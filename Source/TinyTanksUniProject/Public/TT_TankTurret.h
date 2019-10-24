@@ -3,27 +3,47 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/Pawn.h"
 #include "TT_TankTurret.generated.h"
 
 UCLASS()
-class TINYTANKSUNIPROJECT_API ATT_TankTurret : public ACharacter
+class TINYTANKSUNIPROJECT_API ATT_TankTurret : public APawn
 {
 	GENERATED_BODY()
 
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
+
 public:
-	// Sets default values for this character's properties
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		FVector gunOffset;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float fireRate;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float rotateSpeed;
+	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FVector turretForwardVector;
+
+protected:
+
+	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* tankGunBase;
+	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* tankGunBarrel;
+
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
+public:
+
 	ATT_TankTurret();
+
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

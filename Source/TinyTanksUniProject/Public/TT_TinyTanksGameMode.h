@@ -14,4 +14,7 @@ class TINYTANKSUNIPROJECT_API ATT_TinyTanksGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+
+protected:
+	virtual void BeginPlay() override;
 };
