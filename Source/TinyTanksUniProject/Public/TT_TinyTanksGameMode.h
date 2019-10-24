@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "GM_TinyTanks.generated.h"
+#include "TT_TinyTanksGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TINYTANKSUNIPROJECT_API AGM_TinyTanks : public AGameModeBase
+class TINYTANKSUNIPROJECT_API ATT_TinyTanksGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
