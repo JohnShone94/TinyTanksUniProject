@@ -8,7 +8,9 @@
 
 
 class ATT_TankBase;
-
+class ATT_TankTurret;
+class ATT_TinyTanksGameMode;
+class APawn;
 /**
  * 
  */
@@ -24,9 +26,19 @@ class TINYTANKSUNIPROJECT_API ATT_TankBaseController : public APlayerController
 protected:
 	static const FName moveBinding;
 	static const FName rotateBinding;
+	static const FName fireBinding;
 
 	UPROPERTY()
-		ATT_TankBase* controlledPawn;
+		ATT_TankBase* tankPawn;
+	UPROPERTY()
+		ATT_TankTurret* turretPawn;
+	UPROPERTY()
+		ATT_TinyTanksGameMode* gameMode;
+
+	/* Flag to control firing  */
+	uint32 bCanFire : 1;
+	/** Handle for efficient management of ShotTimerExpired timer */
+	FTimerHandle TimerHandle_ShotTimerExpired;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -42,4 +54,8 @@ protected:
 	virtual void PlayerTick(float DeltaTime) override;
 
 	virtual void SetupInputComponent() override;
+
+	void FireShot(FVector FireDirection);
+
+	void ShotTimerExpired();
 };

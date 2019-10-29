@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "TT_TankTurret.h"
+#include "TT_TinyTanksGameMode.h"
 
 // Sets default values
 ATT_TankBase::ATT_TankBase()
@@ -25,7 +26,11 @@ ATT_TankBase::ATT_TankBase()
 	turretSlot->SetChildActorClass(ATT_TankTurret::StaticClass());
 	turretSlot->SetupAttachment(RootComponent);
 
+	AutoPossessAI = EAutoPossessAI::Disabled;
+	AIControllerClass = nullptr;
+
 	moveSpeed = 10.0f;
+	rotateSpeed = 10.0f;
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +40,8 @@ void ATT_TankBase::BeginPlay()
 	
 	tankForwardVector = tankBaseMesh->GetForwardVector();
 
+	ATT_TinyTanksGameMode* gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+	gameMode->AddTankToGM(this);
 }
 
 // Called every frame

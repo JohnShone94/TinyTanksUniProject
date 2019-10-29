@@ -20,6 +20,9 @@ ATT_TankTurret::ATT_TankTurret()
 	RootComponent = tankGunBase;
 	tankGunBarrel->SetupAttachment(RootComponent);
 
+	AutoPossessAI = EAutoPossessAI::Disabled;
+	AIControllerClass = nullptr;
+
 	rotateSpeed = 10.0f;
 	gunOffset = FVector(90.f, 0.f, 0.f);
 	fireRate = 0.1f;
