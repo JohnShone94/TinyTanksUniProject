@@ -112,7 +112,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 
 ATT_TankBaseController* ATT_TinyTanksGameMode::GetPlayerConAtPosition(int32 i)
 {
-	if (playerMap.Contains(i))
+	if ((playerMap.Num() > 0) && (playerMap.Contains(i)))
 		return *playerMap.Find(i);
 	else
 		return nullptr;
@@ -120,7 +120,7 @@ ATT_TankBaseController* ATT_TinyTanksGameMode::GetPlayerConAtPosition(int32 i)
 
 int32 ATT_TinyTanksGameMode::GetPlayerPositionFromCon(ATT_TankBaseController* con)
 {
-	if (playerMap.FindKey(con))
+	if ((playerMap.Num() > 0) && (playerMap.FindKey(con)))
 		return *playerMap.FindKey(con);
 	else
 		return 0;

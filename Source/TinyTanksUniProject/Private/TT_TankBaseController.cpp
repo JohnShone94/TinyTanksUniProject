@@ -20,9 +20,10 @@ ATT_TankBaseController::ATT_TankBaseController()
 
 void ATT_TankBaseController::BeginPlay()
 {
+	Super::BeginPlay();
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 
-	if (gameMode->GetPlayerPositionFromCon(this) == 0)
+	if (gameMode && gameMode->GetPlayerPositionFromCon(this) == 0)
 	{
 		for (int i = 1; i < 5; i++)
 		{
@@ -42,6 +43,7 @@ void ATT_TankBaseController::BeginPlay()
 
 void ATT_TankBaseController::PlayerTick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 	if ((gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		// Find movement direction
@@ -104,6 +106,8 @@ void ATT_TankBaseController::SetupInputComponent()
 		InputComponent->BindAxis(moveBinding);
 		InputComponent->BindAxis(rotateBinding);
 		InputComponent->BindAxis(fireBinding);
+
+		UE_LOG(LogTemp, Warning, TEXT("SETUP INPUT COMPONENT"));
 	}
 	else
 	{
