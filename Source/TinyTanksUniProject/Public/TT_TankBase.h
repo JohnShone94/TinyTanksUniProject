@@ -48,6 +48,9 @@ public:
 	UFUNCTION()
 		UChildActorComponent* GetTurretSlot() { return turretSlot; };
 
+	UFUNCTION()
+		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -103,12 +103,12 @@ void ATT_TankBaseController::MoveForward(float val)
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->tankForwardVector * tankPawn->moveSpeed) * val);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed) * val);
 			tankPawn->AddActorWorldOffset(moveDirection, true, &Hit);
 		}
 		else if (val < 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->tankForwardVector * (tankPawn->moveSpeed / 4)) * val);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* (tankPawn->moveSpeed / 4)) * val);
 			tankPawn->AddActorWorldOffset(moveDirection, true, &Hit);
 		}
 	}

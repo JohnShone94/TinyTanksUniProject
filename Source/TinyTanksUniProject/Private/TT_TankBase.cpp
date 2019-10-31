@@ -37,8 +37,6 @@ ATT_TankBase::ATT_TankBase()
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	tankForwardVector = tankBaseMesh->GetForwardVector();
 
 	ATT_TinyTanksGameMode* gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 	gameMode->AddTankToGM(this);
