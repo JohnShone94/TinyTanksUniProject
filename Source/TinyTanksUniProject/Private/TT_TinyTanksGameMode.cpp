@@ -41,9 +41,9 @@ void ATT_TinyTanksGameMode::BeginPlay()
 		}
 	}
 
-	SpawnPlayerControllerCommon(ENetRole::ROLE_None, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, PlayerControllerClass);
-	SpawnPlayerControllerCommon(ENetRole::ROLE_None, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, PlayerControllerClass);
-	SpawnPlayerControllerCommon(ENetRole::ROLE_None, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, PlayerControllerClass);
+	//SpawnPlayerControllerCommon(ENetRole::ROLE_None, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, PlayerControllerClass);
+	//SpawnPlayerControllerCommon(ENetRole::ROLE_None, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, PlayerControllerClass);
+	//SpawnPlayerControllerCommon(ENetRole::ROLE_None, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, PlayerControllerClass);
 }
 
 
@@ -56,8 +56,11 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player One"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player0;
 
-		if(tankOne)
+		if (tankOne)
+		{
 			pController->Possess(tankOne);
+			pController->SetTankPawn(tankOne);
+		}
 		else
 			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK ONE"));
 
@@ -72,6 +75,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		{
 			ATT_TankTurret* turret = Cast<ATT_TankTurret>(tankOne->GetTurretSlot());
 			pController->Possess(turret);
+			pController->SetTurretPawn(turret);
 		}
 		else
 			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK ONE'S TURRET"));
@@ -83,8 +87,11 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Three"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player2;
 
-		if(tankTwo)
+		if (tankTwo)
+		{
 			pController->Possess(tankTwo);
+			pController->SetTankPawn(tankTwo);
+		}
 		else
 			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK TWO"));
 
@@ -99,6 +106,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		{
 			ATT_TankTurret* turret = Cast<ATT_TankTurret>(tankTwo->GetTurretSlot());
 			pController->Possess(turret);
+			pController->SetTurretPawn(turret);
 		}
 		else
 			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK TWO'S TURRET"));

@@ -47,15 +47,22 @@ protected:
 public:
 	ATT_TankBaseController();
 
+	UFUNCTION()
+		void SetTankPawn(ATT_TankBase* tank) { tankPawn = tank; };
+	UFUNCTION()
+		void SetTurretPawn(ATT_TankTurret* turret) { turretPawn = turret; };
+
 protected:
 
 	virtual void BeginPlay() override;
 
-	virtual void PlayerTick(float DeltaTime) override;
+	//virtual void PlayerTick(float DeltaTime) override;
 
 	virtual void SetupInputComponent() override;
 
-	void FireShot(FVector FireDirection);
+	void MoveForward(float val);
+	void Rotate(float val);
+	void FireShot(float val);
 
 	void ShotTimerExpired();
 };
