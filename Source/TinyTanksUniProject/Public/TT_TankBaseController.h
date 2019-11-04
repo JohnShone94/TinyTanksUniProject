@@ -35,6 +35,9 @@ protected:
 	UPROPERTY()
 		ATT_TinyTanksGameMode* gameMode;
 
+	UPROPERTY()
+		bool rotatingBase;
+
 	/* Flag to control firing  */
 	uint32 bCanFire : 1;
 	/** Handle for efficient management of ShotTimerExpired timer */
@@ -55,8 +58,6 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
-
-	//virtual void PlayerTick(float DeltaTime) override;
 
 	virtual void SetupInputComponent() override;
 

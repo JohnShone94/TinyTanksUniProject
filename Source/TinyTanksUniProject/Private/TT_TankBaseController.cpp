@@ -16,6 +16,7 @@ const FName ATT_TankBaseController::fireBinding("FireBinding");
 ATT_TankBaseController::ATT_TankBaseController()
 {
 	bCanFire = true;
+	rotatingBase = false;
 }
 
 void ATT_TankBaseController::BeginPlay()
@@ -35,42 +36,6 @@ void ATT_TankBaseController::BeginPlay()
 		}
 	}
 }
-//
-//void ATT_TankBaseController::PlayerTick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//	if ((gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
-//	{
-//		// Find movement direction
-//		const float forwardValue = GetInputAxisValue(moveBinding);
-//		UE_LOG(LogTemp, Warning, TEXT("Forward %f"), forwardValue);
-//		const float rotateValue = GetInputAxisValue(rotateBinding);
-//		UE_LOG(LogTemp, Warning, TEXT("Turn %f"), rotateValue);
-//
-//		if (rotateValue != 0.0f)
-//		{
-//			const FRotator rotateDirection = (FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * rotateValue);
-//			tankPawn->AddActorWorldRotation(rotateDirection);
-//			//UE_LOG(LogTemp, Warning, TEXT("ROTATE"));
-//		}
-//		else if (forwardValue != 0.0f)
-//		{
-//			FHitResult Hit(1.f);
-//			if (forwardValue > 0.0f)
-//			{
-//				const FVector moveDirection = ((tankPawn->tankForwardVector * tankPawn->moveSpeed) * forwardValue);
-//				tankPawn->AddActorWorldOffset(moveDirection, true, &Hit);
-//				//UE_LOG(LogTemp, Warning, TEXT("GO FORWARD"));
-//			}
-//			else if (forwardValue < 0.0f)
-//			{
-//				const FVector moveDirection = ((tankPawn->tankForwardVector * (tankPawn->moveSpeed / 4)) * forwardValue);
-//				tankPawn->AddActorWorldOffset(moveDirection, true, &Hit);
-//				//UE_LOG(LogTemp, Warning, TEXT("GO BACK"));
-//			}
-//		}
-//	}
-//}
 
 void ATT_TankBaseController::SetupInputComponent()
 {
@@ -81,7 +46,8 @@ void ATT_TankBaseController::SetupInputComponent()
 		InputComponent->BindAxis("RotateBinding", this, &ATT_TankBaseController::Rotate);
 		InputComponent->BindAxis("FireBinding", this, &ATT_TankBaseController::FireShot);
 
-		UE_LOG(LogTemp, Warning, TEXT("SETUP INPUT COMPONENT"));
+		if(InputComponent)
+			UE_LOG(LogTemp, Warning, TEXT("SETUP INPUT COMPONENT"));
 	}
 	else
 	{
@@ -97,7 +63,7 @@ void ATT_TankBaseController::ShotTimerExpired()
 
 void ATT_TankBaseController::MoveForward(float val)
 {
-	if (tankPawn && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+	if (tankPawn && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Forward %f"), val);
 		FHitResult Hit(1.0f);
@@ -108,15 +74,19 @@ void ATT_TankBaseController::MoveForward(float val)
 		}
 		else if (val < 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* (tankPawn->moveSpeed / 4)) * val);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* (tankPawn->moveSpeed / 2.5)) * val);
 			tankPawn->AddActorWorldOffset(moveDirection, true, &Hit);
 		}
 	}
 }
 void ATT_TankBaseController::Rotate(float val)
 {
+	if(val == 0.0f)
+		rotatingBase = false;
+
 	if (tankPawn && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
+		rotatingBase = true;
 		UE_LOG(LogTemp, Warning, TEXT("Turn %f"), val);
 		const FRotator rotateDirection = (FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);

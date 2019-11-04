@@ -8,6 +8,7 @@
 
 class ATT_TankBaseController;
 class ATT_TankBase;
+class ATT_TankTurret;
 
 /**
  * 
@@ -28,6 +29,12 @@ public:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		ATT_TankBase* tankTwo;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		ATT_TankTurret* turretOne;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		ATT_TankTurret* turretTwo;
 
 
 public:
