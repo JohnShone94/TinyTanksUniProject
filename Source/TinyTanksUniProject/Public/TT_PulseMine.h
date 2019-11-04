@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TT_PulseMine.generated.h"
 #include "Components/PrimitiveComponent.h"
+#include "TT_PulseMine.generated.h"
+
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_PulseMine : public AActor
 {
+	
 		
 public:	
 	// Sets default values for this actor's properties
@@ -25,7 +27,5 @@ public:
 
 private:
 	bool GetGenerateOverlapEvents() const;
-
-
-
+	   
 };
