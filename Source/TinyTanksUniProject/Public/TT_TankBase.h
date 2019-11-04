@@ -20,8 +20,9 @@ class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
 public:
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FVector tankForwardVector;
-
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float rotateSpeed;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float moveSpeed;
 
 protected:
@@ -43,6 +44,12 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+		UChildActorComponent* GetTurretSlot() { return turretSlot; };
+
+	UFUNCTION()
+		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
 
 protected:
 	// Called when the game starts or when spawned
