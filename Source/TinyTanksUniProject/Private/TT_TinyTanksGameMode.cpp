@@ -58,9 +58,23 @@ void ATT_TinyTanksGameMode::BeginPlay()
 		}
 	}
 
-	UGameplayStatics::CreatePlayer(GetWorld(), 0, true);
-	UGameplayStatics::CreatePlayer(GetWorld(), 1, true);
-	UGameplayStatics::CreatePlayer(GetWorld(), 2, true);
+
+	for (int i = GetNumPlayers(); i < 5; )
+	{
+		if (i == 0)
+			UGameplayStatics::CreatePlayer(GetWorld(), 0, true);
+		else if (i == 1)
+			UGameplayStatics::CreatePlayer(GetWorld(), 1, true);
+		else if (i == 2)
+			UGameplayStatics::CreatePlayer(GetWorld(), 2, true);
+		else if (i == 3)
+			UGameplayStatics::CreatePlayer(GetWorld(), 3, true);
+		else
+			break;
+
+		i++;
+		//UE_LOG(LogTemp, Warning, TEXT("Ammount of Players: %d"), i);
+	}
 
 	//SpawnPlayerControllerCommon(ENetRole::ROLE_Authority, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, ATT_TankBaseController::StaticClass());
 	//SpawnPlayerControllerCommon(ENetRole::ROLE_Authority, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, ATT_TankBaseController::StaticClass());

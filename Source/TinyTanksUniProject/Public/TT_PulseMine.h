@@ -11,7 +11,7 @@
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_PulseMine : public AActor
 {
-	
+	GENERATED_BODY()
 		
 public:	
 	// Sets default values for this actor's properties
@@ -23,7 +23,7 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
 private:
 	bool GetGenerateOverlapEvents() const;

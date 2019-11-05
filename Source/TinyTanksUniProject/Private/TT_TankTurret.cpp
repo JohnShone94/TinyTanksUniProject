@@ -9,16 +9,12 @@
 ATT_TankTurret::ATT_TankTurret()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	tankGunBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Gun Base"));
 	tankGunBase->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
-	tankGunBarrel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Gun Barrel"));
-	tankGunBarrel->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
-
 	RootComponent = tankGunBase;
-	tankGunBarrel->SetupAttachment(RootComponent);
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
@@ -33,14 +29,8 @@ void ATT_TankTurret::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	turretForwardVector = tankGunBarrel->GetForwardVector();
+	turretForwardVector = tankGunBase->GetForwardVector();
 }
 
-// Called every frame
-void ATT_TankTurret::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 
