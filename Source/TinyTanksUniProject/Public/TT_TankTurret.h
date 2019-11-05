@@ -30,8 +30,6 @@ protected:
 
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* tankGunBase;
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		class UStaticMeshComponent* tankGunBarrel;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -40,8 +38,6 @@ protected:
 public:
 
 	ATT_TankTurret();
-
-	virtual void Tick(float DeltaTime) override;
 
 protected:
 	// Called when the game starts or when spawned
