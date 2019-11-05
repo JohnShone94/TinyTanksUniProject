@@ -12,11 +12,16 @@ const FName ATT_TankTurretController::rotateBinding("RotateBinding");
 ATT_TankTurretController::ATT_TankTurretController()
 {
 	bCanFire = true;
+
+	
 }
 
 void ATT_TankTurretController::BeginPlay()
 {
 	controlledPawn = Cast<ATT_TankTurret>(GetPawn());
+
+	if (controlledPawn)
+		UnPossess();
 
 	if (!controlledPawn)
 	{
@@ -25,16 +30,18 @@ void ATT_TankTurretController::BeginPlay()
 			// Same as with the Object Iterator, access the subclass instance with the * or -> operators.
 			ATT_TankTurret *actor = *actorItr;
 
+			UE_LOG(LogTemp, Warning, TEXT("Found. %s"), *actor->GetName());
+
 			if (actor->GetController())
-				continue;
-			else
-				Possess(actor);
+				UE_LOG(LogTemp, Warning, TEXT("Possessed By: %s"), *actor->GetController()->GetName());
+			
+			Possess(actor);
 		}
 
 		if (!controlledPawn)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Failed To Possess Turret."));
-		}
+		} 
 	}
 }
 
@@ -64,8 +71,17 @@ void ATT_TankTurretController::PlayerTick(float DeltaTime)
 
 void ATT_TankTurretController::SetupInputComponent()
 {
-	InputComponent->BindAxis(rotateBinding);
-	InputComponent->BindAxis(fireBinding);
+	Super::SetupInputComponent();
+
+	if (InputComponent)
+	{
+		InputComponent->BindAxis(rotateBinding);
+		InputComponent->BindAxis(fireBinding);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TURRET UNABLE TO SETUP INPUT COMPONENT"));
+	}
 }
 
 void ATT_TankTurretController::FireShot(FVector fireDirection)
