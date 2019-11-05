@@ -36,7 +36,7 @@ void ATT_PulseMine::BeginPlay()
 
 			if (MeshComp)
 			{
-				MeshComp->AddRadialImpulse(GetActorLocation(), 500.0f, 2000000.0f, ERadialImpulseFalloff::RIF_Constant, true);
+				MeshComp->AddRadialImpulse(GetActorLocation(), 500.0f, 2000.0f, ERadialImpulseFalloff::RIF_Constant, true);
 			}
 		}
 	}
