@@ -6,6 +6,7 @@
 #include "Engine/CollisionProfile.h"
 #include "TT_TankTurret.h"
 #include "TT_TinyTanksGameMode.h"
+#include "TT_BasicBullet.h"
 
 // Sets default values
 ATT_TankBase::ATT_TankBase()

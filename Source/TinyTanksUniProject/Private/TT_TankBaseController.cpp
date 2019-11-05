@@ -4,6 +4,7 @@
 #include "TT_TankBaseController.h"
 #include "TT_TankBase.h"
 #include "TT_TankTurret.h"
+#include "TT_BasicBullet.h"
 #include "TT_TinyTanksGameMode.h"
 #include "GameFramework/Pawn.h"
 #include "EngineUtils.h"
@@ -104,7 +105,7 @@ void ATT_TankBaseController::FireShot(float val)
 {
 	if (turretPawn && val != 0.0f &&(gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
 	{
-		const FVector fireDirection = turretPawn->turretForwardVector;
+		const FVector fireDirection = turretPawn->GetForwardVector();
 
 		if (turretPawn && bCanFire == true && (fireDirection.SizeSquared() > 0.0f))
 		{
@@ -115,8 +116,9 @@ void ATT_TankBaseController::FireShot(float val)
 			UWorld* const world = GetWorld();
 			if (world != NULL)
 			{
-				//UE_LOG(LogTemp, Warning, TEXT("FIRE!!!"));
-				//world->SpawnActor<ASpaceship>(spawnLocation, fireRotation);
+				UE_LOG(LogTemp, Warning, TEXT("FIRE!!!"));
+				ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
+				bullet->SetVelocity(fireRotation);
 			}
 
 			bCanFire = false;
