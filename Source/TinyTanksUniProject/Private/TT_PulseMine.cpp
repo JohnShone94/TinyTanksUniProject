@@ -2,7 +2,6 @@
 
 
 #include "TT_PulseMine.h"
-#include "GameFramework/PlayerController.h"
 
 // Sets default values
 ATT_PulseMine::ATT_PulseMine()
@@ -12,22 +11,33 @@ ATT_PulseMine::ATT_PulseMine()
 
 }
 
-// Called when the game starts or when spawned
-void ATT_PulseMine::PulseMine(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	//APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	//if (PlayerController != nullptr)
-	//{
-
-
-	//}
-	//if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
-	//{
-
-	//}	
-}
-
 bool ATT_PulseMine::GetGenerateOverlapEvents() const
 {
 	return true;
+}
+
+void ATT_PulseMine::BeginPlay()
+{
+	TArray<FHitResult> ActorHits;
+	FVector MyLocation = GetActorLocation();
+
+	FVector Start = MyLocation;
+	FVector End = MyLocation;
+	FCollisionShape MyColSphere = FCollisionShape::MakeSphere(500.0f);
+
+	DrawDebugSphere(GetWorld(), GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Cyan, true);
+	bool isHit = GetWorld() ->SweepMultiByChannel(ActorHits, Start, End, FQuat::Identity, ECC_WorldStatic, MyColSphere);
+
+	if (isHit)
+	{
+		for (auto& Hit : ActorHits)
+		{
+			UStaticMeshComponent*MeshComp = Cast<UStaticMeshComponent>((Hit.GetActor())->GetRootComponent());
+
+			if (MeshComp)
+			{
+				MeshComp->AddRadialImpulse(GetActorLocation(), 500.0f, 2000.0f, ERadialImpulseFalloff::RIF_Constant, true);
+			}
+		}
+	}
 }
