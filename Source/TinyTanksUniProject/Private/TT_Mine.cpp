@@ -34,17 +34,17 @@ void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DrawDebugBox(GetWorld(), GetActorLocation(), FVector(100, 100, 100), FColor::White, true, -1, 0, 10);
+	DrawDebugBox(GetWorld(), GetActorLocation(), FVector(100, 100, 100), FColor::Purple, true, -1, 0, 10);
 
 	BombMesh->SetMaterial(0, FlashOff);
 }
 
-void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+/*void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		GetWorldTimerManager().SetTimer(MenberTimerHandle, this &ATT_Mine::ChangeBomb, 0.5f, true, 0.0f);
+		GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 1.0f);
 		
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Hello There!"));
 	}
@@ -52,5 +52,5 @@ void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class A
 
 void ATT_Mine::ChangeBomb()
 {
-
-}
+	GetWorldTimerManager().ClearTimer(BombCountdown);
+}*/
