@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "TimerManager.h"
 #include "Engine.h"
 
 // Sets default values
@@ -24,7 +25,9 @@ ATT_Mine::ATT_Mine()
 	FlashOn = CreateAbstractDefaultSubobject<UMaterial>(TEXT("FlashOnMat"));
 	FlashOff = CreateAbstractDefaultSubobject<UMaterial>(TEXT("FlashOffMat"));
 
-	MyBombMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnActorBeginOverlap);
+	BombMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
+	//BombMesh->bGenerateCollisionEvents = true;
+	
 }
 
 void ATT_Mine::BeginPlay()
@@ -36,10 +39,18 @@ void ATT_Mine::BeginPlay()
 	BombMesh->SetMaterial(0, FlashOff);
 }
 
-void ATT_Mine::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
+		GetWorldTimerManager().SetTimer(MenberTimerHandle, this &ATT_Mine::ChangeBomb, 0.5f, true, 0.0f);
+		
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Hello There!"));
 	}
+}
+
+void ATT_Mine::ChangeBomb()
+{
+
 }
