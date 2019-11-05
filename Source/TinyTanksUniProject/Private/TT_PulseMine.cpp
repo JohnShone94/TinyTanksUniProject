@@ -25,7 +25,7 @@ void ATT_PulseMine::BeginPlay()
 	FVector End = MyLocation;
 	FCollisionShape MyColSphere = FCollisionShape::MakeSphere(500.0f);
 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Cyan, true);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Cyan, true);
 	bool isHit = GetWorld() ->SweepMultiByChannel(ActorHits, Start, End, FQuat::Identity, ECC_WorldStatic, MyColSphere);
 
 	if (isHit)
