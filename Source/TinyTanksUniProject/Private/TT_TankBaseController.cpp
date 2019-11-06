@@ -87,7 +87,7 @@ void ATT_TankBaseController::Rotate(float val)
 
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
-		rotatingBase = true;
+		//rotatingBase = true;
 		UE_LOG(LogTemp, Warning, TEXT("Turn %f"), val);
 		const FRotator rotateDirection = (FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);
