@@ -39,7 +39,7 @@ void ATT_Mine::BeginPlay()
 	BombMesh->SetMaterial(0, FlashOff);
 }
 
-/*void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
@@ -53,4 +53,4 @@ void ATT_Mine::BeginPlay()
 void ATT_Mine::ChangeBomb()
 {
 	GetWorldTimerManager().ClearTimer(BombCountdown);
-}*/
+}

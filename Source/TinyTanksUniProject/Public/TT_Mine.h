@@ -19,6 +19,8 @@ class TINYTANKSUNIPROJECT_API ATT_Mine : public AActor
 public:	
 	ATT_Mine();
 
+	FTimerHandle BombCountdown;
+
 protected:
 
 	virtual void BeginPlay();
@@ -40,5 +42,5 @@ public:
 	 UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	 //void ChangeBomb();
+	 void ChangeBomb();
 };
