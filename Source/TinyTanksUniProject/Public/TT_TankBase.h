@@ -7,6 +7,7 @@
 #include "TT_TankBase.generated.h"
 
 class UStaticMeshComponent;
+class ATT_BasicBullet;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
