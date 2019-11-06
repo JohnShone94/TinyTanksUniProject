@@ -7,7 +7,7 @@
 #include "TT_Mine.generated.h"
 
 class UStaticMeshComponent;
-class UMaterialInterface;
+class UMaterial;
 class UBoxComponent;
 
 
@@ -31,10 +31,10 @@ public:
 		UStaticMeshComponent* BombMesh;
 
 	UPROPERTY(EditAnywhere)
-		UMaterialInterface* FlashOn;
+		UMaterial* FlashOn;
 
 	 UPROPERTY(EditAnywhere)
-		UMaterialInterface* FlashOff;
+		UMaterial* FlashOff;
 
 	 UPROPERTY()
 		UBoxComponent* MyBombMesh;
