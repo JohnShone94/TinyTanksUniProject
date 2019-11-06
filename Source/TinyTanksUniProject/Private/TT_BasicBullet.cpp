@@ -35,8 +35,8 @@ ATT_BasicBullet::ATT_BasicBullet()
 
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	projectileMovement->UpdatedComponent = RootComponent;
-	projectileMovement->InitialSpeed = 500.f;
-	projectileMovement->MaxSpeed = 6000.f;
+	projectileMovement->InitialSpeed = 800.f;
+	projectileMovement->MaxSpeed = 9000.f;
 	projectileMovement->bRotationFollowsVelocity = true;
 	projectileMovement->bShouldBounce = true;
 	projectileMovement->Velocity = FVector(0.0f, 0.0f, 0.0f);
@@ -46,7 +46,7 @@ ATT_BasicBullet::ATT_BasicBullet()
 
 	InitialLifeSpan = 5.0f;
 
-	maxHitAmount = 2;
+	maxHitAmount = 3;
 }
 
 void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
