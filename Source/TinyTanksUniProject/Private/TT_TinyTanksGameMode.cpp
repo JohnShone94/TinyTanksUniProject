@@ -14,6 +14,8 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 {
 	DefaultPawnClass = nullptr;
 
+	bCanPlayersControlTanks = false;
+
 	PlayerControllerClass = ATT_TankBaseController::StaticClass();
 }
 

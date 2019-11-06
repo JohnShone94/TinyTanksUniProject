@@ -64,7 +64,7 @@ void ATT_TankBaseController::ShotTimerExpired()
 
 void ATT_TankBaseController::MoveForward(float val)
 {
-	if (tankPawn && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Forward %f"), val);
 		FHitResult Hit(1.0f);
@@ -85,7 +85,7 @@ void ATT_TankBaseController::Rotate(float val)
 	if(val == 0.0f)
 		rotatingBase = false;
 
-	if (tankPawn && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		rotatingBase = true;
 		UE_LOG(LogTemp, Warning, TEXT("Turn %f"), val);
@@ -93,7 +93,7 @@ void ATT_TankBaseController::Rotate(float val)
 		tankPawn->AddActorWorldRotation(rotateDirection);
 	}
 
-	if (turretPawn)
+	if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
 	{
 		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
 		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
@@ -107,7 +107,7 @@ void ATT_TankBaseController::Rotate(float val)
 
 void ATT_TankBaseController::FireShot(float val)
 {
-	if (turretPawn)
+	if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
 	{
 		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
 		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
