@@ -15,20 +15,16 @@ ATT_TankTurret::ATT_TankTurret()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface26.Tank_1_polySurface26'")));
-	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
-
 	tankGunBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Gun Base"));
 	tankGunBase->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
+	RootComponent = tankGunBase;
 
+	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface26.Tank_1_polySurface26'")));
+	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
 	if (meshToUse)
 		tankGunBase->SetStaticMesh(meshToUse);
-
 	if (materialToUse)
 		tankGunBase->GetStaticMesh()->SetMaterial(0, materialToUse);
-
-
-	RootComponent = tankGunBase;
 
 	fireLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Fire Location"));
 	fireLocation->SetupAttachment(RootComponent);
@@ -36,8 +32,8 @@ ATT_TankTurret::ATT_TankTurret()
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
 
-	rotateSpeed = 2.0f;
-	fireRate = 1.0f;
+	rotateSpeed = 1.25f;
+	fireRate = 1.25f;
 }
 
 // Called when the game starts or when spawned
@@ -56,10 +52,8 @@ void ATT_TankTurret::Tick(float DeltaTime)
 
 FVector ATT_TankTurret::GetForwardVector()
 {
+	//UE_LOG(LogTemp, Error, TEXT("FORWARDVECTOR %s"), *tankGunBase->GetForwardVector().ToString());
 	turretForwardVector = tankGunBase->GetForwardVector();
-
-	UE_LOG(LogTemp, Error, TEXT("FORWARDVECTOR %s"), *tankGunBase->GetForwardVector().ToString());
-
 	return turretForwardVector;
 }
 

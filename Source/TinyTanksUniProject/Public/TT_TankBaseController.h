@@ -36,13 +36,16 @@ protected:
 	UPROPERTY()
 		ATT_TinyTanksGameMode* gameMode;
 
+	//Set when the base is rotating, used to stop the player from moving while rotating.
 	UPROPERTY()
 		bool rotatingBase;
 
-	/* Flag to control firing  */
+	//Used to control the fireing.
 	uint32 bCanFire : 1;
-	/** Handle for efficient management of ShotTimerExpired timer */
+
+	//Handler for the timer.
 	FTimerHandle TimerHandle_ShotTimerExpired;
+
 
 	///////////////////
 	//// FUNCTIONS ////

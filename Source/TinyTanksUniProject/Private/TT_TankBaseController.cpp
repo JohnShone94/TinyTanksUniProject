@@ -64,7 +64,7 @@ void ATT_TankBaseController::ShotTimerExpired()
 
 void ATT_TankBaseController::MoveForward(float val)
 {
-	if (tankPawn && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+	if (tankPawn && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Forward %f"), val);
 		FHitResult Hit(1.0f);
@@ -85,7 +85,7 @@ void ATT_TankBaseController::Rotate(float val)
 	if(val == 0.0f)
 		rotatingBase = false;
 
-	if (tankPawn && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+	if (tankPawn && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		rotatingBase = true;
 		UE_LOG(LogTemp, Warning, TEXT("Turn %f"), val);
@@ -93,37 +93,45 @@ void ATT_TankBaseController::Rotate(float val)
 		tankPawn->AddActorWorldRotation(rotateDirection);
 	}
 
-	if (turretPawn && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
+	if (turretPawn)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ROTATE %f"), val);
-		const FRotator rotateDirection = (FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * val);
-		turretPawn->AddActorWorldRotation(rotateDirection);
+		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
+		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ROTATE %f"), val);
+			const FRotator rotateDirection = (FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * val);
+			turretPawn->AddActorWorldRotation(rotateDirection);
+		}
 	}
 }
 
 void ATT_TankBaseController::FireShot(float val)
 {
-	if (turretPawn && val != 0.0f &&(gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
+	if (turretPawn)
 	{
-		const FVector fireDirection = turretPawn->GetForwardVector();
-
-		if (turretPawn && bCanFire == true && (fireDirection.SizeSquared() > 0.0f))
+		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
+		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
 		{
-			const FRotator fireRotation = fireDirection.Rotation();
+			const FVector fireDirection = turretPawn->GetForwardVector();
 
-			const FVector spawnLocation = turretPawn->GetActorLocation() + fireRotation.RotateVector(turretPawn->gunOffset);
-
-			UWorld* const world = GetWorld();
-			if (world != NULL)
+			if (turretPawn && bCanFire == true && (fireDirection.SizeSquared() > 0.0f))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("FIRE!!!"));
-				ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
-				bullet->SetVelocity(fireRotation);
+				const FRotator fireRotation = fireDirection.Rotation();
+
+				const FVector spawnLocation = turretPawn->GetActorLocation() + fireRotation.RotateVector(turretPawn->gunOffset);
+
+				UWorld* const world = GetWorld();
+				if (world != NULL)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("FIRE!!!"));
+					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
+					bullet->SetVelocity(fireRotation);
+				}
+
+				bCanFire = false;
+
+				world->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ATT_TankBaseController::ShotTimerExpired, turretPawn->fireRate);
 			}
-
-			bCanFire = false;
-
-			world->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ATT_TankBaseController::ShotTimerExpired, turretPawn->fireRate);
 		}
 	}
 }

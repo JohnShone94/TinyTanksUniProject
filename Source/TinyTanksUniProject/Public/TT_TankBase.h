@@ -19,10 +19,15 @@ class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
 	///////////////////
 
 public:
+	//The forward vector of the tank.
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FVector tankForwardVector;
+
+	//The speed of a tank when turning.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float rotateSpeed;
+
+	//The speed of a tank when moving forward.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float moveSpeed;
 
@@ -33,6 +38,22 @@ protected:
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
+
+	//The amount of hits a tank can take before it blows up.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 maxHealthPoints;
+
+	//The amount of hits a tank has left before it blows up.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 currentHealthPoints;
+
+	//Set to true when the tank is dead.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bIsDead;
+
+	//Set to true when the tank is stunned.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bIsStunned;
 
 
 	///////////////////
@@ -51,6 +72,35 @@ public:
 
 	UFUNCTION()
 		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
+
+	//Called when the tank dies.
+	UFUNCTION()
+		void KillTank();
+
+	//Called when the tank is stunned.
+	UFUNCTION()
+		void StunTank();
+
+	//Called when the tank is damaged.
+	UFUNCTION()
+		void DamageTank();
+
+	//Called when another class needs to detect if the tank is dead.
+	UFUNCTION()
+		bool GetIsDead() { return bIsDead; };
+
+	//Called when another class needs to detect if the tank is stunned.
+	UFUNCTION()
+		bool GetIsStunned() { return bIsStunned; };
+
+	//Called when another class needs to get the max health points.
+	UFUNCTION()
+		int32 GetMaxHealthPoints() { return maxHealthPoints; };
+
+	//Called when another class needs to get the current health points
+	UFUNCTION()
+		int32 GetCurrentHealthPoints() { return currentHealthPoints; };
+
 
 protected:
 	// Called when the game starts or when spawned

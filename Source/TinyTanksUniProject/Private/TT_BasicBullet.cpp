@@ -40,7 +40,8 @@ ATT_BasicBullet::ATT_BasicBullet()
 	projectileMovement->bRotationFollowsVelocity = true;
 	projectileMovement->bShouldBounce = true;
 	projectileMovement->Velocity = FVector(0.0f, 0.0f, 0.0f);
-	projectileMovement->Bounciness = 0.2f;
+	projectileMovement->Bounciness = 0.5f;
+	projectileMovement->Friction = -1.0f;
 	projectileMovement->ProjectileGravityScale = 0.0f;
 
 	InitialLifeSpan = 5.0f;
@@ -50,18 +51,26 @@ ATT_BasicBullet::ATT_BasicBullet()
 
 void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (!OtherActor || (OtherActor->GetClass() != this->GetClass()))
+	if (OtherActor)
 	{
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
+			tank->DamageTank();
+			Destroy();
+		}
+		else if (OtherActor->GetClass() == this->GetClass())
+		{
 			Destroy();
 		}
 		else
 		{
 			hitAmount++;
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
+
+			if (hitAmount >= maxHitAmount)
+				Destroy();
 		}
 	}
 }
@@ -77,9 +86,6 @@ void ATT_BasicBullet::BeginPlay()
 void ATT_BasicBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (hitAmount >= maxHitAmount)
-		Destroy();
 
 }
 

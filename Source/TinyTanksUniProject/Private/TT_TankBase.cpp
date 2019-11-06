@@ -30,8 +30,13 @@ ATT_TankBase::ATT_TankBase()
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
 
-	moveSpeed = 10.0f;
-	rotateSpeed = 10.0f;
+	moveSpeed = 2.0f;
+	rotateSpeed = 1.25f;
+
+	bIsDead = false;
+	bIsStunned = false;
+	maxHealthPoints = 3;
+	currentHealthPoints = maxHealthPoints;
 }
 
 // Called when the game starts or when spawned
@@ -48,5 +53,39 @@ void ATT_TankBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ATT_TankBase::KillTank()
+{
+	if (!bIsDead)
+	{
+		bIsDead = true;
+		currentHealthPoints = 0;
+	}
+}
+
+void ATT_TankBase::StunTank()
+{
+	if (!bIsStunned)
+		bIsStunned = true;
+}
+
+void ATT_TankBase::DamageTank()
+{
+	if (!bIsDead)
+	{
+		if (currentHealthPoints > 0)
+			currentHealthPoints--;
+
+		if (currentHealthPoints <= 0)
+		{
+			bIsDead = true;
+			tankBaseMesh->SetVisibility(false);
+
+			ATT_TankTurret* myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
+			if (myTurret)
+				myTurret->GetTankGunBase()->SetVisibility(false);
+		}
+	}
 }
 

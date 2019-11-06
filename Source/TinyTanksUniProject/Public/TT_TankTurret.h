@@ -49,6 +49,8 @@ public:
 
 	UFUNCTION()
 		FVector GetForwardVector();
+	UFUNCTION()
+		UStaticMeshComponent* GetTankGunBase() { return tankGunBase; };
 
 protected:
 	// Called when the game starts or when spawned
