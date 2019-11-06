@@ -45,40 +45,53 @@ void ATT_TinyTanksGameMode::BeginPlay()
 			{
 				UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 1: %s"), *tankOne->GetName());
 
-				if(turretOne)
+				if (turretOne)
 					UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 1: %s"), *turretOne->GetName());
 			}
 			if (tankTwo)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 2: %s"), *tankTwo->GetName());
 
-				if(turretTwo)
+				if (turretTwo)
 					UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 2: %s"), *turretTwo->GetName());
 			}
 		}
 	}
 
-
-	for (int i = GetNumPlayers(); i < 5; )
+	int max = 5;
+	for (int i = GetNumPlayers(); i < max; i++)
 	{
 		if (i == 0)
-			UGameplayStatics::CreatePlayer(GetWorld(), 0, true);
+		{
+			if (UGameplayStatics::CreatePlayer(GetWorld(), 0, true))
+			{}
+			else
+				continue;
+		}
 		else if (i == 1)
-			UGameplayStatics::CreatePlayer(GetWorld(), 1, true);
+		{
+			if (UGameplayStatics::CreatePlayer(GetWorld(), 1, true))
+			{}
+			else
+				continue;
+		}
 		else if (i == 2)
-			UGameplayStatics::CreatePlayer(GetWorld(), 2, true);
+		{
+			if (UGameplayStatics::CreatePlayer(GetWorld(), 2, true))
+			{}
+			else
+				continue;
+		}
 		else if (i == 3)
-			UGameplayStatics::CreatePlayer(GetWorld(), 3, true);
+		{
+			if (UGameplayStatics::CreatePlayer(GetWorld(), 3, true))
+			{}
+			else
+				continue;
+		}
 		else
 			break;
-
-		i++;
-		//UE_LOG(LogTemp, Warning, TEXT("Ammount of Players: %d"), i);
 	}
-
-	//SpawnPlayerControllerCommon(ENetRole::ROLE_Authority, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, ATT_TankBaseController::StaticClass());
-	//SpawnPlayerControllerCommon(ENetRole::ROLE_Authority, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, ATT_TankBaseController::StaticClass());
-	//SpawnPlayerControllerCommon(ENetRole::ROLE_Authority, FVector(0.0f, 0.0f, 0.0f), FRotator::ZeroRotator, ATT_TankBaseController::StaticClass());
 }
 
 
@@ -90,7 +103,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		playerMap.Add(1, pController);
 		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player One"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player0;
-		pController->NetPlayerIndex = 0;
+		//pController->NetPlayerIndex = 0;
 
 		if (tankOne)
 		{
@@ -106,7 +119,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		playerMap.Add(2, pController);
 		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Two"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player1;
-		pController->NetPlayerIndex = 1;
+		//pController->NetPlayerIndex = 1;
 
 		if (turretOne)
 		{
@@ -122,7 +135,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		playerMap.Add(3, pController);
 		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Three"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player2;
-		pController->NetPlayerIndex = 2;
+		//pController->NetPlayerIndex = 2;
 
 		if (tankTwo)
 		{
@@ -138,7 +151,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 		playerMap.Add(4, pController);
 		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Four"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player3;
-		pController->NetPlayerIndex = 3;
+		//pController->NetPlayerIndex = 3;
 
 		if (turretTwo)
 		{

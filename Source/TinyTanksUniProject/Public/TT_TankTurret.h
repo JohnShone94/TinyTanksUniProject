@@ -6,6 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "TT_TankTurret.generated.h"
 
+class ATT_BasicBullet;
+class UStaticMeshComponent;
+class USceneComponent;
+
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankTurret : public APawn
 {
@@ -29,7 +33,9 @@ public:
 protected:
 
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		class UStaticMeshComponent* tankGunBase;
+		UStaticMeshComponent* tankGunBase;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		USceneComponent* fireLocation;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -38,6 +44,11 @@ protected:
 public:
 
 	ATT_TankTurret();
+
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+		FVector GetForwardVector();
 
 protected:
 	// Called when the game starts or when spawned
