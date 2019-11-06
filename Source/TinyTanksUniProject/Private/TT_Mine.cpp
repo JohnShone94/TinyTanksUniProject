@@ -41,16 +41,35 @@ void ATT_Mine::BeginPlay()
 
 void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	float Countdown = 0.5f;	
+	int TimesHit = 0;
 
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 1.0f);
+		TimesHit++;
+
+		if (TimesHit <= 1)
+		{
+			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 0.1f);
+
+			BombMesh->SetMaterial(0, FlashOff);
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Hello There!"));
+
+		}
+		else
+		{
+			return;
+		}
 		
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Hello There!"));
 	}
 }
 
 void ATT_Mine::ChangeBomb()
 {
 	GetWorldTimerManager().ClearTimer(BombCountdown);
+
+	BombMesh->SetMaterial(0, FlashOn);
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("ChangeBomb called"));
 }
