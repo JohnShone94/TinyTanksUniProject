@@ -27,14 +27,15 @@ ATT_Mine::ATT_Mine()
 
 	BombMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
 	//BombMesh->bGenerateCollisionEvents = true;
-	
+
+//	int TimesFlashed = 4;
+	bFlashOn = true;	
+	bCanFlash = true;
 }
 
 void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//DrawDebugBox(GetWorld(), GetActorLocation(), FVector(100, 100, 100), FColor::Purple, true, -1, 0, 10);
 
 	//BombMesh->SetMaterial(0, FlashOff);
 }
@@ -45,35 +46,44 @@ void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class A
 
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 0.1f);
+		if (bCanFlash)
+		{
+			bCanFlash = false;
 
-			BombMesh->SetMaterial(0, FlashOff);
+			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 1.0f, true, 1.0f);
 
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Hello There!"));		
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Hello There!"));
+		}
 	}
 }
 
 void ATT_Mine::ChangeBomb()
 {
-	int BombTimer = 4;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("FlashOn"));
-	BombMesh->SetMaterial(0, FlashOn);
-
-	if (--BombTimer >0)
+//	int TimesFlashed = 420;
+	if (bFlashOn == true)
 	{
-		//GetWorldTimerManager().ClearTimer(BombCountdown);
-
-		BombMesh->SetMaterial(0, FlashOff);
+		BombMesh->SetMaterial(0, FlashOn);
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOff"));
-	}
 
+		bFlashOn = false;
+	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Else"));
-		GetWorldTimerManager().ClearTimer(BombCountdown);
-	}
+		BombMesh->SetMaterial(0, FlashOff);
 
-	//GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 0.1f);
+		bFlashOn = true;
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOn"));
+
+//		int TimesFlashed;
+
+//		if (TimesFlashed>=4)
+//		{
+//
+//			Destroy();
+//		}
+	}
+	bCanFlash = true;
 
 }
