@@ -18,6 +18,10 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 	bCanPlayersControlTanks = false;
 
 	PlayerControllerClass = ATT_TankBaseController::StaticClass();
+
+	//ConstructorHelpers::FObjectFinder <ATT_TankBase> tankToSpawnObj(TEXT("/Game/Blueprints/TT_TankBase_BP.TT_TankBase_BP"));
+
+	//tanktospawn = tankToSpawnObj.Object;
 }
 
 void ATT_TinyTanksGameMode::BeginPlay()
@@ -39,7 +43,7 @@ void ATT_TinyTanksGameMode::SpawnPlayerTanks()
 			UWorld* const world = GetWorld();
 			if (world != NULL)
 			{
-				ATT_TankBase* tank = world->SpawnActor<ATT_TankBase>(actor->GetActorLocation(), actor->GetActorRotation());
+				ATT_TankBase* tank = actor->SpawnTank();
 				if (tank)
 				{
 					tankArray.Add(tank);

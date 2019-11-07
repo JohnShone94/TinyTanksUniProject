@@ -34,16 +34,7 @@ public:
 		TArray<ATT_TankBaseController*> playerArray;
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_TankBase* tankOne;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_TankBase* tankTwo;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_TankTurret* turretOne;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_TankTurret* turretTwo;
+		ATT_TankBase* tanktospawn;
 
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
