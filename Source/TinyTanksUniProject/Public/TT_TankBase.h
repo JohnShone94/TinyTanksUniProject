@@ -101,6 +101,20 @@ public:
 	UFUNCTION()
 		int32 GetCurrentHealthPoints() { return currentHealthPoints; };
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void TankHasDied();
+
+		virtual void TankHasDied_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent)
+		void TankHasBeenDamaged();
+
+		virtual void TankHasBeenDamaged_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void TankHasFired();
+
+		virtual void TankHasFired_Implementation();
 
 protected:
 	// Called when the game starts or when spawned
