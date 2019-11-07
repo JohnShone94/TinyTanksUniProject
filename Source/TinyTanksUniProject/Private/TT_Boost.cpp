@@ -22,7 +22,6 @@ ATT_Boost::ATT_Boost()
 	MyBoost->SetupAttachment(RootComponent);
 
 	BoostPU->OnComponentBeginOverlap.AddDynamic(this, &ATT_Boost::OnOverlapBegin);
-
 }
 
 // Called when the game starts or when spawned
@@ -35,14 +34,13 @@ void ATT_Boost::BeginPlay()
 void ATT_Boost::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ATT_Boost::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Boost!"));
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Boost Pickup"));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUp, GetActorLocation());
 
 		//Tank speed up
