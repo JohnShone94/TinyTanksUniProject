@@ -9,6 +9,7 @@
 class UStaticMeshComponent;
 class UMaterial;
 class UBoxComponent;
+class ATT_TankBase;
 
 
 
@@ -26,11 +27,18 @@ protected:
 
 	virtual void BeginPlay();
 
+
+	UPROPERTY()
+		ATT_TankBase* tank;
+
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bFlashOn;
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bCanFlash;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 Countdown;
 
 public:
 	
