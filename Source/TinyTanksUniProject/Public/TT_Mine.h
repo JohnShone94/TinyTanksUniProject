@@ -11,6 +11,7 @@ class UMaterial;
 class UBoxComponent;
 
 
+
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_Mine : public AActor
 {
@@ -24,6 +25,12 @@ public:
 protected:
 
 	virtual void BeginPlay();
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bFlashOn;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bCanFlash;
 
 public:
 	
