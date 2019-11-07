@@ -29,6 +29,8 @@ ATT_Boost::ATT_Boost()
 void ATT_Boost::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("start"));
 }
 
 // Called every frame
@@ -45,7 +47,6 @@ void ATT_Boost::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Boost!"));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUp, GetActorLocation());
 
-		//Tank speed up
 
 		Destroy();
 	}

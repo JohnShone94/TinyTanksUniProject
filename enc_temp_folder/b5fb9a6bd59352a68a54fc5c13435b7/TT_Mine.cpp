@@ -46,6 +46,8 @@ void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class A
 			bCanFlash = false;
 
 			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 1.0f);
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Hello There!"));
 		}
 
 	}
@@ -72,6 +74,7 @@ void ATT_Mine::ChangeBomb()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOn"));
 
 		Countdown++;
+
 	}
 	bCanFlash = true;
 
