@@ -27,9 +27,9 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 void ATT_TinyTanksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	SpawnPlayerTanks();
-	SpawnPlayerControllers();
-	SetupPlayerControllers();
+	//SpawnPlayerTanks();
+	//SpawnPlayerControllers();
+	//SetupPlayerControllers();
 }
 
 void ATT_TinyTanksGameMode::SpawnPlayerTanks()
@@ -210,7 +210,7 @@ void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController
 	}
 }
 
-void ATT_TinyTanksGameMode::ResetPlayers(bool bOverride)
+void ATT_TinyTanksGameMode::ResetPlayers()
 {
 	if (playerArray.Num() > 0)
 	{

@@ -46,11 +46,11 @@ public:
 		void AddPlayerConAtPosition(int32 i, ATT_TankBaseController* pController);
 
 	//Resets the controllers possessions.
-	UFUNCTION()
-		void ResetPlayers(bool bOverride);
+	UFUNCTION(BlueprintCallable)
+		void ResetPlayers();
 
 	//Tells the player controllers to posses a tank/turret.
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void SetupPlayerControllers(bool bOverride = false);
 
 	UFUNCTION()
@@ -67,7 +67,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetCanPlayersControlTanks(bool val) { bCanPlayersControlTanks = val; };
-
 	UFUNCTION(BlueprintCallable)
 		void SpawnPlayerTanks();
 	UFUNCTION(BlueprintCallable)

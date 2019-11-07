@@ -23,7 +23,7 @@ ATT_TankBaseController::ATT_TankBaseController()
 void ATT_TankBaseController::BeginPlay()
 {
 	Super::BeginPlay();
-	//gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 
 	//if (gameMode && gameMode->GetPlayerPositionFromCon(this) == 0)
 	//{
@@ -66,7 +66,7 @@ void ATT_TankBaseController::MoveForward(float val)
 {
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Forward %f"), val);
+		UE_LOG(LogTemp, Warning, TEXT("TANK FORWARD %f"), val);
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
@@ -88,7 +88,7 @@ void ATT_TankBaseController::Rotate(float val)
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		//rotatingBase = true;
-		//UE_LOG(LogTemp, Warning, TEXT("Turn %f"), val);
+		UE_LOG(LogTemp, Warning, TEXT("TANK TURN %f"), val);
 		const FRotator rotateDirection = (FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);
 	}
@@ -98,7 +98,7 @@ void ATT_TankBaseController::Rotate(float val)
 		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
 		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("ROTATE %f"), val);
+			UE_LOG(LogTemp, Warning, TEXT("TURRET ROTATE %f"), val);
 			const FRotator rotateDirection = (FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * val);
 			turretPawn->AddActorWorldRotation(rotateDirection);
 		}
@@ -123,7 +123,7 @@ void ATT_TankBaseController::FireShot(float val)
 				UWorld* const world = GetWorld();
 				if (world != NULL)
 				{
-					//UE_LOG(LogTemp, Warning, TEXT("FIRE!!!"));
+					UE_LOG(LogTemp, Warning, TEXT("TURRET FIRE"));
 					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
 					bullet->SetVelocity(fireRotation);
 
