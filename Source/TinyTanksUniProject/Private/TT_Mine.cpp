@@ -8,7 +8,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 #include "TT_TankBase.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Engine.h"
 
 // Sets default values
@@ -20,7 +19,7 @@ ATT_Mine::ATT_Mine()
 	RootComponent = BombMesh;
 
 	MyBombMesh = CreateDefaultSubobject<UBoxComponent>(TEXT("BombComponent"));
-	MyBombMesh->InitBoxExtent(FVector(50, 50, 50));
+	MyBombMesh->InitBoxExtent(FVector(60, 60, 60));
 	MyBombMesh->SetCollisionProfileName("Hit");
 	MyBombMesh->SetupAttachment(RootComponent);
 
