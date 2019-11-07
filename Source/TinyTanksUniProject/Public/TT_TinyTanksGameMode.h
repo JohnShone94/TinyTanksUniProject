@@ -36,6 +36,10 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		ATT_TankTurret* turretTwo;
 
+protected:
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		bool bCanPlayersControlTanks;
+
 
 public:
 	UFUNCTION()
@@ -49,6 +53,13 @@ public:
 
 	UFUNCTION()
 		void AddTankToGM(ATT_TankBase* tank);
+
+	UFUNCTION(BlueprintCallable)
+		bool GetCanPlayersControlTanks() { return bCanPlayersControlTanks; };
+
+	UFUNCTION(BlueprintCallable)
+		void SetCanPlayersControlTanks(bool val) { bCanPlayersControlTanks = val; };
+
 
 protected:
 	virtual void BeginPlay() override;

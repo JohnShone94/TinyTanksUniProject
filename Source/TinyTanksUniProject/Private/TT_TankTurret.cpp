@@ -32,7 +32,7 @@ ATT_TankTurret::ATT_TankTurret()
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
 
-	rotateSpeed = 1.25f;
+	rotateSpeed = 1.75f;
 	fireRate = 1.25f;
 }
 

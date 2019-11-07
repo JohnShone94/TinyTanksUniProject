@@ -35,7 +35,7 @@ ATT_TankBase::ATT_TankBase()
 
 	bIsDead = false;
 	bIsStunned = false;
-	maxHealthPoints = 3;
+	maxHealthPoints = 2;
 	currentHealthPoints = maxHealthPoints;
 }
 
