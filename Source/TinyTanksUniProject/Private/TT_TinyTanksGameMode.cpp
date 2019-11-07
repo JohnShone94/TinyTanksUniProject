@@ -6,6 +6,7 @@
 #include "TT_TankTurretController.h"
 #include "TT_TankBase.h"
 #include "TT_TankTurret.h"
+#include "TT_TankSpawnPoint.h"
 #include "EngineUtils.h"
 #include "ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
@@ -22,151 +23,250 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 void ATT_TinyTanksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	SpawnPlayerTanks();
+	SpawnPlayerControllers();
+	SetupPlayerControllers();
+}
 
-	if (!tankOne || !tankTwo)
+void ATT_TinyTanksGameMode::SpawnPlayerTanks()
+{
+	for (TActorIterator<ATT_TankSpawnPoint> actorItr(GetWorld()); actorItr; ++actorItr)
 	{
-		for (TActorIterator<ATT_TankBase> actorItr(GetWorld()); actorItr; ++actorItr)
+		ATT_TankSpawnPoint* actor = *actorItr;
+
+		if (actor)
 		{
-
-			ATT_TankBase *actor = *actorItr;
-
-			if (!tankOne)
+			UWorld* const world = GetWorld();
+			if (world != NULL)
 			{
-				tankOne = actor;
-				turretOne = Cast<ATT_TankTurret>(actor->GetTurretSlot()->GetChildActor());
-			}
-			else if (!tankTwo)
-			{
-				tankTwo = actor;
-				turretTwo = Cast<ATT_TankTurret>(actor->GetTurretSlot()->GetChildActor());
-			}
-			else
-				UE_LOG(LogTemp, Warning, TEXT("ALL TANK POSITIONS ARE NOW FULL"));
+				ATT_TankBase* tank = world->SpawnActor<ATT_TankBase>(actor->GetActorLocation(), actor->GetActorRotation());
+				if (tank)
+				{
+					tankArray.Add(tank);
+					UE_LOG(LogTemp, Warning, TEXT("GameMode(SpawnPlayerTanks): Successfully spawned a tank."));
 
-			if (tankOne)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 1: %s"), *tankOne->GetName());
 
-				if (turretOne)
-					UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 1: %s"), *turretOne->GetName());
-			}
-			if (tankTwo)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 2: %s"), *tankTwo->GetName());
-
-				if (turretTwo)
-					UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 2: %s"), *turretTwo->GetName());
+					ATT_TankTurret* turret = Cast<ATT_TankTurret>(tank->GetTurretSlot()->GetChildActor());
+					if (turret)
+					{
+						turretArray.Add(turret);
+						UE_LOG(LogTemp, Warning, TEXT("GameMode(SpawnPlayerTanks): Successfully grabbed the turret."));
+					}
+					else
+						UE_LOG(LogTemp, Error, TEXT("GameMode(SpawnPlayerTanks): Successfully spawned a tank but failed to grab the turret."));
+				}
+				else
+					UE_LOG(LogTemp, Error, TEXT("GameMode(SpawnPlayerTanks): Failed to spawn a tank."));
 			}
 		}
-	}
-
-	int max = 5;
-	for (int i = GetNumPlayers(); i < max; i++)
-	{
-		if (i == 0)
-		{
-			if (UGameplayStatics::CreatePlayer(GetWorld(), 0, true))
-			{}
-			else
-				continue;
-		}
-		else if (i == 1)
-		{
-			if (UGameplayStatics::CreatePlayer(GetWorld(), 1, true))
-			{}
-			else
-				continue;
-		}
-		else if (i == 2)
-		{
-			if (UGameplayStatics::CreatePlayer(GetWorld(), 2, true))
-			{}
-			else
-				continue;
-		}
-		else if (i == 3)
-		{
-			if (UGameplayStatics::CreatePlayer(GetWorld(), 3, true))
-			{}
-			else
-				continue;
-		}
-		else
-			break;
 	}
 }
+
+void ATT_TinyTanksGameMode::SpawnPlayerControllers()
+{
+	for (int i = GetNumPlayers(); i < ((tankArray.Num() * 2)); i++)
+	{
+		ATT_TankBaseController* playerCon = Cast<ATT_TankBaseController>(UGameplayStatics::CreatePlayer(GetWorld(), i, true));
+		if (playerCon)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("GameMode(SpawnPlayerControllers): Created a player controller, with Net ID: %d"), i);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("GameMode(SpawnPlayerControllers): Failed to create player controller with Net ID: %d"), i);
+			continue;
+		}
+	}
+}
+
 
 
 void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController* pController)
 {
 	switch (i)
 	{
-	case 1:
+	case 0:
 		playerMap.Add(1, pController);
-		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player One"), *pController->GetName());
 		pController->AutoReceiveInput = EAutoReceiveInput::Player0;
-		//pController->NetPlayerIndex = 0;
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player One"), *pController->GetName());
 
-		if (tankOne)
+		if (tankArray.Num() > 0)
 		{
-			pController->Possess(tankOne);
-			pController->SetTankPawn(tankOne);
+			pController->Possess(tankArray[0]);
+			pController->SetTankPawn(tankArray[0]);
 		}
 		else
-			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK ONE"));
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank one."));
+
+		break;
+
+	case 1:
+		playerMap.Add(2, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Two"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player1;
+
+		if (turretArray.Num() > 0)
+		{
+			pController->Possess(turretArray[0]);
+			pController->SetTurretPawn(turretArray[0]);
+		}
+		else
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank one's turret."));
 
 		break;
 
 	case 2:
-		playerMap.Add(2, pController);
-		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Two"), *pController->GetName());
-		pController->AutoReceiveInput = EAutoReceiveInput::Player1;
-		//pController->NetPlayerIndex = 1;
+		playerMap.Add(3, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Three"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player2;
 
-		if (turretOne)
+		if (tankArray.Num() > 1)
 		{
-			pController->Possess(turretOne);
-			pController->SetTurretPawn(turretOne);
+			pController->Possess(tankArray[1]);
+			pController->SetTankPawn(tankArray[1]);
 		}
 		else
-			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK ONE'S TURRET"));
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank two."));
 
 		break;
 
 	case 3:
-		playerMap.Add(3, pController);
-		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Three"), *pController->GetName());
-		pController->AutoReceiveInput = EAutoReceiveInput::Player2;
-		//pController->NetPlayerIndex = 2;
+		playerMap.Add(4, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Four"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player3;
 
-		if (tankTwo)
+		if (turretArray.Num() > 1)
 		{
-			pController->Possess(tankTwo);
-			pController->SetTankPawn(tankTwo);
+			pController->Possess(turretArray[1]);
+			pController->SetTurretPawn(turretArray[1]);
 		}
 		else
-			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK TWO"));
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank two's turret."));
 
 		break;
-
 	case 4:
-		playerMap.Add(4, pController);
-		UE_LOG(LogTemp, Warning, TEXT("Added %s to Player Four"), *pController->GetName());
-		pController->AutoReceiveInput = EAutoReceiveInput::Player3;
-		//pController->NetPlayerIndex = 3;
+		playerMap.Add(5, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Five"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player4;
 
-		if (turretTwo)
+		if (tankArray.Num() > 2)
 		{
-			pController->Possess(turretTwo);
-			pController->SetTurretPawn(turretTwo);
+			pController->Possess(tankArray[2]);
+			pController->SetTankPawn(tankArray[2]);
 		}
 		else
-			UE_LOG(LogTemp, Error, TEXT("FAILED TO POSSESS TANK TWO'S TURRET"));
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank three."));
+
+		break;
+	case 5:
+		playerMap.Add(6, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Six"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player5;
+
+		if (turretArray.Num() > 2)
+		{
+			pController->Possess(turretArray[2]);
+			pController->SetTurretPawn(turretArray[2]);
+		}
+		else
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank three's turret."));
+
+		break;
+	case 6:
+		playerMap.Add(7, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Seven"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player6;
+
+		if (tankArray.Num() > 3)
+		{
+			pController->Possess(tankArray[3]);
+			pController->SetTankPawn(tankArray[3]);
+		}
+		else
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank four."));
+
+		break;
+	case 7:
+		playerMap.Add(8, pController);
+		UE_LOG(LogTemp, Warning, TEXT("GameMode(AddPlayerConAtPosition): Added %s to Player Eight"), *pController->GetName());
+		pController->AutoReceiveInput = EAutoReceiveInput::Player7;
+
+		if (turretArray.Num() > 3)
+		{
+			pController->Possess(turretArray[3]);
+			pController->SetTurretPawn(turretArray[3]);
+		}
+		else
+			UE_LOG(LogTemp, Error, TEXT("GameMode(AddPlayerConAtPosition): Failed to possess tank four's turret."));
 
 		break;
 
 	default:
 		break;
+	}
+}
+
+void ATT_TinyTanksGameMode::ResetPlayers(bool bOverride)
+{
+	if (playerArray.Num() > 0)
+	{
+		for (int i = 0; i < playerArray.Num(); i++)
+		{
+			playerArray[i]->AutoReceiveInput = EAutoReceiveInput::Disabled;
+			playerArray[i]->UnPossess();
+			playerArray[i]->SetTankPawn(nullptr);
+			playerArray[i]->SetTurretPawn(nullptr);
+		}
+	}
+
+	if (tankArray.Num() > 0)
+	{
+		for (int i = 0; i < tankArray.Num(); i++)
+		{
+			tankArray[i]->Destroy();
+		}
+
+		tankArray.Empty();
+	}
+	else
+	{
+		for (TActorIterator<ATT_TankBase> actorItr(GetWorld()); actorItr; ++actorItr)
+		{
+			ATT_TankBase* actor = *actorItr;
+
+			if (actor)
+			{
+				actor->Destroy();
+			}
+		}
+		tankArray.Empty();
+	}
+	
+	if(tankArray.Num() > 0)
+		turretArray.Empty();
+
+}
+
+void ATT_TinyTanksGameMode::SetupPlayerControllers(bool bOverride)
+{
+	if (playerArray.Num() <= 0 || bOverride)
+	{
+		for (TActorIterator<ATT_TankBaseController> actorItr(GetWorld()); actorItr; ++actorItr)
+		{
+			ATT_TankBaseController* actor = *actorItr;
+			if (actor)
+			{
+				playerArray.Add(actor);
+			}
+		}
+	}
+
+	if (playerArray.Num() > 0)
+	{
+		for (int i = 0; i < playerArray.Num(); i++)
+		{
+			AddPlayerConAtPosition(i, playerArray[i]);
+		}
 	}
 }
 
@@ -188,31 +288,31 @@ int32 ATT_TinyTanksGameMode::GetPlayerPositionFromCon(ATT_TankBaseController* co
 
 void ATT_TinyTanksGameMode::AddTankToGM(ATT_TankBase * tank)
 {
-	if (!tankOne)
-	{		
-		tankOne = tank;
-		turretOne = Cast<ATT_TankTurret>(tank->GetTurretSlot()->GetChildActor());
-	}
-	else if (!tankTwo)
-	{
-		tankTwo = tank;
-		turretTwo = Cast<ATT_TankTurret>(tank->GetTurretSlot()->GetChildActor());
-	}
-	else
-		UE_LOG(LogTemp, Warning, TEXT("ALL TANK POSITIONS ARE NOW FULL"));
+	//if (!tankOne)
+	//{		
+	//	tankOne = tank;
+	//	turretOne = Cast<ATT_TankTurret>(tank->GetTurretSlot()->GetChildActor());
+	//}
+	//else if (!tankTwo)
+	//{
+	//	tankTwo = tank;
+	//	turretTwo = Cast<ATT_TankTurret>(tank->GetTurretSlot()->GetChildActor());
+	//}
+	//else
+	//	UE_LOG(LogTemp, Warning, TEXT("ALL TANK POSITIONS ARE NOW FULL"));
 
-	if (tankOne)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 1: %s"), *tankOne->GetName());
-		
-		if(turretOne)
-			UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 1: %s"), *turretOne->GetName());
-	}
-	if (tankTwo)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 2: %s"), *tankTwo->GetName());
-		
-		if(turretTwo)
-			UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 2: %s"), *turretTwo->GetName());
-	}
+	//if (tankOne)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 1: %s"), *tankOne->GetName());
+	//	
+	//	if(turretOne)
+	//		UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 1: %s"), *turretOne->GetName());
+	//}
+	//if (tankTwo)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("TANK POSITION 2: %s"), *tankTwo->GetName());
+	//	
+	//	if(turretTwo)
+	//		UE_LOG(LogTemp, Warning, TEXT("TURRET POSITION 2: %s"), *turretTwo->GetName());
+	//}
 }
