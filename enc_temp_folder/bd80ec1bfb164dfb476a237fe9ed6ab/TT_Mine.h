@@ -51,9 +51,6 @@ public:
 	 UPROPERTY(EditAnywhere)
 		UMaterial* FlashOff;
 
-	 UPROPERTY(EditAnywhere)
-		 UParticleSystem* Explosion;
-
 	 UPROPERTY()
 		UBoxComponent* MyBombMesh;
 

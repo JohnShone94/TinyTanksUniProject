@@ -8,7 +8,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 #include "TT_TankBase.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Engine.h"
 
 // Sets default values
@@ -24,7 +23,11 @@ ATT_Mine::ATT_Mine()
 	MyBombMesh->SetCollisionProfileName("Hit");
 	MyBombMesh->SetupAttachment(RootComponent);
 
+	//FlashOn = CreateAbstractDefaultSubobject<UMaterial>(TEXT("FlashOnMat"));
+	//FlashOff = CreateAbstractDefaultSubobject<UMaterial>(TEXT("FlashOffMat"));
+
 	BombMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
+	//BombMesh->bGenerateCollisionEvents = true;
 
 	Countdown = 0;
 	bFlashOn = true;	
@@ -34,6 +37,7 @@ ATT_Mine::ATT_Mine()
 void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -84,6 +88,5 @@ void ATT_Mine::ChangeBomb()
 		if (tank)
 			tank->StunTank();
 			Destroy();
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation());
 	}
 }
