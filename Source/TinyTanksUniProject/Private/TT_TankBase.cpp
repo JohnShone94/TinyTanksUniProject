@@ -4,6 +4,7 @@
 #include "TT_TankBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/CollisionProfile.h"
+#include "Engine.h"
 #include "TT_TankTurret.h"
 #include "TT_TinyTanksGameMode.h"
 #include "TT_BasicBullet.h"
@@ -22,6 +23,12 @@ ATT_TankBase::ATT_TankBase()
 	tankBaseMesh->SetEnableGravity(false);
 	RootComponent = tankBaseMesh;
 
+	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface59.Tank_1_polySurface59'")));
+	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
+	if (meshToUse)
+		tankBaseMesh->SetStaticMesh(meshToUse);
+	if (materialToUse)
+		tankBaseMesh->SetMaterial(0, materialToUse);
 
 	turretSlot = CreateDefaultSubobject<UChildActorComponent>(TEXT("Turret Slot"));
 	turretSlot->SetChildActorClass(ATT_TankTurret::StaticClass());
@@ -39,13 +46,25 @@ ATT_TankBase::ATT_TankBase()
 	currentHealthPoints = maxHealthPoints;
 }
 
+void ATT_TankBase::TankHasDied_Implementation()
+{
+}
+
+void ATT_TankBase::TankHasBeenDamaged_Implementation()
+{
+}
+
+void ATT_TankBase::TankHasFired_Implementation()
+{
+}
+
 // Called when the game starts or when spawned
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ATT_TinyTanksGameMode* gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
-	gameMode->AddTankToGM(this);
+	//ATT_TinyTanksGameMode* gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+	//gameMode->AddTankToGM(this);
 }
 
 // Called every frame
@@ -61,6 +80,7 @@ void ATT_TankBase::KillTank()
 	{
 		bIsDead = true;
 		currentHealthPoints = 0;
+		TankHasDied();
 	}
 }
 
@@ -75,16 +95,21 @@ void ATT_TankBase::DamageTank()
 	if (!bIsDead)
 	{
 		if (currentHealthPoints > 0)
+		{
+			TankHasBeenDamaged();
 			currentHealthPoints--;
+		}
 
 		if (currentHealthPoints <= 0)
 		{
 			bIsDead = true;
-			tankBaseMesh->SetVisibility(false);
+			TankHasDied();
+
+			tankBaseMesh->SetVisibility(true);
 
 			ATT_TankTurret* myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
 			if (myTurret)
-				myTurret->GetTankGunBase()->SetVisibility(false);
+				myTurret->GetTankGunBase()->SetVisibility(true);
 		}
 	}
 }
