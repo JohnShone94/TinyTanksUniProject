@@ -9,6 +9,7 @@
 class ATT_TankBaseController;
 class ATT_TankBase;
 class ATT_TankTurret;
+class ATT_MainCamera;
 
 /**
  * 
@@ -36,9 +37,15 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		ATT_TankBase* tanktospawn;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		ATT_MainCamera* mainCam;
+
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bCanPlayersControlTanks;
+
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		int32 playersLeft;
 
 
 public:
@@ -58,6 +65,13 @@ public:
 	
 	UFUNCTION()
 		int32 GetPlayerPositionFromCon(ATT_TankBaseController* con);
+
+	//called when a tank dies.
+	UFUNCTION()
+		void RemoveTank();
+
+	UFUNCTION()
+		int32 GetPlayersLeft() { return playersLeft; };
 
 	UFUNCTION()
 		void AddTankToGM(ATT_TankBase* tank);

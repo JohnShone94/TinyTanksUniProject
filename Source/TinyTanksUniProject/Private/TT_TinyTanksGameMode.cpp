@@ -10,6 +10,7 @@
 #include "EngineUtils.h"
 #include "ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "TT_MainCamera.h"
 
 ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 {
@@ -27,6 +28,12 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 void ATT_TinyTanksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (TActorIterator<ATT_MainCamera> actorItr(GetWorld()); actorItr; ++actorItr)
+	{
+		mainCam = *actorItr;
+	}
+
 	//SpawnPlayerTanks();
 	//SpawnPlayerControllers();
 	//SetupPlayerControllers();
@@ -34,6 +41,7 @@ void ATT_TinyTanksGameMode::BeginPlay()
 
 void ATT_TinyTanksGameMode::SpawnPlayerTanks()
 {
+	playersLeft = 0;
 	for (TActorIterator<ATT_TankSpawnPoint> actorItr(GetWorld()); actorItr; ++actorItr)
 	{
 		ATT_TankSpawnPoint* actor = *actorItr;
@@ -47,6 +55,8 @@ void ATT_TinyTanksGameMode::SpawnPlayerTanks()
 				if (tank)
 				{
 					tankArray.Add(tank);
+					playersLeft++;
+
 					UE_LOG(LogTemp, Warning, TEXT("GameMode(SpawnPlayerTanks): Successfully spawned a tank."));
 
 
@@ -288,6 +298,14 @@ int32 ATT_TinyTanksGameMode::GetPlayerPositionFromCon(ATT_TankBaseController* co
 		return *playerMap.FindKey(con);
 	else
 		return 0;
+}
+
+void ATT_TinyTanksGameMode::RemoveTank()
+{
+	playersLeft = (playersLeft - 1);
+
+	if (playersLeft <= 1)
+		mainCam->LastManIsStanding();
 }
 
 void ATT_TinyTanksGameMode::AddTankToGM(ATT_TankBase * tank)

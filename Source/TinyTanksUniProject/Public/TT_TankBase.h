@@ -74,7 +74,7 @@ public:
 		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
 
 	//Called when the tank dies.
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void KillTank();
 
 	//Called when the tank is stunned.
@@ -86,22 +86,22 @@ public:
 		void DamageTank();
 
 	//Called when another class needs to detect if the tank is dead.
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		bool GetIsDead() { return bIsDead; };
 
 	//Called when another class needs to detect if the tank is stunned.
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		bool GetIsStunned() { return bIsStunned; };
 
 	//Called when another class needs to get the max health points.
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		int32 GetMaxHealthPoints() { return maxHealthPoints; };
 
 	//Called when another class needs to get the current health points
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		int32 GetCurrentHealthPoints() { return currentHealthPoints; };
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent)
 		void TankHasDied();
 
 		virtual void TankHasDied_Implementation();
@@ -111,7 +111,7 @@ public:
 
 		virtual void TankHasBeenDamaged_Implementation();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent)
 		void TankHasFired();
 
 		virtual void TankHasFired_Implementation();
