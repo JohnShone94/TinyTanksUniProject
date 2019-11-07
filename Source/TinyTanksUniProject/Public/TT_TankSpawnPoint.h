@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "TT_TankSpawnPoint.generated.h"
+
+class ATT_TankBase;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankSpawnPoint : public AActor
@@ -14,6 +17,12 @@ class TINYTANKSUNIPROJECT_API ATT_TankSpawnPoint : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATT_TankSpawnPoint();
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_TankBase> tanktospawn;
+
+	UFUNCTION()
+		ATT_TankBase* SpawnTank();
 
 protected:
 	// Called when the game starts or when spawned
