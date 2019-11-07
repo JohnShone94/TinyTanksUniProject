@@ -25,6 +25,15 @@ public:
 		TMap<int32, ATT_TankBaseController*> playerMap;
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TArray<ATT_TankBase*> tankArray;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TArray<ATT_TankTurret*> turretArray;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TArray<ATT_TankBaseController*> playerArray;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		ATT_TankBase* tankOne;
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
@@ -45,6 +54,14 @@ public:
 	UFUNCTION()
 		void AddPlayerConAtPosition(int32 i, ATT_TankBaseController* pController);
 
+	//Resets the controllers possessions.
+	UFUNCTION()
+		void ResetPlayers(bool bOverride);
+
+	//Tells the player controllers to posses a tank/turret.
+	UFUNCTION()
+		void SetupPlayerControllers(bool bOverride = false);
+
 	UFUNCTION()
 		ATT_TankBaseController* GetPlayerConAtPosition(int32 i);
 	
@@ -59,6 +76,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetCanPlayersControlTanks(bool val) { bCanPlayersControlTanks = val; };
+
+	UFUNCTION(BlueprintCallable)
+		void SpawnPlayerTanks();
+	UFUNCTION(BlueprintCallable)
+		void SpawnPlayerControllers();
 
 
 protected:
