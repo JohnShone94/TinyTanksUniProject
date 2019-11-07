@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
+#include "TT_TankBase.h"
 #include "Engine.h"
 
 // Sets default values
@@ -18,17 +19,13 @@ ATT_Mine::ATT_Mine()
 	RootComponent = BombMesh;
 
 	MyBombMesh = CreateDefaultSubobject<UBoxComponent>(TEXT("BombComponent"));
-	MyBombMesh->InitBoxExtent(FVector(50, 50, 50));
+	MyBombMesh->InitBoxExtent(FVector(60, 60, 60));
 	MyBombMesh->SetCollisionProfileName("Hit");
 	MyBombMesh->SetupAttachment(RootComponent);
 
-	//FlashOn = CreateAbstractDefaultSubobject<UMaterial>(TEXT("FlashOnMat"));
-	//FlashOff = CreateAbstractDefaultSubobject<UMaterial>(TEXT("FlashOffMat"));
-
 	BombMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
-	//BombMesh->bGenerateCollisionEvents = true;
 
-//	int TimesFlashed = 4;
+	Countdown = 0;
 	bFlashOn = true;	
 	bCanFlash = true;
 }
@@ -36,30 +33,27 @@ ATT_Mine::ATT_Mine()
 void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//BombMesh->SetMaterial(0, FlashOff);
 }
 
 void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	float Countdown = 0.5f;	
-
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		if (bCanFlash)
+		tank = Cast<ATT_TankBase>(OtherActor);
+
+		if (tank && bCanFlash)
 		{
 			bCanFlash = false;
 
-			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 1.0f, true, 1.0f);
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Hello There!"));
+			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 1.0f);
+//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Mine Triggerd"));
 		}
+
 	}
 }
 
 void ATT_Mine::ChangeBomb()
 {
-//	int TimesFlashed = 420;
 	if (bFlashOn == true)
 	{
 		BombMesh->SetMaterial(0, FlashOn);
@@ -67,6 +61,8 @@ void ATT_Mine::ChangeBomb()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOff"));
 
 		bFlashOn = false;
+
+		Countdown++;
 	}
 	else
 	{
@@ -76,14 +72,15 @@ void ATT_Mine::ChangeBomb()
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOn"));
 
-//		int TimesFlashed;
-
-//		if (TimesFlashed>=4)
-//		{
-//
-//			Destroy();
-//		}
+		Countdown++;
 	}
 	bCanFlash = true;
 
+	if (Countdown >= 4)
+	{
+		if (tank)
+			tank->StunTank();
+			Destroy();
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation());
+	}
 }
