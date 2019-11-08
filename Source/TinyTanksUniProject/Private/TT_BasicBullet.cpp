@@ -43,13 +43,15 @@ ATT_BasicBullet::ATT_BasicBullet()
 	projectileMovement->Bounciness = 0.5f;
 	projectileMovement->Friction = -1.0f;
 	projectileMovement->ProjectileGravityScale = 0.0f;
-
+	
+	speedLoss = 1.0f;
 	InitialLifeSpan = 5.0f;
 
 	maxHitAmount = 3;
 }
 
-void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, 
+	const FHitResult& Hit, FVector HitLocation, FVector HitNormal)
 {
 	if (OtherActor)
 	{
@@ -66,6 +68,12 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 		}
 		else
 		{
+			FVector bounceBackVel = (-1 * FVector::DotProduct(projectileMovement->Velocity, HitNormal) * HitNormal + projectileMovement->Velocity) * speedLoss;
+			projectileMovement->Velocity = bounceBackVel;
+
+			bounceBackVel.Normalize();
+			SetActorRotation(bounceBackVel.Rotation());
+
 			hitAmount++;
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
 
