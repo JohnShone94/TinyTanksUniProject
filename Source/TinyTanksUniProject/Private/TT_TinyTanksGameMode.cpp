@@ -7,6 +7,7 @@
 #include "TT_TankBase.h"
 #include "TT_TankTurret.h"
 #include "TT_TankSpawnPoint.h"
+#include "TT_BasicBullet.h"
 #include "EngineUtils.h"
 #include "ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
@@ -19,10 +20,6 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 	bCanPlayersControlTanks = false;
 
 	PlayerControllerClass = ATT_TankBaseController::StaticClass();
-
-	//ConstructorHelpers::FObjectFinder <ATT_TankBase> tankToSpawnObj(TEXT("/Game/Blueprints/TT_TankBase_BP.TT_TankBase_BP"));
-
-	//tanktospawn = tankToSpawnObj.Object;
 }
 
 void ATT_TinyTanksGameMode::BeginPlay()
@@ -33,10 +30,6 @@ void ATT_TinyTanksGameMode::BeginPlay()
 	{
 		mainCam = *actorItr;
 	}
-
-	//SpawnPlayerTanks();
-	//SpawnPlayerControllers();
-	//SetupPlayerControllers();
 }
 
 void ATT_TinyTanksGameMode::SpawnPlayerTanks()
@@ -256,6 +249,16 @@ void ATT_TinyTanksGameMode::ResetPlayers()
 		}
 		tankArray.Empty();
 		turretArray.Empty();
+	}
+
+	for (TActorIterator<ATT_BasicBullet> actorItr(GetWorld()); actorItr; ++actorItr)
+	{
+		ATT_BasicBullet* actor = *actorItr;
+
+		if (actor)
+		{
+			actor->Destroy();
+		}
 	}
 }
 
