@@ -7,7 +7,6 @@
 #include "Components/SceneComponent.h"
 #include "TT_TankBase.h"
 #include "TT_TankTurret.h"
-#include "TT_DestructableWall.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine.h"
 
@@ -60,29 +59,21 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank)
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
 			tank->DamageTank();
+			Destroy();
+		}
+		else if (OtherActor->GetClass() == this->GetClass())
+		{
 			Destroy();
 		}
 		else
 		{
-			ATT_DestructableWall* dWall = Cast<ATT_DestructableWall>(OtherActor);
-			if (dWall)
-			{
-				Destroy();
-			}
-			else if (OtherActor->GetClass() == this->GetClass())
-			{
-				Destroy();
-			}
-			else
-			{
-				hitAmount++;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
+			hitAmount++;
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
 
-				if (hitAmount >= maxHitAmount)
-					Destroy();
-			}
+			if (hitAmount >= maxHitAmount)
+				Destroy();
 		}
 	}
 }
