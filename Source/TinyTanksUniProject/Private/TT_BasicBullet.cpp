@@ -89,7 +89,7 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 					else
 					{
 						hitAmount++;
-						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
+						//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
 
 						if (hitAmount >= maxHitAmount)
 							Destroy();
