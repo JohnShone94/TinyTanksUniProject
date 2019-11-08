@@ -46,7 +46,6 @@ protected:
 	//Handler for the timer.
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
-
 	///////////////////
 	//// FUNCTIONS ////
 	///////////////////
@@ -70,4 +69,5 @@ protected:
 	void FireShot(float val);
 
 	void ShotTimerExpired();
+
 };

@@ -241,6 +241,7 @@ void ATT_TinyTanksGameMode::ResetPlayers()
 		}
 
 		tankArray.Empty();
+		turretArray.Empty();
 	}
 	else
 	{
@@ -254,17 +255,15 @@ void ATT_TinyTanksGameMode::ResetPlayers()
 			}
 		}
 		tankArray.Empty();
-	}
-	
-	if(tankArray.Num() > 0)
 		turretArray.Empty();
-
+	}
 }
 
 void ATT_TinyTanksGameMode::SetupPlayerControllers(bool bOverride)
 {
 	if (playerArray.Num() <= 0 || bOverride)
 	{
+		playerArray.Empty();
 		for (TActorIterator<ATT_TankBaseController> actorItr(GetWorld()); actorItr; ++actorItr)
 		{
 			ATT_TankBaseController* actor = *actorItr;

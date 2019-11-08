@@ -40,7 +40,7 @@ void ATT_Boost::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Boost Pickup"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Boost Pickup"));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUp, GetActorLocation());
 
 		//Tank speed up

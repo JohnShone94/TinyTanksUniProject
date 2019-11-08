@@ -44,18 +44,8 @@ ATT_TankBase::ATT_TankBase()
 	bIsStunned = false;
 	maxHealthPoints = 2;
 	currentHealthPoints = maxHealthPoints;
-}
 
-void ATT_TankBase::TankHasDied_Implementation()
-{
-}
-
-void ATT_TankBase::TankHasBeenDamaged_Implementation()
-{
-}
-
-void ATT_TankBase::TankHasFired_Implementation()
-{
+	stunTimer = 2.0f;
 }
 
 // Called when the game starts or when spawned
@@ -63,7 +53,7 @@ void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//ATT_TinyTanksGameMode* gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 	//gameMode->AddTankToGM(this);
 }
 
@@ -80,6 +70,7 @@ void ATT_TankBase::KillTank()
 	{
 		bIsDead = true;
 		currentHealthPoints = 0;
+		gameMode->RemoveTank();
 		TankHasDied();
 	}
 }
@@ -88,6 +79,13 @@ void ATT_TankBase::StunTank()
 {
 	if (!bIsStunned)
 		bIsStunned = true;
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_StunTimerExpired, this, &ATT_TankBase::StunTimerExpired, stunTimer);
+}
+
+void ATT_TankBase::StunTimerExpired()
+{
+	bIsStunned = false;
 }
 
 void ATT_TankBase::DamageTank()
@@ -103,6 +101,7 @@ void ATT_TankBase::DamageTank()
 		if (currentHealthPoints <= 0)
 		{
 			bIsDead = true;
+			gameMode->RemoveTank();
 			TankHasDied();
 
 			tankBaseMesh->SetVisibility(true);
@@ -112,5 +111,17 @@ void ATT_TankBase::DamageTank()
 				myTurret->GetTankGunBase()->SetVisibility(true);
 		}
 	}
+}
+
+void ATT_TankBase::TankHasDied_Implementation()
+{
+}
+
+void ATT_TankBase::TankHasBeenDamaged_Implementation()
+{
+}
+
+void ATT_TankBase::TankHasFired_Implementation()
+{
 }
 

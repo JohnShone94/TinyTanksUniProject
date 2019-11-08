@@ -16,14 +16,17 @@ ATT_BasicBullet::ATT_BasicBullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bulletMesh = CreateDefaultSubobject<UStaticMeshComponent>("Bullet Mesh");
+
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Bullet_Low.Bullet_Low'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
 
-	bulletMesh = CreateDefaultSubobject<UStaticMeshComponent>("Bullet Mesh");
 	if(meshToUse)
 		bulletMesh->SetStaticMesh(meshToUse);
+
 	if (materialToUse)
 		bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
+
 	bulletMesh->BodyInstance.SetCollisionProfileName("BlockAll");
 	bulletMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
 	bulletMesh->SetNotifyRigidBodyCollision(true);

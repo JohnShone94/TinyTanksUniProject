@@ -15,24 +15,34 @@ ATT_Mine::ATT_Mine()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	BombMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BombMesh"));
-	RootComponent = BombMesh;
+	mineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mine Mesh"));
+	mineMesh->BodyInstance.SetCollisionProfileName("OverlapAll");
+	mineMesh->SetSimulatePhysics(false);
+	mineMesh->SetEnableGravity(false);
+	RootComponent = mineMesh;
 
-	MyBombMesh = CreateDefaultSubobject<UBoxComponent>(TEXT("BombComponent"));
-	MyBombMesh->InitBoxExtent(FVector(60, 60, 60));
-	MyBombMesh->SetCollisionProfileName("Hit");
-	MyBombMesh->SetupAttachment(RootComponent);
+	mineMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnMineOverlapBegin);
 
-	BombMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
+	mineOverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Mine Overlap Component"));
+	mineOverlapSphere->BodyInstance.SetCollisionProfileName("OverlapAll");
+	mineOverlapSphere->SetSimulatePhysics(false);
+	mineOverlapSphere->SetEnableGravity(false);
+	mineOverlapSphere->SetupAttachment(RootComponent);
 
-	Countdown = 0;
+	mineOverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
+	mineOverlapSphere->OnComponentEndOverlap.AddDynamic(this, &ATT_Mine::OnOverlapEnd);
+
+	countdown = 0;
 	bFlashOn = true;	
 	bCanFlash = true;
+	bIsActivated = false;
 }
 
 void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
+
+	mineMesh->SetVisibility(false);
 }
 
 void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -40,47 +50,65 @@ void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class A
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		tank = Cast<ATT_TankBase>(OtherActor);
-
-		if (tank && bCanFlash)
-		{
-			bCanFlash = false;
-
-			GetWorld()->GetTimerManager().SetTimer(BombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 1.0f);
-//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Mine Triggerd"));
-		}
-
 	}
+}
+
+void ATT_Mine::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		ATT_TankBase* leavingTank = Cast<ATT_TankBase>(OtherActor);
+		if (leavingTank)
+		{
+			tank = nullptr;
+		}
+	}
+}
+
+void ATT_Mine::OnMineOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		if(tank && bCanFlash)
+		{
+			mineMesh->SetVisibility(true);
+			bCanFlash = false;
+			GetWorld()->GetTimerManager().SetTimer(bombCountdown, this, &ATT_Mine::ChangeBomb, 0.5f, true, 1.0f);
+		}
+	}
+
 }
 
 void ATT_Mine::ChangeBomb()
 {
 	if (bFlashOn == true)
 	{
-		BombMesh->SetMaterial(0, FlashOn);
+		mineMesh->SetMaterial(0, flashOn);
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOff"));
 
 		bFlashOn = false;
 
-		Countdown++;
+		countdown++;
 	}
 	else
 	{
-		BombMesh->SetMaterial(0, FlashOff);
+		mineMesh->SetMaterial(0, flashOff);
 
 		bFlashOn = true;
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("FlashOn"));
 
-		Countdown++;
+		countdown++;
 	}
 	bCanFlash = true;
 
-	if (Countdown >= 4)
+	if (countdown >= 4)
 	{
 		if (tank)
 			tank->StunTank();
-			Destroy();
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation());
+
+		Destroy();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation());
 	}
 }

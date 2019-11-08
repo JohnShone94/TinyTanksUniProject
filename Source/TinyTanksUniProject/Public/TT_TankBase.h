@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class ATT_BasicBullet;
+class ATT_TinyTanksGameMode;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
@@ -55,6 +56,14 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bIsStunned;
 
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
+		ATT_TinyTanksGameMode* gameMode;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float stunTimer;
+
+
+	FTimerHandle TimerHandle_StunTimerExpired;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -120,4 +129,5 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void StunTimerExpired();
 };
