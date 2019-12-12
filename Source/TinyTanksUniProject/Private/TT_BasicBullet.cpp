@@ -7,8 +7,6 @@
 #include "Components/SceneComponent.h"
 #include "TT_TankBase.h"
 #include "TT_TankTurret.h"
-#include "TT_DestructableWall.h"
-#include "TT_FallingRock.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine.h"
 
@@ -18,17 +16,14 @@ ATT_BasicBullet::ATT_BasicBullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	bulletMesh = CreateDefaultSubobject<UStaticMeshComponent>("Bullet Mesh");
-
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Bullet_Low.Bullet_Low'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
 
+	bulletMesh = CreateDefaultSubobject<UStaticMeshComponent>("Bullet Mesh");
 	if(meshToUse)
 		bulletMesh->SetStaticMesh(meshToUse);
-
 	if (materialToUse)
 		bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
-
 	bulletMesh->BodyInstance.SetCollisionProfileName("BlockAll");
 	bulletMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
 	bulletMesh->SetNotifyRigidBodyCollision(true);
@@ -48,54 +43,42 @@ ATT_BasicBullet::ATT_BasicBullet()
 	projectileMovement->Bounciness = 0.5f;
 	projectileMovement->Friction = -1.0f;
 	projectileMovement->ProjectileGravityScale = 0.0f;
-
+	
+	speedLoss = 1.0f;
 	InitialLifeSpan = 5.0f;
 
 	maxHitAmount = 3;
 }
 
-void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, 
+	const FHitResult& Hit, FVector HitLocation, FVector HitNormal)
 {
 	if (OtherActor)
 	{
-		if (OtherActor->GetClass() == this->GetClass())
+		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
+		if (tank)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
+			tank->DamageTank();
+			Destroy();
+		}
+		else if (OtherActor->GetClass() == this->GetClass())
 		{
 			Destroy();
 		}
 		else
 		{
-			ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
-			if (tank)
-			{
-				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
-				tank->DamageTank();
-				Destroy();
-			}
-			else
-			{
-				ATT_DestructableWall* dWall = Cast<ATT_DestructableWall>(OtherActor);
-				if (dWall)
-				{
-					Destroy();
-				}
-				else
-				{
-					ATT_FallingRock* fallingRock = Cast<ATT_FallingRock>(OtherActor);
-					if (fallingRock)
-					{
-						fallingRock->Destroy();
-						Destroy();
-					}
-					else
-					{
-						hitAmount++;
-						//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
+			FVector bounceBackVel = (-1 * FVector::DotProduct(projectileMovement->Velocity, HitNormal) * HitNormal + projectileMovement->Velocity) * speedLoss;
+			projectileMovement->Velocity = bounceBackVel;
 
-						if (hitAmount >= maxHitAmount)
-							Destroy();
-					}
-				}
-			}
+			bounceBackVel.Normalize();
+			SetActorRotation(bounceBackVel.Rotation());
+
+			hitAmount++;
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
+
+			if (hitAmount >= maxHitAmount)
+				Destroy();
 		}
 	}
 }
