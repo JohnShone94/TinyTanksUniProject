@@ -52,6 +52,10 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bIsDead;
 
+	//Set to true when the tank is dead.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bCanRockDestroy;
+
 	//Set to true when the tank is stunned.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bIsStunned;
@@ -94,9 +98,15 @@ public:
 	UFUNCTION()
 		void DamageTank();
 
+	UFUNCTION(BlueprintCallable)
+		void SetCanRockDestroy(bool val = true) { bCanRockDestroy = val; };
+
 	//Called when another class needs to detect if the tank is dead.
 	UFUNCTION(BlueprintCallable)
 		bool GetIsDead() { return bIsDead; };
+
+	UFUNCTION(BlueprintCallable)
+		bool GetCanRockDestroy() { return bCanRockDestroy; };
 
 	//Called when another class needs to detect if the tank is stunned.
 	UFUNCTION(BlueprintCallable)
