@@ -50,8 +50,7 @@ ATT_BasicBullet::ATT_BasicBullet()
 	maxHitAmount = 3;
 }
 
-void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, 
-	const FHitResult& Hit, FVector HitLocation, FVector HitNormal)
+void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector HitNormal, const FHitResult& Hit)
 {
 	if (OtherActor)
 	{
