@@ -15,15 +15,17 @@ UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_PulseMine : public AActor
 {
 	GENERATED_BODY()
-		
+
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
 public:	
-	// Sets default values for this actor's properties
 	ATT_PulseMine();
 
 protected:
-	// Called when the game starts or when spawned
-		virtual void BeginPlay();
+	virtual void BeginPlay();
+
 private:
 	bool GetGenerateOverlapEvents() const;
-	   
 };

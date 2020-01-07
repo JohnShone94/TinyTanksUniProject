@@ -8,11 +8,8 @@
 #include "TT_BasicBullet.h"
 #include "Engine.h"
 
-
-// Sets default values
 ATT_TankTurret::ATT_TankTurret()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	tankGunBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Gun Base"));
@@ -36,7 +33,6 @@ ATT_TankTurret::ATT_TankTurret()
 	fireRate = 1.25f;
 }
 
-// Called when the game starts or when spawned
 void ATT_TankTurret::BeginPlay()
 {
 	Super::BeginPlay();

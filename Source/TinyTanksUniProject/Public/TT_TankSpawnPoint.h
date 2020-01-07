@@ -13,23 +13,27 @@ UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankSpawnPoint : public AActor
 {
 	GENERATED_BODY()
-	
+
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
+
 public:	
-	// Sets default values for this actor's properties
-	ATT_TankSpawnPoint();
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TankBase> tanktospawn;
+
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
+public:	
+	ATT_TankSpawnPoint();
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 		ATT_TankBase* SpawnTank();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 };

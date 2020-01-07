@@ -9,10 +9,8 @@
 #include "TT_TinyTanksGameMode.h"
 #include "TT_BasicBullet.h"
 
-// Sets default values
 ATT_TankBase::ATT_TankBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	tankBaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
@@ -48,20 +46,15 @@ ATT_TankBase::ATT_TankBase()
 	stunTimer = 2.0f;
 }
 
-// Called when the game starts or when spawned
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
-
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
-	//gameMode->AddTankToGM(this);
 }
 
-// Called every frame
 void ATT_TankBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ATT_TankBase::KillTank()

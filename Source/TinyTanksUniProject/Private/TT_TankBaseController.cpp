@@ -24,18 +24,6 @@ void ATT_TankBaseController::BeginPlay()
 {
 	Super::BeginPlay();
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
-
-	//if (gameMode && gameMode->GetPlayerPositionFromCon(this) == 0)
-	//{
-	//	for (int i = 1; i < 5; i++)
-	//	{
-	//		if (!gameMode->GetPlayerConAtPosition(i))
-	//		{
-	//			gameMode->AddPlayerConAtPosition(i, this);
-	//			break;
-	//		}
-	//	}
-	//}
 }
 
 void ATT_TankBaseController::SetupInputComponent()
@@ -87,7 +75,6 @@ void ATT_TankBaseController::Rotate(float val)
 
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
-		//rotatingBase = true;
 		//UE_LOG(LogTemp, Warning, TEXT("TANK TURN %f"), val);
 		const FRotator rotateDirection = (FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);

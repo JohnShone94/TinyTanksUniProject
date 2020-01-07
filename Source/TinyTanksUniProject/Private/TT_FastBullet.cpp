@@ -13,15 +13,15 @@ ATT_FastBullet::ATT_FastBullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	FastBullet = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FastBullet"));
-	RootComponent = FastBullet;
+	fastBulletStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FastBullet"));
+	RootComponent = fastBulletStaticMesh;
 
-	MyFastBullet = CreateDefaultSubobject<UBoxComponent>(TEXT("FastBulletComp"));
-	MyFastBullet->InitBoxExtent(FVector(60, 60, 60));
-	MyFastBullet->SetCollisionProfileName("Hit");
-	MyFastBullet->SetupAttachment(RootComponent);
+	fastBulletCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("FastBulletComp"));
+	fastBulletCollision->InitBoxExtent(FVector(60, 60, 60));
+	fastBulletCollision->SetCollisionProfileName("Hit");
+	fastBulletCollision->SetupAttachment(RootComponent);
 
-	FastBullet->OnComponentBeginOverlap.AddDynamic(this, &ATT_FastBullet::OnOverlapBegin);
+	fastBulletStaticMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_FastBullet::OnOverlapBegin);
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +40,7 @@ void ATT_FastBullet::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUp, GetActorLocation());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fastBulletParticleSystem, GetActorLocation());
 //		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Fast Bullet Pickup"));
 		//SPeed bullet float up by set amout for 1 bullet
 		Destroy();

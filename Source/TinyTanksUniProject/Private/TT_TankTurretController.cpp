@@ -27,7 +27,6 @@ void ATT_TankTurretController::BeginPlay()
 	{
 		for (TActorIterator<ATT_TankTurret> actorItr(GetWorld()); actorItr; ++actorItr)
 		{
-			// Same as with the Object Iterator, access the subclass instance with the * or -> operators.
 			ATT_TankTurret *actor = *actorItr;
 
 			UE_LOG(LogTemp, Warning, TEXT("Found. %s"), *actor->GetName());

@@ -14,13 +14,19 @@ class TINYTANKSUNIPROJECT_API ATT_MainCamera : public ACameraActor
 {
 	GENERATED_BODY()
 
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
+
 public:
-
-	ATT_MainCamera();
-
 	UFUNCTION(BlueprintNativeEvent)
 		void LastManIsStanding();
 
-		virtual void LastManIsStanding_Implementation();
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
+	ATT_MainCamera();
+	virtual void LastManIsStanding_Implementation();
 	
 };

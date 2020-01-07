@@ -28,9 +28,9 @@ protected:
 	UPROPERTY()
 		ATT_TankTurret* controlledPawn;
 
-	/* Flag to control firing  */
+	//Flag to control firing 
 	uint32 bCanFire : 1;
-	/** Handle for efficient management of ShotTimerExpired timer */
+	//Handle for efficient management of ShotTimerExpired timer
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
 	///////////////////

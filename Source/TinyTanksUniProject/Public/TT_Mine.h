@@ -17,10 +17,12 @@ UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_Mine : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	ATT_Mine();
 
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
+
+public:	
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* mineMesh;
 
@@ -54,6 +56,13 @@ protected:
 
 	FTimerHandle bombCountdown;
 
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
+public:
+	ATT_Mine();
+
 protected:
 
 	virtual void BeginPlay();
@@ -62,12 +71,12 @@ protected:
 		void ChangeBomb();
 
 	 UFUNCTION()
-		 void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	 UFUNCTION()
-		 void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+		void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	 UFUNCTION()
-		 void OnMineOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnMineOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 };

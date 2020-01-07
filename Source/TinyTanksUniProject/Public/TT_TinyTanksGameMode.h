@@ -19,7 +19,9 @@ class TINYTANKSUNIPROJECT_API ATT_TinyTanksGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
-		ATT_TinyTanksGameMode();
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
 
 public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
@@ -47,8 +49,13 @@ protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		int32 playersLeft;
 
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
 
 public:
+	ATT_TinyTanksGameMode();
+
 	UFUNCTION()
 		void AddPlayerConAtPosition(int32 i, ATT_TankBaseController* pController);
 

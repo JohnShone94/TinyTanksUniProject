@@ -16,28 +16,31 @@ class TINYTANKSUNIPROJECT_API ATT_FastBullet : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	ATT_FastBullet();
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
 
+public:	
 	UPROPERTY(VisibleAnywhere)
-		UStaticMeshComponent* FastBullet;
+		UStaticMeshComponent* fastBulletStaticMesh;
 
 	UPROPERTY(EditAnywhere)
-		UParticleSystem* PickUp;
+		UParticleSystem* fastBulletParticleSystem;
 
 	UPROPERTY()
-		UBoxComponent* MyFastBullet;
+		UBoxComponent* fastBulletCollision;
 
 	UFUNCTION()
-		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
-		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
+public:
+	ATT_FastBullet();
+	virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };

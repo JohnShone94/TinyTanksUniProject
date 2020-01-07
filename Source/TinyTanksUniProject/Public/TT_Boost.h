@@ -14,29 +14,30 @@ UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_Boost : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+	///////////////////
+	//// VARIABLES ////
+	///////////////////
+
+protected:	
+	UPROPERTY()
+		UBoxComponent* boostCollision;
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* boostStaticMesh;
+	UPROPERTY(EditAnywhere)
+		UParticleSystem* boostParticleSystem;
+
+	///////////////////
+	//// FUNCTIONS ////
+	///////////////////
+
+public:
 	ATT_Boost();
+	virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
-		UBoxComponent* MyBoost;
-
-	UPROPERTY(VisibleAnywhere)
-		UStaticMeshComponent* BoostPU;
-
-	UPROPERTY(EditAnywhere)
-		UParticleSystem* PickUp;
-
 	UFUNCTION()
-		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
-		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
