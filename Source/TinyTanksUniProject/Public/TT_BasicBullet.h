@@ -53,8 +53,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	float speedMiltiplier;
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-		EBulletType BulletType;
+//		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+//		EBulletType BulletType;
 
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* explosion;

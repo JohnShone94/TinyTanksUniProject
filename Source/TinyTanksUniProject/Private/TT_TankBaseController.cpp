@@ -110,12 +110,12 @@ void ATT_TankBaseController::FireShot(float val)
 				UWorld* const world = GetWorld();
 				if (world != NULL)
 				{
-					if (BulletType = EBulletType::e_basicBullet)
-					{
+					//if (BulletSet == EBulletType::e_basicBullet)
+					//{
 						//UE_LOG(LogTemp, Warning, TEXT("TURRET FIRE"));
 						ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
 						bullet->SetVelocity(fireRotation);
-					}
+					//}
 
 					turretParent->TankHasFired();
 				}
