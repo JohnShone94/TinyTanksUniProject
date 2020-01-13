@@ -103,6 +103,8 @@ void ATT_BasicBullet::SetVelocity(FRotator fireRotation)
 	EBulletType Basic = EBulletType::e_basicBullet;
 	EBulletType Fast = EBulletType::e_fastBullet;
 	EBulletType Missile = EBulletType::e_Missile;
+	EBulletType Wall = EBulletType::e_WallShot;
+	EBulletType Underground = EBulletType::e_UndergroundBullet;
 
 	if (Basic == EBulletType::e_basicBullet)
 	{
@@ -111,6 +113,14 @@ void ATT_BasicBullet::SetVelocity(FRotator fireRotation)
 	else if (Fast == EBulletType::e_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+	}
+	else if (Wall == EBulletType::e_WallShot)
+	{
+
+	}
+	else if (Underground == EBulletType::e_UndergroundBullet)
+	{
+
 	}
 	else if (Missile == EBulletType::e_Missile)
 	{

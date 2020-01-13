@@ -58,7 +58,18 @@ public:
 	UFUNCTION()
 		void SetTurretPawn(ATT_TankTurret* turret) { turretPawn = turret; };
 
+	UFUNCTION()
+		void PickupMissile();
+	UFUNCTION()
+		void PickupFast();
+
 protected:
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bHasFast;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bHasMissile;
 
 	virtual void BeginPlay() override;
 

@@ -18,6 +18,7 @@ ATT_TankBaseController::ATT_TankBaseController()
 {
 	bCanFire = true;
 	rotatingBase = false;
+
 }
 
 void ATT_TankBaseController::BeginPlay()
@@ -41,6 +42,24 @@ void ATT_TankBaseController::SetupInputComponent()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("TankBaseController(SetupInputComponent): Failed to setup Input Component."));
+	}
+}
+
+void ATT_TankBaseController::PickupMissile()
+{
+	if (bHasMissile == false)
+	{
+		bHasMissile = true;
+		bHasFast = false;
+	}
+}
+
+void ATT_TankBaseController::PickupFast()
+{
+	if (bHasFast == false)
+	{
+		bHasFast = true;
+		bHasMissile = false;
 	}
 }
 
@@ -110,12 +129,30 @@ void ATT_TankBaseController::FireShot(float val)
 				UWorld* const world = GetWorld();
 				if (world != NULL)
 				{
-					//if (BulletSet == EBulletType::e_basicBullet)
-					//{
-						//UE_LOG(LogTemp, Warning, TEXT("TURRET FIRE"));
+					if (bHasFast == true)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("FAST BULLET"));
 						ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
 						bullet->SetVelocity(fireRotation);
-					//}
+
+						bHasFast = false;
+
+					}
+					else if (bHasMissile == true)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("MISSILE FIRE"));
+						ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
+						bullet->SetVelocity(fireRotation);
+
+						bHasMissile = false;
+						EBulletType = EBulletType::e_Missile;
+					}
+					else
+					{
+						//UE_LOG(LogTemp, Warning, TEXT("FAST BULLET"));
+						ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
+						bullet->SetVelocity(fireRotation);
+					}
 
 					turretParent->TankHasFired();
 				}

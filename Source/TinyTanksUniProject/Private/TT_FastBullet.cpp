@@ -2,6 +2,7 @@
 
 
 #include "TT_FastBullet.h"
+#include "TT_TankBaseController.h"
 #include "Components/PrimitiveComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
@@ -42,7 +43,8 @@ void ATT_FastBullet::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fastBulletParticleSystem, GetActorLocation());
 //		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Fast Bullet Pickup"));
-		//SPeed bullet float up by set amout for 1 bullet
+		
+		
 		Destroy();
 
 	}

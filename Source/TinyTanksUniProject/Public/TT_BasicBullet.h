@@ -14,7 +14,9 @@ enum class EBulletType
 {
 	e_basicBullet	UMETA(DiaplayName = "Basic Bullet"),
 	e_fastBullet	UMETA(DisplayName = "Fast Bullet"),
-	e_Missile	    UMETA(DisplayName = "Misslie")
+	e_Missile	    UMETA(DisplayName = "Misslie"),
+	e_UndergroundBullet UMETA(DisplayName = "Underground Shot"),
+	e_WallShot		UMETA(DisplayName = "Through Wall")
 };
 
 
