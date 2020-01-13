@@ -47,6 +47,7 @@ ATT_BasicBullet::ATT_BasicBullet()
 	speedLoss = 1.0f;
 	InitialLifeSpan = 5.0f;
 
+
 	maxHitAmount = 3;
 }
 
@@ -98,7 +99,36 @@ void ATT_BasicBullet::Tick(float DeltaTime)
 
 void ATT_BasicBullet::SetVelocity(FRotator fireRotation)
 {
-	projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+	if (e_basicBullet)
+	{
+		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+		if (e_fastBullet)
+		{
+			projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+			if (e_Missile)
+			{
+				projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+
+				UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
+				UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Big_Missile_Mat.Big_Missile_Mat'")));					
+
+				missileMesh = CreateDefaultSubobject<UStaticMeshComponent>("Missile Mesh");
+				if (meshToUse)
+					missileMesh->SetStaticMesh(meshToUse);
+				if (materialToUse)
+					missileMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
+				missileMesh->BodyInstance.SetCollisionProfileName("BlockAll");
+				missileMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
+				missileMesh->SetNotifyRigidBodyCollision(true);
+				missileMesh->SetSimulatePhysics(false);
+				missileMesh->SetEnableGravity(false);
+				RootComponent = missileMesh;
+
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation()); //will stay at launch location
+
+			}
+		}
+	}
 }
 
 

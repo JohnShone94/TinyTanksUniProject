@@ -10,6 +10,15 @@ class UStaticMeshComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
 
+UENUM()
+enum EBulletType
+{
+	e_basicBullet	UMETA(DiaplayName = "Basic Bullet"),
+	e_fastBullet	UMETA(DisplayName = "Fast Bullet"),
+	e_Missile	    UMETA(DisplayName = "Misslie"),
+};
+
+
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
 {
@@ -24,6 +33,8 @@ protected:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* bulletMesh;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* missileMesh;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		int32 hitAmount;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -40,6 +51,13 @@ protected:
 public:
 	ATT_BasicBullet();
 	virtual void Tick(float DeltaTime) override;
+	float speedMiltiplier;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		EBulletType BulletType;
+
+	UPROPERTY(EditAnywhere)
+		UParticleSystem* explosion;
 
 	UFUNCTION()
 		void SetVelocity(FRotator fireRotation);
