@@ -98,14 +98,21 @@ void ATT_BasicBullet::Tick(float DeltaTime)
 
 }
 
-void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation)
+void ATT_BasicBullet::SetVelocity(FRotator fireRotation)
 {
-	
-	if (bulletType == EPowerupType::PT_fastBullet)
+	EBulletType Basic = EBulletType::e_basicBullet;
+	EBulletType Fast = EBulletType::e_fastBullet;
+	EBulletType Missile = EBulletType::e_Missile;
+
+	if (Basic == EBulletType::e_basicBullet)
+	{
+		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+	}
+	else if (Fast == EBulletType::e_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
 	}
-	else if (bulletType == EPowerupType::PT_missile)
+	else if (Missile == EBulletType::e_Missile)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
 
@@ -125,10 +132,6 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 		RootComponent = missileMesh;
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation()); //will stay at launch location
-	}
-	else
-	{
-		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
 	}
 }
 

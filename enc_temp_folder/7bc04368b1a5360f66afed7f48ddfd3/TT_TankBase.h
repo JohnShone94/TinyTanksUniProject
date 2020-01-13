@@ -10,15 +10,6 @@ class UStaticMeshComponent;
 class ATT_BasicBullet;
 class ATT_TinyTanksGameMode;
 
-
-enum class EPowerupType
-{
-	PT_none		UMETA(DiaplayName = "None"),
-	PT_fastBullet		UMETA(DisplayName = "Fast Bullet"),
-	PT_missile			UMETA(DisplayName = "Misslie"),
-	PT_speedBoost		UMETA(DisplayName = "Speed Boost")
-};
-
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
 {
@@ -40,9 +31,6 @@ public:
 	//The speed of a tank when moving forward.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float moveSpeed;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType currentPowerup;
 
 protected:
 
@@ -112,12 +100,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetCanRockDestroy(bool val = true) { bCanRockDestroy = val; };
-
-	UFUNCTION(BlueprintCallable)
-		void SetCurrentPowerup(EPowerupType powerup = EPowerupType::PT_none) { currentPowerup = powerup; };
-
-	UFUNCTION(BlueprintCallable)
-		EPowerupType GetCurrentPowerup() { return currentPowerup; };
 
 	//Called when another class needs to detect if the tank is dead.
 	UFUNCTION(BlueprintCallable)

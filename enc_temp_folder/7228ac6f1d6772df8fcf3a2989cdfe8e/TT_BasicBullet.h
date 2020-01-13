@@ -9,7 +9,14 @@
 class UStaticMeshComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
-class ATT_TankBase;
+
+enum class EBulletType 
+{
+	e_basicBullet	UMETA(DiaplayName = "Basic Bullet"),
+	e_fastBullet	UMETA(DisplayName = "Fast Bullet"),
+	e_Missile	    UMETA(DisplayName = "Misslie")
+};
+
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
@@ -52,7 +59,7 @@ public:
 		UParticleSystem* explosion;
 
 	UFUNCTION()
-		void SetupBullet(EPowerupType bulletType, FRotator fireRotation);
+		void SetVelocity(FRotator fireRotation);
 
 protected:
 	virtual void BeginPlay() override;
