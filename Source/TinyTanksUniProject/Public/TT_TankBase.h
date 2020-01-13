@@ -10,7 +10,7 @@ class UStaticMeshComponent;
 class ATT_BasicBullet;
 class ATT_TinyTanksGameMode;
 
-
+UENUM()
 enum class EPowerupType
 {
 	PT_none		UMETA(DiaplayName = "None"),
@@ -113,10 +113,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetCanRockDestroy(bool val = true) { bCanRockDestroy = val; };
 
-	UFUNCTION(BlueprintCallable)
-		void SetCurrentPowerup(EPowerupType powerup = EPowerupType::PT_none) { currentPowerup = powerup; };
+	UFUNCTION()
+		void SetCurrentPowerup(EPowerupType powerup) { currentPowerup = powerup; };
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 		EPowerupType GetCurrentPowerup() { return currentPowerup; };
 
 	//Called when another class needs to detect if the tank is dead.

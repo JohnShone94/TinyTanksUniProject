@@ -5,7 +5,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
-#include "TT_TankBase.h"
 #include "TT_TankTurret.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine.h"

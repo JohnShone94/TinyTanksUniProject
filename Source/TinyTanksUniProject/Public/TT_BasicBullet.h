@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TT_TankBase.h"
 #include "GameFramework/Actor.h"
 #include "TT_BasicBullet.generated.h"
 
 class UStaticMeshComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
-class ATT_TankBase;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
