@@ -16,7 +16,7 @@ ATT_TankTurret::ATT_TankTurret()
 	tankGunBase->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 	RootComponent = tankGunBase;
 
-	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface26.Tank_1_polySurface26'")));
+	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank_1/Tank_1_polySurface26.Tank_1_polySurface26'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
 	if (meshToUse)
 		tankGunBase->SetStaticMesh(meshToUse);
