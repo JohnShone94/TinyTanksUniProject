@@ -10,12 +10,11 @@ class UStaticMeshComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
 
-UENUM()
-enum EBulletType
+enum class EBulletType 
 {
 	e_basicBullet	UMETA(DiaplayName = "Basic Bullet"),
 	e_fastBullet	UMETA(DisplayName = "Fast Bullet"),
-	e_Missile	    UMETA(DisplayName = "Misslie"),
+	e_Missile	    UMETA(DisplayName = "Misslie")
 };
 
 
@@ -54,7 +53,7 @@ public:
 	float speedMiltiplier;
 
 //		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-//		EBulletType BulletType;
+//		EBulletType SelectBullet;
 
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* explosion;
