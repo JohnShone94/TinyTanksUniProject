@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "TT_WorldGrid.generated.h"
 
-class UBoxComponent;
-
+class ATT_GridCell;
+class USceneComponent;
 /**
  * 
  */
@@ -28,13 +28,25 @@ public:
 		float gridSizeX;
 	UPROPERTY(EditAnywhere)
 		float gridSizeY;
+	UPROPERTY(EditAnywhere)
+		float gridStartX;
+	UPROPERTY(EditAnywhere)
+		float gridStartY;
+	UPROPERTY(EditAnywhere)
+		bool activate;
+	UPROPERTY(EditAnywhere)
+		bool resetEverything;
+
+	UPROPERTY(EditAnywhere)
+		USceneComponent* sceneComp;
 
 protected:
-	UPROPERTY(EditAnywhere)
-		UBoxComponent* box;
 
 	UPROPERTY(EditAnywhere)
-		TArray<UBoxComponent*> cellArray;
+		TArray<FVector> cellLocations;
+
+	UPROPERTY(EditAnywhere)
+		TArray<ATT_GridCell*> cellArray;
 
 
 	///////////////////
@@ -43,6 +55,12 @@ protected:
 
 public:
 	ATT_WorldGrid();
+
+	UFUNCTION(BlueprintCallable)
+		TArray<FVector> GetArrayOfCellLocations() { return cellLocations; };
+
+	UFUNCTION(BlueprintCallable)
+		TArray<ATT_GridCell*> GetArrayOfCells() { return cellArray; };
 
 protected:
 	virtual void BeginPlay();
