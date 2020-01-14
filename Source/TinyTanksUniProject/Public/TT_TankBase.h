@@ -10,6 +10,18 @@ class UStaticMeshComponent;
 class ATT_BasicBullet;
 class ATT_TinyTanksGameMode;
 
+UENUM()
+enum class EPowerupType
+{
+	PT_none					UMETA(DiaplayName = "None"),
+	PT_speedBoost			UMETA(DisplayName = "Speed Boost"),
+
+	PT_fastBullet			UMETA(DisplayName = "Fast Bullet"),
+	PT_missile				UMETA(DisplayName = "Misslie"),
+	PT_wallBullet				UMETA(DisplayName = "Wall Bullet"),
+	PT_undergroundBullet	UMETA(DisplayName = "Undeground Bullet"),
+};
+
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
 {
@@ -31,6 +43,9 @@ public:
 	//The speed of a tank when moving forward.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float moveSpeed;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		EPowerupType currentPowerup;
 
 protected:
 
@@ -101,6 +116,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetCanRockDestroy(bool val = true) { bCanRockDestroy = val; };
 
+	UFUNCTION()
+		void SetCurrentPowerup(EPowerupType powerup) { currentPowerup = powerup; };
+
+	UFUNCTION()
+		EPowerupType GetCurrentPowerup() { return currentPowerup; };
+
 	//Called when another class needs to detect if the tank is dead.
 	UFUNCTION(BlueprintCallable)
 		bool GetIsDead() { return bIsDead; };
@@ -140,4 +161,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void StunTimerExpired();
+
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

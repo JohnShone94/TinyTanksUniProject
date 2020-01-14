@@ -5,7 +5,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
-#include "TT_TankBase.h"
 #include "TT_TankTurret.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine.h"
@@ -98,33 +97,20 @@ void ATT_BasicBullet::Tick(float DeltaTime)
 
 }
 
-void ATT_BasicBullet::SetVelocity(FRotator fireRotation)
+void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation)
 {
-	EBulletType Basic = EBulletType::e_basicBullet;
-	EBulletType Fast = EBulletType::e_fastBullet;
-	EBulletType Missile = EBulletType::e_Missile;
-	EBulletType Wall = EBulletType::e_WallShot;
-	EBulletType Underground = EBulletType::e_UndergroundBullet;
-
-	if (Basic == EBulletType::e_basicBullet)
-	{
-		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
-	}
-	else if (Fast == EBulletType::e_fastBullet)
+	
+	if (bulletType == EPowerupType::PT_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
-	}
-	else if (Wall == EBulletType::e_WallShot)
-	{
 
+		currentBulletType = EPowerupType::PT_fastBullet;
 	}
-	else if (Underground == EBulletType::e_UndergroundBullet)
-	{
-
-	}
-	else if (Missile == EBulletType::e_Missile)
+	else if (bulletType == EPowerupType::PT_missile)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+
+		currentBulletType = EPowerupType::PT_missile;
 
 		UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
 		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Big_Missile_Mat.Big_Missile_Mat'")));					
@@ -142,6 +128,21 @@ void ATT_BasicBullet::SetVelocity(FRotator fireRotation)
 		RootComponent = missileMesh;
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation()); //will stay at launch location
+	}
+	else if (bulletType == EPowerupType::PT_wallBullet)
+	{
+		//this bullet can travel through walls but slows down when it enters and speeds back up when it leaves the wall.
+		currentBulletType = EPowerupType::PT_wallBullet;
+	}
+	else if (bulletType == EPowerupType::PT_undergroundBullet)
+	{
+		//this bullet travels underground homing on the closest enemy tank.
+		currentBulletType = EPowerupType::PT_undergroundBullet;
+	}
+	else
+	{
+		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+		currentBulletType = EPowerupType::PT_none;
 	}
 }
 

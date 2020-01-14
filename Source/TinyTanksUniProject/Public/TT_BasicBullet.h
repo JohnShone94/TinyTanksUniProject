@@ -3,22 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TT_TankBase.h"
 #include "GameFramework/Actor.h"
 #include "TT_BasicBullet.generated.h"
 
 class UStaticMeshComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
-
-enum class EBulletType 
-{
-	e_basicBullet	UMETA(DiaplayName = "Basic Bullet"),
-	e_fastBullet	UMETA(DisplayName = "Fast Bullet"),
-	e_Missile	    UMETA(DisplayName = "Misslie"),
-	e_UndergroundBullet UMETA(DisplayName = "Underground Shot"),
-	e_WallShot		UMETA(DisplayName = "Through Wall")
-};
-
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
@@ -45,6 +36,9 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* projectileMovement;
 
+
+	EPowerupType currentBulletType;
+
 	///////////////////
 	//// FUNCTIONS ////
 	///////////////////
@@ -61,7 +55,7 @@ public:
 		UParticleSystem* explosion;
 
 	UFUNCTION()
-		void SetVelocity(FRotator fireRotation);
+		void SetupBullet(EPowerupType bulletType, FRotator fireRotation);
 
 protected:
 	virtual void BeginPlay() override;
