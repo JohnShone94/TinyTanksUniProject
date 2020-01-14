@@ -13,10 +13,13 @@ class ATT_TinyTanksGameMode;
 UENUM()
 enum class EPowerupType
 {
-	PT_none		UMETA(DiaplayName = "None"),
-	PT_fastBullet		UMETA(DisplayName = "Fast Bullet"),
-	PT_missile			UMETA(DisplayName = "Misslie"),
-	PT_speedBoost		UMETA(DisplayName = "Speed Boost")
+	PT_none					UMETA(DiaplayName = "None"),
+	PT_speedBoost			UMETA(DisplayName = "Speed Boost"),
+
+	PT_fastBullet			UMETA(DisplayName = "Fast Bullet"),
+	PT_missile				UMETA(DisplayName = "Misslie"),
+	PT_wallBullet				UMETA(DisplayName = "Wall Bullet"),
+	PT_undergroundBullet	UMETA(DisplayName = "Undeground Bullet"),
 };
 
 UCLASS()
@@ -158,4 +161,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void StunTimerExpired();
+
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

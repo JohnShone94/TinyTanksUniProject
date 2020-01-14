@@ -36,6 +36,9 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* projectileMovement;
 
+
+	EPowerupType currentBulletType;
+
 	///////////////////
 	//// FUNCTIONS ////
 	///////////////////

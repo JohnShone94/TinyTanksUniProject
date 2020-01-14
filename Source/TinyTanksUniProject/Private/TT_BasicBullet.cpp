@@ -103,10 +103,14 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 	if (bulletType == EPowerupType::PT_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+
+		currentBulletType = EPowerupType::PT_fastBullet;
 	}
 	else if (bulletType == EPowerupType::PT_missile)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+
+		currentBulletType = EPowerupType::PT_missile;
 
 		UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
 		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Big_Missile_Mat.Big_Missile_Mat'")));					
@@ -125,9 +129,20 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation()); //will stay at launch location
 	}
+	else if (bulletType == EPowerupType::PT_wallBullet)
+	{
+		//this bullet can travel through walls but slows down when it enters and speeds back up when it leaves the wall.
+		currentBulletType = EPowerupType::PT_wallBullet;
+	}
+	else if (bulletType == EPowerupType::PT_undergroundBullet)
+	{
+		//this bullet travels underground homing on the closest enemy tank.
+		currentBulletType = EPowerupType::PT_undergroundBullet;
+	}
 	else
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+		currentBulletType = EPowerupType::PT_none;
 	}
 }
 
