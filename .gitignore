@@ -75,6 +75,9 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+Content/StarterContent/Architecture/Floor_400x400.uasset
+Content/StarterContent/Architecture/Pillar_50x500.uasset
+Content/StarterContent/Architecture/SM_AssetPlatform.uasset
 Content/StarterContent/Architecture/Wall_400x200.uasset
 Content/StarterContent/Architecture/Wall_400x300.uasset
 Content/StarterContent/Architecture/Wall_400x400.uasset
@@ -318,6 +321,3 @@ Content/StarterContent/Textures/T_Wood_Pine_D.uasset
 Content/StarterContent/Textures/T_Wood_Pine_N.uasset
 Content/StarterContent/Textures/T_Wood_Walnut_D.uasset
 Content/StarterContent/Textures/T_Wood_Walnut_N.uasset
-Content/StarterContent/Architecture/Floor_400x400.uasset
-Content/StarterContent/Architecture/Pillar_50x500.uasset
-Content/StarterContent/Architecture/SM_AssetPlatform.uasset
