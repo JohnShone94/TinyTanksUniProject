@@ -2,15 +2,16 @@
 
 
 #include "TT_WorldGrid.h"
-#include "DrawDebugHelpers.h"
 #include "Engine.h"
+#include "TT_GridCell.h"
+#include "Components/SceneComponent.h"
 
 ATT_WorldGrid::ATT_WorldGrid()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	box = CreateDefaultSubobject<UBoxComponent>(TEXT("The Box"));
-	RootComponent = box;
+	sceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComp"));
+	RootComponent = sceneComp;
 }
 
 void ATT_WorldGrid::BeginPlay()
@@ -24,38 +25,64 @@ void ATT_WorldGrid::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+
+
+
+
 #if WITH_EDITOR
 void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 
-	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, cellSizeX)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, cellSizeY)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, gridSizeX)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, gridSizeY)))
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, resetEverything)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, activate)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, gridStartX)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, gridStartY)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, cellSizeX)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, cellSizeY)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, gridSizeX)) || (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, gridSizeY)))
 	{
-		box->SetBoxExtent(FVector(cellSizeX, cellSizeY, 10.0f));
-		
-		if (cellArray.Num() > 0)
+		if (resetEverything)
 		{
-			for (int i = 0; i < cellArray.Num(); i++)
+			if (cellArray.Num() > 0)
 			{
-				if(cellArray[i])
-					cellArray[i]->DestroyComponent();
+				for (int i = 0; i < cellArray.Num(); i++)
+				{
+					if (cellArray[i])
+						cellArray[i]->Destroy();
+				}
+
+				cellArray.Empty();
 			}
 
-			cellArray.Empty();
+			if (cellLocations.Num() > 0)
+				cellLocations.Empty();
+
+			resetEverything = false;
 		}
 
-		FVector startVector = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
-		for (int x = 2; x <= gridSizeX; x++)
+		if (activate)
 		{
-			for (int y = 2; y <= gridSizeY; y++)
+			if (cellLocations.Num() <= 0)
 			{
-				UBoxComponent* cell = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass());
-				cell->RegisterComponent();
-				cell->SetupAttachment(RootComponent);
-				cell->SetRelativeLocation(FVector((startVector.X + (cellSizeX * x)), (startVector.Y + (cellSizeY * y)), startVector.Z)); 
-				cell->SetBoxExtent(FVector(cellSizeX, cellSizeY, 10.0f));
-				cellArray.Add(cell);
+				for (int x = 0; x < gridSizeX; x++)
+				{
+					for (int y = 0; y < gridSizeY; y++)
+					{
+						cellLocations.Add(FVector(gridStartX + (cellSizeX * x), gridStartY + (cellSizeY * y), -15.0f));
+					}
+				}
 			}
+
+			if (cellLocations.Num() > 0 && cellArray.Num() <= 0)
+			{
+				for (int i = 0; i < cellLocations.Num(); i++)
+				{
+					ATT_GridCell* cell = GetWorld()->SpawnActor<ATT_GridCell>(cellLocations[i], FRotator(0.0f, 0.0f, 0.0f));
+					if (cell)
+					{
+						cellArray.Add(cell);
+						cell->SetBoxSize(cellSizeX/2, cellSizeY/2);
+					}
+				}
+			}
+
+			//need to make invisable.
+
 		}
 	}
 
