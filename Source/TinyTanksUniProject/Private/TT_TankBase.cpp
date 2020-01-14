@@ -81,6 +81,21 @@ void ATT_TankBase::StunTimerExpired()
 	bIsStunned = false;
 }
 
+void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	//if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	//{
+	//	if (OtherActor->GetClass() == ATT_Powerup)
+	//	{
+	//		ATT_Powerup* powerUp = Cast<ATT_Powerup>(OtherActor);
+	//		if (powerUp)
+	//		{
+
+	//		}
+	//	}
+	//}
+}
+
 void ATT_TankBase::DamageTank()
 {
 	if (!bIsDead)

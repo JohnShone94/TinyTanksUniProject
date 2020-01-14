@@ -111,7 +111,11 @@ void ATT_TankBaseController::FireShot(float val)
 				if (world != NULL)
 				{
 					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
-					bullet->SetupBullet(turretParent->currentPowerup, fireRotation);
+
+					if (turretParent->currentPowerup == EPowerupType::PT_wallBullet || turretParent->currentPowerup == EPowerupType::PT_undergroundBullet || turretParent->currentPowerup == EPowerupType::PT_missile || turretParent->currentPowerup == EPowerupType::PT_fastBullet)
+						bullet->SetupBullet(turretParent->currentPowerup, fireRotation);
+					else
+						bullet->SetupBullet(EPowerupType::PT_none, fireRotation);
 
 					turretParent->TankHasFired();
 				}

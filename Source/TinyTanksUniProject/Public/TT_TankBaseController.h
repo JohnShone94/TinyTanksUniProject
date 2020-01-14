@@ -58,10 +58,10 @@ public:
 	UFUNCTION()
 		void SetTurretPawn(ATT_TankTurret* turret) { turretPawn = turret; };
 
-	UFUNCTION()
-		void PickupMissile();
-	UFUNCTION()
-		void PickupFast();
+	//UFUNCTION()
+	//	void PickupMissile();
+	//UFUNCTION()
+	//	void PickupFast();
 
 protected:
 
