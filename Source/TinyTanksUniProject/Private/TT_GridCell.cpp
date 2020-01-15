@@ -223,7 +223,9 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				FActorSpawnParameters SpawnParams;
 
-				ATT_TankSpawnPoint* actorRef = GetWorld()->SpawnActor<ATT_TankSpawnPoint>(tankSpawnPoint, GetTransform(), SpawnParams);
+				FVector newLoc = FVector((GetTransform().GetLocation().X), (GetTransform().GetLocation().Y), (GetTransform().GetLocation().Z + 16.0f));
+
+				ATT_TankSpawnPoint* actorRef = GetWorld()->SpawnActor<ATT_TankSpawnPoint>(tankSpawnPoint, FTransform(GetTransform().GetRotation(), newLoc, GetTransform().GetScale3D()), SpawnParams);
 				currentItemActor = actorRef;
 
 				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
@@ -333,6 +335,71 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 			}
 		}
 	}
+
+
+
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_GridCell, rotateRight))
+	{
+		if (currentItemActor)
+		{
+			//float zRot = currentItemActor->GetActorRotation().Yaw;
+
+			if (rotationVal == 0)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, -90.0f, 0.0f));
+
+				rotationVal = 1;
+			}
+			else if (rotationVal == 1)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, 180.0f, 0.0f));
+				rotationVal = 2;
+			}
+			else if (rotationVal == 2)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
+				rotationVal = 3;
+			}
+			else if (rotationVal == 3)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
+				rotationVal = 0;
+			}
+		}
+
+		rotateRight = false;
+	}
+
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_GridCell, rotateLeft))
+	{
+		if (currentItemActor)
+		{
+			if (rotationVal == 0)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
+
+				rotationVal = 3;
+			}
+			else if (rotationVal == 1)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
+				rotationVal = 0;
+			}
+			else if (rotationVal == 2)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, -90.0f, 0.0f));
+				rotationVal = 1;
+			}
+			else if (rotationVal == 3)
+			{
+				currentItemActor->SetActorRotation(FRotator(0.0f, 180.0f, 0.0f));
+				rotationVal = 2;
+			}
+		}
+
+		rotateLeft = false;
+	}
+
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }

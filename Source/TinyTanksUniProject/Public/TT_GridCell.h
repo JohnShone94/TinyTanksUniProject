@@ -81,6 +81,14 @@ public:
 		AActor* currentFloorActor;
 
 
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool rotateRight;
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool rotateLeft;
+
+	UPROPERTY(Category = "Default", VisibleAnywhere)
+		int32 rotationVal;
+
 protected:	
 
 	UPROPERTY(VisibleAnywhere)

@@ -12,6 +12,16 @@ ATT_WorldGrid::ATT_WorldGrid()
 
 	sceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComp"));
 	RootComponent = sceneComp;
+
+
+
+	cellSizeX = 46.5f;
+	cellSizeY = 46.5f;
+	gridSizeX = 21.0f;
+	gridSizeY = 12.0f;
+	gridStartX = -463.0f;
+	gridStartY = -243.0f;
+
 }
 
 void ATT_WorldGrid::BeginPlay()
@@ -84,7 +94,7 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 					}
 				}
 			}
-
+			activate = false;
 		}
 	}
 
