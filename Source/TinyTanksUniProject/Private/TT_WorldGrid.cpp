@@ -25,10 +25,6 @@ void ATT_WorldGrid::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-
-
-
-
 #if WITH_EDITOR
 void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
@@ -43,7 +39,14 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 				for (int i = 0; i < cellArray.Num(); i++)
 				{
 					if (cellArray[i])
+					{
+						if (cellArray[i]->currentFloorActor)
+							cellArray[i]->currentFloorActor->Destroy();
+						if (cellArray[i]->currentItemActor)
+							cellArray[i]->currentItemActor->Destroy();
+
 						cellArray[i]->Destroy();
+					}
 				}
 
 				cellArray.Empty();
@@ -63,7 +66,7 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 				{
 					for (int y = 0; y < gridSizeY; y++)
 					{
-						cellLocations.Add(FVector(gridStartX + (cellSizeX * x), gridStartY + (cellSizeY * y), -15.0f));
+						cellLocations.Add(FVector(gridStartX + (cellSizeX * x), gridStartY + (cellSizeY * y), 0.0f));
 					}
 				}
 			}
@@ -72,7 +75,8 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 			{
 				for (int i = 0; i < cellLocations.Num(); i++)
 				{
-					ATT_GridCell* cell = GetWorld()->SpawnActor<ATT_GridCell>(cellLocations[i], FRotator(0.0f, 0.0f, 0.0f));
+					FActorSpawnParameters SpawnParams;
+					ATT_GridCell* cell = GetWorld()->SpawnActor<ATT_GridCell>(gridCell, FTransform(FRotator(0.0f, 0.0f, 0.0f), cellLocations[i], FVector(1.0f, 1.0f, 1.0f)), SpawnParams);
 					if (cell)
 					{
 						cellArray.Add(cell);
@@ -81,9 +85,20 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 				}
 			}
 
-			//need to make invisable.
-
 		}
+	}
+
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, randomiseEveryFloorTile))
+	{
+		if (cellArray.Num() > 0)
+		{
+			for (int i = 0; i < cellArray.Num(); i++)
+			{
+				if (cellArray[i] && (cellArray[i]->floorItemToSpawn == E_FloorItemToSpawn::FITS_tile || cellArray[i]->floorItemToSpawn == E_FloorItemToSpawn::FITS_none))
+					cellArray[i]->RandomiseFloorTile();
+			}
+		}
+		randomiseEveryFloorTile = false;
 	}
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);

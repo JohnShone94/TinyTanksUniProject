@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TT_StandardWall.generated.h"
+#include "TT_FloorTile.generated.h"
 
 class UStaticMeshComponent;
 
 UCLASS()
-class TINYTANKSUNIPROJECT_API ATT_StandardWall : public AActor
+class TINYTANKSUNIPROJECT_API ATT_FloorTile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATT_StandardWall();
+	ATT_FloorTile();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,7 +24,7 @@ protected:
 
 
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UStaticMeshComponent* wallMesh;
+		UStaticMeshComponent* tileMesh;
 
 public:	
 	// Called every frame

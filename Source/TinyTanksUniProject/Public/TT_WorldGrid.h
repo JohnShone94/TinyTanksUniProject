@@ -20,24 +20,31 @@ class TINYTANKSUNIPROJECT_API ATT_WorldGrid : public AActor
 	///////////////////
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float cellSizeX;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float cellSizeY;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridSizeX;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridSizeY;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridStartX;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridStartY;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		bool activate;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		bool resetEverything;
 
-	UPROPERTY(EditAnywhere)
+	//WARNING: USING THIS IN EDITOR WILL REMOVE ALL THE FLOOR TILES AND RANDOMISE THEM!
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool randomiseEveryFloorTile;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_GridCell> gridCell;
+
+	UPROPERTY(VisibleAnywhere)
 		USceneComponent* sceneComp;
 
 protected:

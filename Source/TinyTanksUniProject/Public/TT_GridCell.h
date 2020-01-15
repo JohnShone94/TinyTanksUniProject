@@ -14,6 +14,7 @@ class ATT_TankSpawnPoint;
 class ATT_Mine;
 class ATT_StandardWall;
 class ATT_DestructableWall;
+class ATT_FloorTile;
 
 
 UENUM()
@@ -26,6 +27,7 @@ enum class E_ItemToSpawn
 	ITS_destructableWall	UMETA(DiaplayName = "Destructable Wall"),
 	ITS_spawnPoint			UMETA(DiaplayName = "Spawn Point"),
 	ITS_mine				UMETA(DiaplayName = "Mine"),
+	ITS_destroyed			UMETA(DiaplayName = "Destroyed"),
 };
 
 UENUM()
@@ -34,6 +36,7 @@ enum class E_FloorItemToSpawn
 	FITS_none				UMETA(DiaplayName = "Floor None"),
 	FITS_trapdoor			UMETA(DiaplayName = "Trapdoor"),
 	FITS_tile				UMETA(DiaplayName = "Floor Tile"),
+	FITS_destroyed			UMETA(DiaplayName = "Floor Destroyed"),
 };
 
 
@@ -41,23 +44,8 @@ UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_GridCell : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:
-	UPROPERTY(EditAnywhere)
-		UBoxComponent* box;
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* itemSelectionComp;
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* floorSelectionComp;
-	UPROPERTY(EditAnywhere)
-		AActor* currentItemActor;
-	UPROPERTY(EditAnywhere)
-		AActor* currentFloorActor;
-
-protected:	
-	UPROPERTY(EditAnywhere)
-		E_ItemToSpawn itemToSpawn;
-
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TankSpawnPoint> tankSpawnPoint;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
@@ -71,9 +59,36 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_DestructableWall> destructableWall;
 
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_FloorTile> floorTileOne;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_FloorTile> floorTileTwo;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_FloorTile> floorTileThree;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_FloorTile> floorTileFour;
+
+
+	UPROPERTY(Category = "Default", EditAnywhere)
+		E_ItemToSpawn itemToSpawn;
+	UPROPERTY(Category = "Default", EditAnywhere)
 		E_FloorItemToSpawn floorItemToSpawn;
 
+	UPROPERTY(Category = "Default", VisibleAnywhere)
+		AActor* currentItemActor;
+	UPROPERTY(Category = "Default", VisibleAnywhere)
+		AActor* currentFloorActor;
+
+
+protected:	
+
+	UPROPERTY(VisibleAnywhere)
+		UBoxComponent* box;
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* itemSelectionComp;
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* floorSelectionComp;
 public:	
 	// Sets default values for this actor's properties
 	ATT_GridCell();
@@ -84,7 +99,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetBoxSize(float sizeX, float sizeY);
 
-
+	UFUNCTION(BlueprintCallable)
+		void RandomiseFloorTile();
 
 protected:
 	// Called when the game starts or when spawned
