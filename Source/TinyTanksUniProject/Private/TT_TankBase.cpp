@@ -101,7 +101,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 			{
 				case EPowerupType::PT_fastBullet:
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
 
 					currentPowerup = EPowerupType::PT_fastBullet;
 
@@ -109,7 +109,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 				}
 				case EPowerupType::PT_missile:
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT(" Missile Pickup"));
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT(" Missile Pickup"));
 					currentPowerup = EPowerupType::PT_missile;
 					break;
 				}
@@ -131,13 +131,13 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 				}
 				case EPowerupType::PT_none:
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("none"));
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("none"));
 
 					break;
 				}
 				default:
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Defult"));
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Defult"));
 					break;
 				}
 			}

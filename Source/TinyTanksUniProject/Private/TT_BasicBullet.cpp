@@ -55,7 +55,7 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
+//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
 			tank->DamageTank();
 			Destroy();
 		}
@@ -72,7 +72,7 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 			SetActorRotation(bounceBackVel.Rotation());
 
 			hitAmount++;
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
+//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
 
 			if (hitAmount >= maxHitAmount)
 				Destroy();
@@ -97,7 +97,7 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 	if (bulletType == EPowerupType::PT_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 2));
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast fired"));
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast fired"));
 	}
 	else if (bulletType == EPowerupType::PT_missile)
 	{
@@ -120,7 +120,7 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation()); //will stay at launch location
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Missile Launch"));
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Missile Launch"));
 	}
 	else if (bulletType == EPowerupType::PT_wallBullet)
 	{
@@ -134,6 +134,6 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Normal Bullet"));
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Normal Bullet"));
 	}
 }
