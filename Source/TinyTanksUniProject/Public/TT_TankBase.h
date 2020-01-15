@@ -9,6 +9,8 @@
 class UStaticMeshComponent;
 class ATT_BasicBullet;
 class ATT_TinyTanksGameMode;
+class ATT_Powerup;
+class USphereComponent;
 
 UENUM()
 enum class EPowerupType
@@ -18,7 +20,7 @@ enum class EPowerupType
 
 	PT_fastBullet			UMETA(DisplayName = "Fast Bullet"),
 	PT_missile				UMETA(DisplayName = "Misslie"),
-	PT_wallBullet				UMETA(DisplayName = "Wall Bullet"),
+	PT_wallBullet			UMETA(DisplayName = "Wall Bullet"),
 	PT_undergroundBullet	UMETA(DisplayName = "Undeground Bullet"),
 };
 
@@ -46,6 +48,9 @@ public:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		EPowerupType currentPowerup;
+
+	UPROPERTY(EditAnywhere)
+		USphereComponent* tankOverlap;
 
 protected:
 
@@ -80,7 +85,6 @@ protected:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float stunTimer;
-
 
 	FTimerHandle TimerHandle_StunTimerExpired;
 
@@ -121,7 +125,7 @@ public:
 
 	UFUNCTION()
 		EPowerupType GetCurrentPowerup() { return currentPowerup; };
-
+	
 	//Called when another class needs to detect if the tank is dead.
 	UFUNCTION(BlueprintCallable)
 		bool GetIsDead() { return bIsDead; };

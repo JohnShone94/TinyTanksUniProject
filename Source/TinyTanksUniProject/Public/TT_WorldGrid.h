@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "TT_WorldGrid.generated.h"
 
-class UBoxComponent;
-
+class ATT_GridCell;
+class USceneComponent;
 /**
  * 
  */
@@ -20,21 +20,40 @@ class TINYTANKSUNIPROJECT_API ATT_WorldGrid : public AActor
 	///////////////////
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float cellSizeX;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float cellSizeY;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridSizeX;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridSizeY;
+	UPROPERTY(Category = "Default", EditAnywhere)
+		float gridStartX;
+	UPROPERTY(Category = "Default", EditAnywhere)
+		float gridStartY;
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool activate;
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool resetEverything;
+
+	//WARNING: USING THIS IN EDITOR WILL REMOVE ALL THE FLOOR TILES AND RANDOMISE THEM!
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool randomiseEveryFloorTile;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_GridCell> gridCell;
+
+	UPROPERTY(VisibleAnywhere)
+		USceneComponent* sceneComp;
 
 protected:
-	UPROPERTY(EditAnywhere)
-		UBoxComponent* box;
 
 	UPROPERTY(EditAnywhere)
-		TArray<UBoxComponent*> cellArray;
+		TArray<FVector> cellLocations;
+
+	UPROPERTY(EditAnywhere)
+		TArray<ATT_GridCell*> cellArray;
 
 
 	///////////////////
@@ -43,6 +62,12 @@ protected:
 
 public:
 	ATT_WorldGrid();
+
+	UFUNCTION(BlueprintCallable)
+		TArray<FVector> GetArrayOfCellLocations() { return cellLocations; };
+
+	UFUNCTION(BlueprintCallable)
+		TArray<ATT_GridCell*> GetArrayOfCells() { return cellArray; };
 
 protected:
 	virtual void BeginPlay();
