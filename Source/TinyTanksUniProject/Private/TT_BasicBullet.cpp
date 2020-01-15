@@ -109,7 +109,7 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 	}
 	else if (bulletType == EPowerupType::PT_missile)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * speedMiltiplier));
+		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 0.25));
 
 		currentBulletType = EPowerupType::PT_none;
 

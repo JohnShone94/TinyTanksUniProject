@@ -99,7 +99,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 		if (powerup)			
 		{
 			int powerupNumber = 2;
-//			ATT_TankBase* powerupNumber <ATT_Powerup>();
+//			ATT_TankBase* powerupNumber = <ATT_Powerup>(powerup);
 			if (powerupNumber == 1)
 			{
 				currentPowerup = EPowerupType::PT_fastBullet;
