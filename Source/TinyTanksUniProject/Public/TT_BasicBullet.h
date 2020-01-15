@@ -10,12 +10,12 @@
 class UStaticMeshComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
+class ATT_TankBase;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
 {
-	GENERATED_BODY()
-	
+	GENERATED_BODY()	
 
 	///////////////////
 	//// VARIABLES ////
@@ -35,7 +35,6 @@ protected:
 		int32 speedLoss;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* projectileMovement;
-
 
 	EPowerupType currentBulletType;
 

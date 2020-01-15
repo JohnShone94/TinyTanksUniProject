@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
 #include "TT_TankTurret.h"
+#include "TT_TankBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine.h"
 
@@ -30,8 +31,6 @@ ATT_BasicBullet::ATT_BasicBullet()
 	bulletMesh->SetEnableGravity(false);
 	RootComponent = bulletMesh;
 
-
-
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	projectileMovement->UpdatedComponent = RootComponent;
 	projectileMovement->InitialSpeed = 800.f;
@@ -47,8 +46,6 @@ ATT_BasicBullet::ATT_BasicBullet()
 	InitialLifeSpan = 5.0f;
 
 	maxHitAmount = 3;
-
-
 }
 
 void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector HitNormal, const FHitResult& Hit)
@@ -86,15 +83,13 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 // Called when the game starts or when spawned
 void ATT_BasicBullet::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
 void ATT_BasicBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation)
@@ -102,17 +97,11 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 	if (bulletType == EPowerupType::PT_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 2));
-
-		currentBulletType = EPowerupType::PT_none;
-
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast fired"));
 	}
 	else if (bulletType == EPowerupType::PT_missile)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 0.25
-			));
-
-		currentBulletType = EPowerupType::PT_none;
+		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 0.25));
 
 		UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
 		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Big_Missile_Mat.Big_Missile_Mat'")));					
@@ -136,21 +125,15 @@ void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation
 	else if (bulletType == EPowerupType::PT_wallBullet)
 	{
 		//this bullet can travel through walls but slows down when it enters and speeds back up when it leaves the wall.
-		currentBulletType = EPowerupType::PT_none;
 	}
 	else if (bulletType == EPowerupType::PT_undergroundBullet)
 	{
 		//this bullet travels underground homing on the closest enemy tank.
-		currentBulletType = EPowerupType::PT_none;
 	}
 	else
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
-		currentBulletType = EPowerupType::PT_none;
 
-		
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Normal Bullet"));
 	}
 }
-
-

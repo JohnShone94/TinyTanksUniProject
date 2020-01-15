@@ -118,6 +118,7 @@ void ATT_TankBaseController::FireShot(float val)
 						bullet->SetupBullet(EPowerupType::PT_none, fireRotation);
 
 					turretParent->TankHasFired();
+					turretParent->ResetPowerup();
 				}
 
 				bCanFire = false;

@@ -47,28 +47,7 @@ void ATT_Powerup::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * 
 	{
 		tank = Cast<ATT_TankBase>(OtherActor);
 
-		/*if (powerupNo == 1)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Fast Pickup"));
-		}
-		else if (powerupNo == 2)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Missile Pickup"));
-		}
-		else if (powerupNo == 3)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("3"));
-		}
-		else if (powerupNo == 4)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("4"));
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("0"));
-		}*/
-
-		Destroy();
+		
 	}
 }
 
@@ -79,6 +58,8 @@ void ATT_Powerup::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * Ot
 		ATT_TankBase* leavingTank = Cast<ATT_TankBase>(OtherActor);
 		if (leavingTank)
 			tank = nullptr;
+
+		Destroy();
 	}
 }
 

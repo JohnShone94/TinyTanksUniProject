@@ -123,6 +123,9 @@ public:
 	UFUNCTION()
 		void DamageTank();
 
+	UFUNCTION()
+		void ResetPowerup();
+
 	UFUNCTION(BlueprintCallable)
 		void SetCanRockDestroy(bool val = true) { bCanRockDestroy = val; };
 
