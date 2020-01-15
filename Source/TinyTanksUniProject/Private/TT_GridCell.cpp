@@ -119,7 +119,6 @@ void ATT_GridCell::ReloadCell()
 	}
 	else if(floorSelectionComp)
 		floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
-
 }
 
 

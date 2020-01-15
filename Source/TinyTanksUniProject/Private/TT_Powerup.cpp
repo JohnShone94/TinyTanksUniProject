@@ -15,28 +15,24 @@ ATT_Powerup::ATT_Powerup()
 	PrimaryActorTick.bCanEverTick = true;
 
 	powerupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Powerup Mesh"));
-	powerupMesh->BodyInstance.SetCollisionProfileName("OverlapAll");
+	powerupMesh->SetCollisionProfileName("OverlapAll");
 	powerupMesh->SetSimulatePhysics(false);
 	powerupMesh->SetEnableGravity(false);
 	RootComponent = powerupMesh;
 
 	powerupOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Mine Overlap Component"));
-	powerupOverlap->BodyInstance.SetCollisionProfileName("OverlapAll");
+	powerupOverlap->SetCollisionProfileName("OverlapAll");
 	powerupOverlap->SetSimulatePhysics(false);
 	powerupOverlap->SetEnableGravity(false);
 	powerupOverlap->SetupAttachment(RootComponent);
-
-	powerupOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapBegin);
-	powerupOverlap->OnComponentEndOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapEnd);
-
-
-	
 }
 
 // Called when the game starts or when spawned
 void ATT_Powerup::BeginPlay()
 {
 	Super::BeginPlay();	
+	powerupOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapBegin);
+	powerupOverlap->OnComponentEndOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapEnd);
 
 	powerupOverlap->SetVisibility(false);
 }

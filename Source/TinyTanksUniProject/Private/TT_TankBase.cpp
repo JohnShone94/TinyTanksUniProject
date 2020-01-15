@@ -22,12 +22,10 @@ ATT_TankBase::ATT_TankBase()
 	RootComponent = tankBaseMesh;
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
-	tankOverlap->BodyInstance.SetCollisionProfileName("OverlapAll");
+	tankOverlap->SetCollisionProfileName("OverlapAll");
 	tankOverlap->SetSimulatePhysics(false);
 	tankOverlap->SetEnableGravity(false);
 	tankOverlap->SetupAttachment(RootComponent);
-
-	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
 
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface59.Tank_1_polySurface59'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
@@ -57,6 +55,9 @@ ATT_TankBase::ATT_TankBase()
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
+
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 }
 

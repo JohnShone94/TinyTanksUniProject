@@ -120,7 +120,7 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 					cellArray[i]->ReloadCell();
 			}
 		}
-		randomiseEveryFloorTile = false;
+		reloadGrid = false;
 	}
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);

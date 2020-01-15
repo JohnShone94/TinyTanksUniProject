@@ -24,8 +24,7 @@ ATT_BasicBullet::ATT_BasicBullet()
 		bulletMesh->SetStaticMesh(meshToUse);
 	if (materialToUse)
 		bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
-	bulletMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
-	bulletMesh->BodyInstance.SetCollisionProfileName("BlockAll");
+	bulletMesh->SetCollisionProfileName("BlockAll");
 	bulletMesh->SetNotifyRigidBodyCollision(true);
 	bulletMesh->SetSimulatePhysics(false);
 	bulletMesh->SetEnableGravity(false);
@@ -84,6 +83,8 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 void ATT_BasicBullet::BeginPlay()
 {
 	Super::BeginPlay();	
+
+	bulletMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
 }
 
 // Called every frame
