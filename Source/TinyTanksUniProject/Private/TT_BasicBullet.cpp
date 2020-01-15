@@ -23,8 +23,8 @@ ATT_BasicBullet::ATT_BasicBullet()
 		bulletMesh->SetStaticMesh(meshToUse);
 	if (materialToUse)
 		bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
-	bulletMesh->BodyInstance.SetCollisionProfileName("BlockAll");
 	bulletMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
+	bulletMesh->BodyInstance.SetCollisionProfileName("BlockAll");
 	bulletMesh->SetNotifyRigidBodyCollision(true);
 	bulletMesh->SetSimulatePhysics(false);
 	bulletMesh->SetEnableGravity(false);

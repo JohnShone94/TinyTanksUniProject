@@ -15,7 +15,7 @@ class ATT_Mine;
 class ATT_StandardWall;
 class ATT_DestructableWall;
 class ATT_FloorTile;
-
+class ATT_TrapDoor;
 
 UENUM()
 enum class E_ItemToSpawn
@@ -63,11 +63,15 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_FloorTile> floorTileOne;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ATT_FloorTile> floorTileTwo;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ATT_FloorTile> floorTileThree;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ATT_FloorTile> floorTileFour;
+		TSubclassOf<ATT_TrapDoor> trapDoor;
+
+
+	//UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<ATT_FloorTile> floorTileTwo;
+	//UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<ATT_FloorTile> floorTileThree;
+	//UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	//	TSubclassOf<ATT_FloorTile> floorTileFour;
 
 
 	UPROPERTY(Category = "Default", EditAnywhere)

@@ -9,6 +9,7 @@
 #include "TT_DestructableWall.h"
 #include "TT_Mine.h"
 #include "TT_TankSpawnPoint.h"
+#include "TT_TrapDoor.h"
 
 // Sets default values
 ATT_GridCell::ATT_GridCell()
@@ -24,9 +25,15 @@ ATT_GridCell::ATT_GridCell()
 	itemSelectionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	itemSelectionComp->SetupAttachment(RootComponent);
 
+	itemSelectionComp->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
+	itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 31.0f));
+
 	floorSelectionComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Floor Selection Comp"));
 	floorSelectionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	floorSelectionComp->SetupAttachment(RootComponent);
+
+	floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
+	floorSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 1.0f));
 }
 
 // Called when the game starts or when spawned
@@ -66,51 +73,57 @@ void ATT_GridCell::RandomiseFloorTile()
 	if(floorSelectionComp)
 		floorSelectionComp->SetVisibility(false);
 
-	int var = FMath::RandRange(1, 4);
+	FActorSpawnParameters SpawnParams;
 
-	switch (var)
-	{
-		case 1:
-		{
-			FActorSpawnParameters SpawnParams;
+	ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileOne, GetTransform(), SpawnParams);
+	currentFloorActor = actorRef;
 
-			ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileOne, GetTransform(), SpawnParams);
-			currentFloorActor = actorRef;
 
-			break;
-		}
-		case 2:
-		{
-			FActorSpawnParameters SpawnParams;
+	//int var = FMath::RandRange(1, 4);
 
-			ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileTwo, GetTransform(), SpawnParams);
-			currentFloorActor = actorRef;
+	//switch (var)
+	//{
+	//	case 1:
+	//	{
+	//		FActorSpawnParameters SpawnParams;
 
-			break;
-		}
-		case 3:
-		{
-			FActorSpawnParameters SpawnParams;
+	//		ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileOne, GetTransform(), SpawnParams);
+	//		currentFloorActor = actorRef;
 
-			ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileThree, GetTransform(), SpawnParams);
-			currentFloorActor = actorRef;
+	//		break;
+	//	}
+	//	case 2:
+	//	{
+	//		FActorSpawnParameters SpawnParams;
 
-			break;
-		}
-		case 4:
-		{
-			FActorSpawnParameters SpawnParams;
+	//		ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileTwo, GetTransform(), SpawnParams);
+	//		currentFloorActor = actorRef;
 
-			ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileFour, GetTransform(), SpawnParams);
-			currentFloorActor = actorRef;
+	//		break;
+	//	}
+	//	case 3:
+	//	{
+	//		FActorSpawnParameters SpawnParams;
 
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
+	//		ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileThree, GetTransform(), SpawnParams);
+	//		currentFloorActor = actorRef;
+
+	//		break;
+	//	}
+	//	case 4:
+	//	{
+	//		FActorSpawnParameters SpawnParams;
+
+	//		ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileFour, GetTransform(), SpawnParams);
+	//		currentFloorActor = actorRef;
+
+	//		break;
+	//	}
+	//	default:
+	//	{
+	//		break;
+	//	}
+	//}
 }
 
 
@@ -122,7 +135,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_GridCell, itemSelectionComp) || PropertyName == GET_MEMBER_NAME_CHECKED(ATT_GridCell, floorSelectionComp))
 	{
 		itemSelectionComp->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
-		itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 6.5f));
+		itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 31.0f));
 
 		floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
 		floorSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 1.0f));
@@ -130,7 +143,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_GridCell, itemToSpawn))
 	{
-
+		FTransform newLoc = FTransform(GetActorRotation(), (FVector(GetTransform().GetLocation().X, GetTransform().GetLocation().Y, 30.0f)), FVector(1.0f, 1.0f, 1.0f));
 		switch (itemToSpawn)
 		{
 			case E_ItemToSpawn::ITS_none:
@@ -141,7 +154,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 					currentItemActor = nullptr;
 				}
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 6.5f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 31.0f));
 
 				break;
 			}
@@ -155,10 +168,10 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				FActorSpawnParameters SpawnParams;
 
-				ATT_StandardWall* actorRef = GetWorld()->SpawnActor<ATT_StandardWall>(standardWall, GetTransform(), SpawnParams);
+				ATT_StandardWall* actorRef = GetWorld()->SpawnActor<ATT_StandardWall>(standardWall, newLoc, SpawnParams);
 				currentItemActor = actorRef;
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -172,10 +185,10 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				FActorSpawnParameters SpawnParams;
 
-				ATT_StandardWall* actorRef = GetWorld()->SpawnActor<ATT_StandardWall>(standardTWall, GetTransform(), SpawnParams);
+				ATT_StandardWall* actorRef = GetWorld()->SpawnActor<ATT_StandardWall>(standardTWall, newLoc, SpawnParams);
 				currentItemActor = actorRef;
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -189,10 +202,10 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				FActorSpawnParameters SpawnParams;
 
-				ATT_StandardWall* actorRef = GetWorld()->SpawnActor<ATT_StandardWall>(standardLWall, GetTransform(), SpawnParams);
+				ATT_StandardWall* actorRef = GetWorld()->SpawnActor<ATT_StandardWall>(standardLWall, newLoc, SpawnParams);
 				currentItemActor = actorRef;
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -206,10 +219,10 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				FActorSpawnParameters SpawnParams;
 
-				ATT_DestructableWall* actorRef = GetWorld()->SpawnActor<ATT_DestructableWall>(destructableWall, GetTransform(), SpawnParams);
+				ATT_DestructableWall* actorRef = GetWorld()->SpawnActor<ATT_DestructableWall>(destructableWall, newLoc, SpawnParams);
 				currentItemActor = actorRef;
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -223,12 +236,12 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				FActorSpawnParameters SpawnParams;
 
-				FVector newLoc = FVector((GetTransform().GetLocation().X), (GetTransform().GetLocation().Y), (GetTransform().GetLocation().Z + 16.0f));
+				FVector newNewLoc = FVector((newLoc.GetLocation().X), (newLoc.GetLocation().Y), (newLoc.GetLocation().Z + 16.0f));
 
-				ATT_TankSpawnPoint* actorRef = GetWorld()->SpawnActor<ATT_TankSpawnPoint>(tankSpawnPoint, FTransform(GetTransform().GetRotation(), newLoc, GetTransform().GetScale3D()), SpawnParams);
+				ATT_TankSpawnPoint* actorRef = GetWorld()->SpawnActor<ATT_TankSpawnPoint>(tankSpawnPoint, FTransform(GetTransform().GetRotation(), newNewLoc, GetTransform().GetScale3D()), SpawnParams);
 				currentItemActor = actorRef;
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -245,7 +258,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 				ATT_Mine* actorRef = GetWorld()->SpawnActor<ATT_Mine>(mine, GetTransform(), SpawnParams);
 				currentItemActor = actorRef;
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -257,7 +270,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 					currentItemActor = nullptr;
 				}
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}
@@ -269,7 +282,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 					currentItemActor = nullptr;
 				}
 
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 6.5f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 31.0f));
 
 				break;
 			}
@@ -293,7 +306,22 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 			}
 			case E_FloorItemToSpawn::FITS_trapdoor:
 			{
-				floorSelectionComp->SetVisibility(false);
+				FTransform newLoc = FTransform(GetActorRotation(), (FVector(GetTransform().GetLocation().X, GetTransform().GetLocation().Y, 26.0f)), FVector(1.0f, 1.0f, 1.0f));
+
+				if (currentFloorActor)
+				{
+					currentFloorActor->Destroy();
+					currentFloorActor = nullptr;
+				}
+
+				if (floorSelectionComp)
+					floorSelectionComp->SetVisibility(false);
+
+				FActorSpawnParameters SpawnParams;
+
+				ATT_TrapDoor* actorRef = GetWorld()->SpawnActor<ATT_TrapDoor>(trapDoor, newLoc, SpawnParams);
+				currentFloorActor = actorRef;
+
 				break;
 			}
 			case E_FloorItemToSpawn::FITS_tile:
@@ -318,7 +346,7 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 				itemToSpawn = E_ItemToSpawn::ITS_destroyed;
 				floorSelectionComp->SetVisibility(false);
-				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+				itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
 
 				break;
 			}

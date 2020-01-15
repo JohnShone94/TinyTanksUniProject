@@ -94,7 +94,6 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 					}
 				}
 			}
-			activate = false;
 		}
 	}
 
