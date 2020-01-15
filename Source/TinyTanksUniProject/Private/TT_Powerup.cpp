@@ -28,6 +28,9 @@ ATT_Powerup::ATT_Powerup()
 
 	powerupOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapBegin);
 	powerupOverlap->OnComponentEndOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapEnd);
+
+
+	
 }
 
 // Called when the game starts or when spawned

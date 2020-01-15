@@ -94,38 +94,76 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("help"));
 		ATT_Powerup* powerup = Cast<ATT_Powerup>(OtherActor);
 		if (powerup)			
-		{
-			int powerupNumber = 2;
-//			ATT_TankBase* powerupNumber = <ATT_Powerup>(powerup);
-			if (powerupNumber == 1)
-			{
-				currentPowerup = EPowerupType::PT_fastBullet;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
-			}
-			else if (powerupNumber == 2)
-			{
-				currentPowerup = EPowerupType::PT_missile;
+		{			
 
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Missile Pickup"));
-			}
-			else if (powerupNumber == 3)
+			switch (powerup->GetPowerupType())
 			{
-				currentPowerup = EPowerupType::PT_speedBoost;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("speed boost Pickup"));
+				case EPowerupType::PT_fastBullet:
+				{
+
+					break;
+				}
+				case EPowerupType::PT_missile:
+				{
+
+					break;
+				}
+				case EPowerupType::PT_undergroundBullet:
+				{
+
+					break;
+				}
+				case EPowerupType::PT_wallBullet:
+				{
+
+					break;
+				}
+				case EPowerupType::PT_speedBoost:
+				{
+					
+					break;
+				}
+				case EPowerupType::PT_none:
+				{
+
+
+					break;
+				}
+				default:
+				{
+					break;
+				}
 			}
-			else if (powerupNumber == 4)
-			{
-				currentPowerup = EPowerupType::PT_undergroundBullet;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("undergriond Pickup"));
-			}
-			else
-			{
-				currentPowerup = EPowerupType::PT_none;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("no Pickup"));
-			}
+
+
+			//if (powerupNumber == 1)
+			//{
+			//	currentPowerup = EPowerupType::PT_fastBullet;
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
+			//}
+			//else if (powerupNumber == 2)
+			//{
+			//	currentPowerup = EPowerupType::PT_missile;
+
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Missile Pickup"));
+			//}
+			//else if (powerupNumber == 3)
+			//{
+			//	currentPowerup = EPowerupType::PT_speedBoost;
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("speed boost Pickup"));
+			//}
+			//else if (powerupNumber == 4)
+			//{
+			//	currentPowerup = EPowerupType::PT_undergroundBullet;
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("undergriond Pickup"));
+			//}
+			//else
+			//{
+			//	currentPowerup = EPowerupType::PT_none;
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("no Pickup"));
+			//}
 		}
 	}
 }

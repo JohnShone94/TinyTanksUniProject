@@ -64,6 +64,9 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 maxHealthPoints;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 powerupNumber;
+
 	//The amount of hits a tank has left before it blows up.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 currentHealthPoints;
@@ -87,6 +90,9 @@ protected:
 		float stunTimer;
 
 	FTimerHandle TimerHandle_StunTimerExpired;
+
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		ATT_Powerup* powerupInt;
 
 	///////////////////
 	//// FUNCTIONS ////
