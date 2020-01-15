@@ -110,6 +110,19 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 		randomiseEveryFloorTile = false;
 	}
 
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, reloadGrid))
+	{
+		if (cellArray.Num() > 0)
+		{
+			for (int i = 0; i < cellArray.Num(); i++)
+			{
+				if (cellArray[i])
+					cellArray[i]->ReloadCell();
+			}
+		}
+		randomiseEveryFloorTile = false;
+	}
+
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 #endif

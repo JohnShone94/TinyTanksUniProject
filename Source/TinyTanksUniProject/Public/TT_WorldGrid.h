@@ -37,6 +37,9 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere)
 		bool resetEverything;
 
+	UPROPERTY(Category = "Default", EditAnywhere)
+		bool reloadGrid;
+
 	//WARNING: USING THIS IN EDITOR WILL REMOVE ALL THE FLOOR TILES AND RANDOMISE THEM!
 	UPROPERTY(Category = "Default", EditAnywhere)
 		bool randomiseEveryFloorTile;
