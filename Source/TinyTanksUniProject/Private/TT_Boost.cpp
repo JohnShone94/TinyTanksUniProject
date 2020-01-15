@@ -20,14 +20,14 @@ ATT_Boost::ATT_Boost()
 	boostCollision->InitBoxExtent(FVector(50, 50, 50));
 	boostCollision->SetCollisionProfileName("Hit");
 	boostCollision->SetupAttachment(RootComponent);
-
-	boostStaticMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Boost::OnOverlapBegin);
 }
 
 // Called when the game starts or when spawned
 void ATT_Boost::BeginPlay()
 {
 	Super::BeginPlay();
+
+	boostStaticMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Boost::OnOverlapBegin);
 }
 
 // Called every frame

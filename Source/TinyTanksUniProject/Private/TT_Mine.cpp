@@ -16,21 +16,16 @@ ATT_Mine::ATT_Mine()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mine Mesh"));
-	mineMesh->BodyInstance.SetCollisionProfileName("OverlapAll");
+	mineMesh->SetCollisionProfileName("OverlapAll");
 	mineMesh->SetSimulatePhysics(false);
 	mineMesh->SetEnableGravity(false);
 	RootComponent = mineMesh;
 
-	mineMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnMineOverlapBegin);
-
 	mineOverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Mine Overlap Component"));
-	mineOverlapSphere->BodyInstance.SetCollisionProfileName("OverlapAll");
+	mineOverlapSphere->SetCollisionProfileName("OverlapAll");
 	mineOverlapSphere->SetSimulatePhysics(false);
 	mineOverlapSphere->SetEnableGravity(false);
 	mineOverlapSphere->SetupAttachment(RootComponent);
-
-	mineOverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
-	mineOverlapSphere->OnComponentEndOverlap.AddDynamic(this, &ATT_Mine::OnOverlapEnd);
 
 	countdown = 0;
 	bFlashOn = true;	
@@ -42,7 +37,11 @@ void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
 
+	mineMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnMineOverlapBegin);
 	mineMesh->SetVisibility(false);
+
+	mineOverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
+	mineOverlapSphere->OnComponentEndOverlap.AddDynamic(this, &ATT_Mine::OnOverlapEnd);
 }
 
 void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

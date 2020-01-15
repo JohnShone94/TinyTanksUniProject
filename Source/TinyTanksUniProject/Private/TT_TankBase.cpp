@@ -22,12 +22,10 @@ ATT_TankBase::ATT_TankBase()
 	RootComponent = tankBaseMesh;
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
-	tankOverlap->BodyInstance.SetCollisionProfileName("OverlapAll");
+	tankOverlap->SetCollisionProfileName("OverlapAll");
 	tankOverlap->SetSimulatePhysics(false);
 	tankOverlap->SetEnableGravity(false);
 	tankOverlap->SetupAttachment(RootComponent);
-
-	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
 
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface59.Tank_1_polySurface59'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
@@ -57,6 +55,9 @@ ATT_TankBase::ATT_TankBase()
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
+
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 }
 
@@ -94,37 +95,52 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("help"));
 		ATT_Powerup* powerup = Cast<ATT_Powerup>(OtherActor);
 		if (powerup)			
-		{
-			int powerupNumber = 2;
-//			ATT_TankBase* powerupNumber <ATT_Powerup>();
-			if (powerupNumber == 1)
+		{	
+			switch (powerup->GetPowerupType())
 			{
-				currentPowerup = EPowerupType::PT_fastBullet;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
-			}
-			else if (powerupNumber == 2)
-			{
-				currentPowerup = EPowerupType::PT_missile;
+				case EPowerupType::PT_fastBullet:
+				{
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
 
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Missile Pickup"));
-			}
-			else if (powerupNumber == 3)
-			{
-				currentPowerup = EPowerupType::PT_speedBoost;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("speed boost Pickup"));
-			}
-			else if (powerupNumber == 4)
-			{
-				currentPowerup = EPowerupType::PT_undergroundBullet;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("undergriond Pickup"));
-			}
-			else
-			{
-				currentPowerup = EPowerupType::PT_none;
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("no Pickup"));
+					currentPowerup = EPowerupType::PT_fastBullet;
+
+					break;
+				}
+				case EPowerupType::PT_missile:
+				{
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT(" Missile Pickup"));
+					currentPowerup = EPowerupType::PT_missile;
+					break;
+				}
+				case EPowerupType::PT_undergroundBullet:
+				{
+
+					currentPowerup = EPowerupType::PT_undergroundBullet;
+					break;
+				}
+				case EPowerupType::PT_wallBullet:
+				{
+					currentPowerup = EPowerupType::PT_wallBullet;
+					break;
+				}
+				case EPowerupType::PT_speedBoost:
+				{
+					currentPowerup = EPowerupType::PT_speedBoost;
+					break;
+				}
+				case EPowerupType::PT_none:
+				{
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("none"));
+
+					break;
+				}
+				default:
+				{
+//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Defult"));
+					break;
+				}
 			}
 		}
 	}
@@ -153,6 +169,13 @@ void ATT_TankBase::DamageTank()
 				myTurret->GetTankGunBase()->SetVisibility(true);
 		}
 	}
+}
+
+void ATT_TankBase::ResetPowerup()
+{
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Reset to defult"));
+	currentPowerup = EPowerupType::PT_none;
 }
 
 void ATT_TankBase::TankHasDied_Implementation()

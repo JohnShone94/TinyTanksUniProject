@@ -1,30 +1,30 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TT_FloorTile.h"
+#include "TT_TrapDoor.h"
 #include "Components/StaticMeshComponent.h"
 
-
 // Sets default values
-ATT_FloorTile::ATT_FloorTile()
+ATT_TrapDoor::ATT_TrapDoor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	tileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tile Mesh"));
-	tileMesh->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.3f));
-	RootComponent = tileMesh;
+	trapDoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Trap Door Mesh"));
+	trapDoorMesh->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.3f));
+	RootComponent = trapDoorMesh;
+
 }
 
 // Called when the game starts or when spawned
-void ATT_FloorTile::BeginPlay()
+void ATT_TrapDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ATT_FloorTile::Tick(float DeltaTime)
+void ATT_TrapDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
