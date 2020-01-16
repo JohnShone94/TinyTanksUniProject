@@ -2,6 +2,7 @@
 
 #include "TT_TankBase.h"
 #include "TT_Powerup.h"
+#include "TT_PressurePlate.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Engine.h"
@@ -141,6 +142,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 //					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Defult"));
 					break;
 				}
+
 			}
 		}
 	}
@@ -169,12 +171,13 @@ void ATT_TankBase::DamageTank()
 				myTurret->GetTankGunBase()->SetVisibility(true);
 		}
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, TEXT("Spikes Triggerd"));
 }
 
 void ATT_TankBase::ResetPowerup()
 {
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Reset to defult"));
+//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Reset to defult"));
 	currentPowerup = EPowerupType::PT_none;
 }
 

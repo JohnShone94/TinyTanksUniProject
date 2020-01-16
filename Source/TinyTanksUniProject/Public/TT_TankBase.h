@@ -10,6 +10,7 @@ class UStaticMeshComponent;
 class ATT_BasicBullet;
 class ATT_TinyTanksGameMode;
 class ATT_Powerup;
+class ATT_PressurePlate;
 class USphereComponent;
 
 UENUM()
