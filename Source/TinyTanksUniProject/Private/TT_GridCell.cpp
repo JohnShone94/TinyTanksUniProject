@@ -121,6 +121,14 @@ void ATT_GridCell::ReloadCell()
 		floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
 }
 
+void ATT_GridCell::HideCell(bool val)
+{
+	if (itemSelectionComp)
+		itemSelectionComp->SetVisibility(!val);
+	if (floorSelectionComp && floorItemToSpawn == E_FloorItemToSpawn::FITS_none)
+		floorSelectionComp->SetVisibility(!val);
+}
+
 
 #if WITH_EDITOR
 void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)

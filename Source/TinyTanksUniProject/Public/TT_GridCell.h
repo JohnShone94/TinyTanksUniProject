@@ -117,6 +117,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ReloadCell();
 
+	UFUNCTION(BlueprintCallable)
+		void HideCell(bool val);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

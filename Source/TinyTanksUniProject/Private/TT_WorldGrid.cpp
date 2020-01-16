@@ -94,6 +94,26 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 					}
 				}
 			}
+			else if (cellArray.Num() > 0)
+			{
+				for (int i = 0; i < cellArray.Num(); i++)
+				{
+					if (cellArray[i])
+						cellArray[i]->HideCell(false);
+				}
+			}
+		}
+
+		if (!activate)
+		{
+			if (cellArray.Num() > 0)
+			{
+				for (int i = 0; i < cellArray.Num(); i++)
+				{
+					if (cellArray[i])
+						cellArray[i]->HideCell(true);
+				}
+			}
 		}
 	}
 
