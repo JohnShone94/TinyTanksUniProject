@@ -40,6 +40,12 @@ ATT_BasicBullet::ATT_BasicBullet()
 	projectileMovement->Bounciness = 0.5f;
 	projectileMovement->Friction = -1.0f;
 	projectileMovement->ProjectileGravityScale = 0.0f;
+
+	overlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Overlap Component"));
+	overlapSphere->SetCollisionProfileName("OverlapAll");
+	overlapSphere->SetSimulatePhysics(false);
+	overlapSphere->SetEnableGravity(false);
+	overlapSphere->SetupAttachment(RootComponent);
 	
 	speedLoss = 1.0f;
 	InitialLifeSpan = 5.0f;
@@ -54,8 +60,28 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank)
 		{
-//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet hit: %s"), *tank->GetName());
-			tank->DamageTank();
+			if (currentBulletType == EPowerupType::PT_fastBullet)
+			{
+				tank->DamageTank();
+			}
+			else if (currentBulletType == EPowerupType::PT_missileBullet)
+			{
+				//tank->DamageTank();
+				//tank->DamageTank();
+			}
+			else if (currentBulletType == EPowerupType::PT_stunBullet)
+			{
+				tank->StunTank();
+			}
+			else if (currentBulletType == EPowerupType::PT_undergroundBullet)
+			{
+				tank->DamageTank();
+			}
+			else
+			{
+				tank->DamageTank();
+			}
+
 			Destroy();
 		}
 		else if (OtherActor->GetClass() == this->GetClass())
@@ -64,18 +90,35 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		}
 		else
 		{
-			FVector bounceBackVel = (-1 * FVector::DotProduct(projectileMovement->Velocity, HitNormal) * HitNormal + projectileMovement->Velocity) * speedLoss;
-			projectileMovement->Velocity = bounceBackVel;
-
-			bounceBackVel.Normalize();
-			SetActorRotation(bounceBackVel.Rotation());
-
-			hitAmount++;
-//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Bullet bounced"));
-
-			if (hitAmount >= maxHitAmount)
+			if (currentBulletType == EPowerupType::PT_fastBullet || currentBulletType == EPowerupType::PT_missileBullet || currentBulletType == EPowerupType::PT_stunBullet || currentBulletType == EPowerupType::PT_undergroundBullet)
+			{
 				Destroy();
+			}
+			else
+			{
+				FVector bounceBackVel = (-1 * FVector::DotProduct(projectileMovement->Velocity, HitNormal) * HitNormal + projectileMovement->Velocity) * speedLoss;
+				projectileMovement->Velocity = bounceBackVel;
+
+				bounceBackVel.Normalize();
+				SetActorRotation(bounceBackVel.Rotation());
+
+				hitAmount++;
+
+				if (hitAmount >= maxHitAmount)
+					Destroy();
+			}
 		}
+	}
+}
+
+void ATT_BasicBullet::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
+	if (tank && currentBulletType == EPowerupType::PT_missileBullet)
+	{
+		tank->DamageTank();
+		tank->DamageTank();
+		Destroy();
 	}
 }
 
@@ -85,6 +128,7 @@ void ATT_BasicBullet::BeginPlay()
 	Super::BeginPlay();	
 
 	bulletMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
+	overlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_BasicBullet::OnOverlapBegin);
 }
 
 // Called every frame
@@ -95,46 +139,46 @@ void ATT_BasicBullet::Tick(float DeltaTime)
 
 void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation)
 {	
-	if (bulletType == EPowerupType::PT_fastBullet)
+	currentBulletType = bulletType;
+	if (currentBulletType == EPowerupType::PT_fastBullet)
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 2));
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast fired"));
 	}
-	else if (bulletType == EPowerupType::PT_missile)
+	else if (currentBulletType == EPowerupType::PT_missileBullet)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 0.25));
+		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 1.25));
 
-		UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
-		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Big_Missile_Mat.Big_Missile_Mat'")));					
-
-		/*missileMesh = CreateDefaultSubobject<UStaticMeshComponent>("Missile Mesh");
-		if (meshToUse)
-			missileMesh->SetStaticMesh(meshToUse);
+		//UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
+		//if (meshToUse)
+		//	bulletMesh->SetStaticMesh(meshToUse);
+		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Orange.Orange'")));
 		if (materialToUse)
-			missileMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
-		missileMesh->BodyInstance.SetCollisionProfileName("BlockAll");
-		missileMesh->OnComponentHit.AddDynamic(this, &ATT_BasicBullet::OnHit);
-		missileMesh->SetNotifyRigidBodyCollision(true);
-		missileMesh->SetSimulatePhysics(false);
-		missileMesh->SetEnableGravity(false);
-		RootComponent = missileMesh;*/
+			bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
 
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation()); //will stay at launch location
-
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Missile Launch"));
+		//UParticleEmitter* emitter = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation());
 	}
-	else if (bulletType == EPowerupType::PT_wallBullet)
+	else if (currentBulletType == EPowerupType::PT_stunBullet)
 	{
+		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+
+		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Blue.Blue'")));
+		if (materialToUse)
+			bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
+
 		//this bullet can travel through walls but slows down when it enters and speeds back up when it leaves the wall.
 	}
-	else if (bulletType == EPowerupType::PT_undergroundBullet)
+	else if (currentBulletType == EPowerupType::PT_undergroundBullet)
 	{
+		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+
+		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
+		if (materialToUse)
+			bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
+
 		//this bullet travels underground homing on the closest enemy tank.
 	}
 	else
 	{
 		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
-
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Normal Bullet"));
 	}
 }
