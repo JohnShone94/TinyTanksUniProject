@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "TT_SpringBoard.h"
 #include "TT_TankBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Engine.h"
-#include "TT_SpringBoard.h"
 
 // Sets default values
 ATT_SpringBoard::ATT_SpringBoard()

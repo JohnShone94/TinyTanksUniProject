@@ -31,6 +31,7 @@ ATT_Powerup::ATT_Powerup()
 void ATT_Powerup::BeginPlay()
 {
 	Super::BeginPlay();	
+<<<<<<< HEAD
 	powerupOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapBegin);
 	powerupOverlap->OnComponentEndOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapEnd);
 
@@ -58,6 +59,22 @@ void ATT_Powerup::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * Ot
 		Destroy();
 	}
 }
+=======
+	//powerupOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapBegin);
+}
+
+//void ATT_Powerup::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+//{
+//	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+//	{
+//		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
+//		if (tank)
+//		{
+//			Destroy();
+//		}
+//	}
+//}
+>>>>>>> master
 
 // Called every frame
 void ATT_Powerup::Tick(float DeltaTime)

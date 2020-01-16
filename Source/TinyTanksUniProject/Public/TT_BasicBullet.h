@@ -27,6 +27,8 @@ protected:
 		UStaticMeshComponent* bulletMesh;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* missileMesh;
+	UPROPERTY(EditAnywhere)
+		USphereComponent* overlapSphere;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		int32 hitAmount;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -50,6 +52,7 @@ public:
 //		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 //		EBulletType SelectBullet;
 
+
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* explosion;
 
@@ -61,4 +64,7 @@ protected:
 
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector HitNormal, const FHitResult& Hit);
+
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
