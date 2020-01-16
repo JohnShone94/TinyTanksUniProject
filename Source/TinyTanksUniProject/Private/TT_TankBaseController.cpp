@@ -2,7 +2,6 @@
 
 
 #include "TT_TankBaseController.h"
-#include "TT_TankBase.h"
 #include "TT_TankTurret.h"
 #include "TT_BasicBullet.h"
 #include "TT_TinyTanksGameMode.h"
@@ -13,11 +12,13 @@
 const FName ATT_TankBaseController::moveBinding("MoveBinding");
 const FName ATT_TankBaseController::rotateBinding("RotateBinding");
 const FName ATT_TankBaseController::fireBinding("FireBinding");
+const FName ATT_TankBaseController::specialBinding("SpecialBinding");
 
 ATT_TankBaseController::ATT_TankBaseController()
 {
 	bCanFire = true;
 	rotatingBase = false;
+	activeOffensivePowerup = EPowerupType::PT_none;
 }
 
 void ATT_TankBaseController::BeginPlay()
@@ -34,6 +35,7 @@ void ATT_TankBaseController::SetupInputComponent()
 		InputComponent->BindAxis("MoveBinding", this, &ATT_TankBaseController::MoveForward);
 		InputComponent->BindAxis("RotateBinding", this, &ATT_TankBaseController::Rotate);
 		InputComponent->BindAxis("FireBinding", this, &ATT_TankBaseController::FireShot);
+		InputComponent->BindAxis("SpecialBinding", this, &ATT_TankBaseController::ActivateSpecial);
 
 		if(InputComponent)
 			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(SetupInputComponent): Successfully setup Input Component."));
@@ -112,18 +114,41 @@ void ATT_TankBaseController::FireShot(float val)
 				{
 					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
 
-					if (turretParent->currentPowerup == EPowerupType::PT_wallBullet || turretParent->currentPowerup == EPowerupType::PT_undergroundBullet || turretParent->currentPowerup == EPowerupType::PT_missile || turretParent->currentPowerup == EPowerupType::PT_fastBullet)
-						bullet->SetupBullet(turretParent->currentPowerup, fireRotation);
+					if (activeOffensivePowerup != EPowerupType::PT_none)
+					{
+						bullet->SetupBullet(activeOffensivePowerup, fireRotation);
+						activeOffensivePowerup = EPowerupType::PT_none;
+					}
 					else
 						bullet->SetupBullet(EPowerupType::PT_none, fireRotation);
 
 					turretParent->TankHasFired();
-					turretParent->ResetPowerup();
 				}
 
 				bCanFire = false;
 
 				world->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ATT_TankBaseController::ShotTimerExpired, turretPawn->fireRate);
+			}
+		}
+	}
+}
+
+void ATT_TankBaseController::ActivateSpecial(float val)
+{
+	if (gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f)
+	{
+		if (tankPawn && (tankPawn->currentDeffensivePowerup == EPowerupType::PT_airblast || tankPawn->currentDeffensivePowerup == EPowerupType::PT_floating || tankPawn->currentDeffensivePowerup == EPowerupType::PT_shild || tankPawn->currentDeffensivePowerup == EPowerupType::PT_smokeScreen))
+		{
+			activeDeffensivePowerup = tankPawn->currentDeffensivePowerup;
+			tankPawn->ResetDeffensivePowerup();
+		}
+		else if (turretPawn)
+		{
+			ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
+			if (turretParent && (turretParent->currentOffensivePowerup == EPowerupType::PT_stunBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_undergroundBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_missileBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_fastBullet))
+			{
+				activeOffensivePowerup = turretParent->currentOffensivePowerup;
+				turretParent->ResetOffensivePowerup();
 			}
 		}
 	}

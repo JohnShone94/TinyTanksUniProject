@@ -8,6 +8,8 @@
 #include "TT_TankTurret.h"
 #include "TT_TinyTanksGameMode.h"
 #include "TT_BasicBullet.h"
+#include "TT_SpringBoard.h"
+#include "TT_PressurePlate.h"
 
 ATT_TankBase::ATT_TankBase()
 {
@@ -95,50 +97,112 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
+		ATT_SpringBoard* spring = Cast<ATT_SpringBoard>(OtherActor);
+
+		if (spring)
+		{
+			setLocation.X = 170.0f;
+			setLocation.Y = -50.0f;
+			setLocation.Z = 40;
+			SetActorLocation(setLocation, false, 0, ETeleportType::None);
+		}
+
 		ATT_Powerup* powerup = Cast<ATT_Powerup>(OtherActor);
 		if (powerup)			
-		{	
+		{
 			switch (powerup->GetPowerupType())
 			{
 				case EPowerupType::PT_fastBullet:
 				{
-//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("fast Pickup"));
-
-					currentPowerup = EPowerupType::PT_fastBullet;
+					if (currentOffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentOffensivePowerup = EPowerupType::PT_fastBullet;
+					}
 
 					break;
 				}
-				case EPowerupType::PT_missile:
+				case EPowerupType::PT_missileBullet:
 				{
-//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT(" Missile Pickup"));
-					currentPowerup = EPowerupType::PT_missile;
+					if (currentOffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentOffensivePowerup = EPowerupType::PT_missileBullet;
+					}
+
 					break;
 				}
 				case EPowerupType::PT_undergroundBullet:
 				{
+					if (currentOffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentOffensivePowerup = EPowerupType::PT_undergroundBullet;
+					}
 
-					currentPowerup = EPowerupType::PT_undergroundBullet;
 					break;
 				}
-				case EPowerupType::PT_wallBullet:
+				case EPowerupType::PT_stunBullet:
 				{
-					currentPowerup = EPowerupType::PT_wallBullet;
+					if (currentOffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentOffensivePowerup = EPowerupType::PT_stunBullet;
+					}
+
 					break;
 				}
-				case EPowerupType::PT_speedBoost:
+				case EPowerupType::PT_airblast:
 				{
-					currentPowerup = EPowerupType::PT_speedBoost;
+					if (currentDeffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentDeffensivePowerup = EPowerupType::PT_airblast;
+					}
+
+					break;
+				}
+				case EPowerupType::PT_smokeScreen:
+				{
+					if (currentDeffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentDeffensivePowerup = EPowerupType::PT_smokeScreen;
+					}
+
+					break;
+				}
+				case EPowerupType::PT_shild:
+				{
+					if (currentDeffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentDeffensivePowerup = EPowerupType::PT_shild;
+					}
+
+					break;
+				}
+				case EPowerupType::PT_floating:
+				{
+					if (currentDeffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentDeffensivePowerup = EPowerupType::PT_floating;
+					}
+
 					break;
 				}
 				case EPowerupType::PT_none:
 				{
-//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("none"));
-
+					break;
+				}
+				case EPowerupType::PT_speedBoost:
+				{
+					//apply temp speedboost
 					break;
 				}
 				default:
 				{
-//					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Defult"));
 					break;
 				}
 			}
@@ -171,11 +235,14 @@ void ATT_TankBase::DamageTank()
 	}
 }
 
-void ATT_TankBase::ResetPowerup()
+void ATT_TankBase::ResetDeffensivePowerup()
 {
+	currentDeffensivePowerup = EPowerupType::PT_none;
+}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Reset to defult"));
-	currentPowerup = EPowerupType::PT_none;
+void ATT_TankBase::ResetOffensivePowerup()
+{
+	currentOffensivePowerup = EPowerupType::PT_none;
 }
 
 void ATT_TankBase::TankHasDied_Implementation()

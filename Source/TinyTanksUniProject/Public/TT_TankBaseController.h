@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TT_TankBase.h"
 #include "GameFramework/PlayerController.h"
 #include "TT_TankBaseController.generated.h"
 
 
-class ATT_TankBase;
 class ATT_TankTurret;
 class ATT_TinyTanksGameMode;
 class APawn;
@@ -28,6 +28,7 @@ protected:
 	static const FName moveBinding;
 	static const FName rotateBinding;
 	static const FName fireBinding;
+	static const FName specialBinding;
 
 	UPROPERTY()
 		ATT_TankBase* tankPawn;
@@ -39,6 +40,13 @@ protected:
 	//Set when the base is rotating, used to stop the player from moving while rotating.
 	UPROPERTY()
 		bool rotatingBase;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		EPowerupType activeOffensivePowerup;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		EPowerupType activeDeffensivePowerup;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		EPowerupType activeNeutralPowerup;
 
 	//Used to control the fireing.
 	uint32 bCanFire : 1;
@@ -78,6 +86,7 @@ protected:
 	void MoveForward(float val);
 	void Rotate(float val);
 	void FireShot(float val);
+	void ActivateSpecial(float val);
 
 	void ShotTimerExpired();
 
