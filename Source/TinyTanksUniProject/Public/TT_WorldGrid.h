@@ -72,6 +72,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TArray<ATT_GridCell*> GetArrayOfCells() { return cellArray; };
 
+	UFUNCTION(BlueprintCallable)
+		TArray<ATT_GridCell*> GetArrayOfEmptyCells();
+
+	UFUNCTION(BlueprintCallable)
+		ATT_GridCell* GetRandomEmptyCell();
+
 protected:
 	virtual void BeginPlay();
 	virtual void Tick(float DeltaTime) override;
