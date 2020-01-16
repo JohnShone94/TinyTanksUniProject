@@ -26,7 +26,7 @@ ATT_PressurePlate::ATT_PressurePlate()
 	plateOverlap->SetEnableGravity(false);
 	plateOverlap->SetupAttachment(RootComponent);
 
-	bSpikesUp = false;
+	bPlateActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -51,8 +51,8 @@ void ATT_PressurePlate::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AAc
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		tank = Cast<ATT_TankBase>(OtherActor);
-		&ATT_TankBase::DamageTank;
 		plateMesh->SetMaterial(0, PlateDown);
+		bPlateActivate = true;
 	}
 }
 
@@ -65,6 +65,7 @@ void ATT_PressurePlate::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActo
 			tank = nullptr;
 
 		plateMesh->SetMaterial(0, PlateUp);
+		bPlateActivate = false;
 	}
 }
 

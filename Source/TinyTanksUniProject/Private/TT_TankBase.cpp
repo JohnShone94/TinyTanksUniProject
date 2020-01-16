@@ -2,6 +2,7 @@
 
 #include "TT_TankBase.h"
 #include "TT_Powerup.h"
+#include "TT_SpringBoard.h"
 #include "TT_PressurePlate.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/CollisionProfile.h"
@@ -49,7 +50,6 @@ ATT_TankBase::ATT_TankBase()
 	bIsStunned = false;
 	maxHealthPoints = 2;
 	currentHealthPoints = maxHealthPoints;
-
 	stunTimer = 2.0f;
 }
 
@@ -97,6 +97,16 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		ATT_Powerup* powerup = Cast<ATT_Powerup>(OtherActor);
+		ATT_SpringBoard* spring = Cast<ATT_SpringBoard>(OtherActor);
+
+		if (spring)
+		{
+			setLocation.X = 170.0f;
+			setLocation.Y = -50.0f;
+			setLocation.Z = 40;
+			SetActorLocation(setLocation, false, 1, ETeleportType::None);
+		}
+		
 		if (powerup)			
 		{	
 			switch (powerup->GetPowerupType())
