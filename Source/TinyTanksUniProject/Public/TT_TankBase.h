@@ -10,6 +10,8 @@ class UStaticMeshComponent;
 class ATT_BasicBullet;
 class ATT_TinyTanksGameMode;
 class ATT_Powerup;
+class ATT_PressurePlate;
+class ATT_SpringBoard;
 class USphereComponent;
 
 UENUM()
@@ -43,6 +45,9 @@ public:
 	//The forward vector of the tank.
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FVector tankForwardVector;
+
+	/*UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FVector newActorLocation;*/
 
 	//The speed of a tank when turning.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
@@ -96,6 +101,9 @@ protected:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float stunTimer;
+
+	UPROPERTY()
+		FVector setLocation;
 
 	FTimerHandle TimerHandle_StunTimerExpired;
 
