@@ -24,6 +24,44 @@ ATT_WorldGrid::ATT_WorldGrid()
 
 }
 
+TArray<ATT_GridCell*> ATT_WorldGrid::GetArrayOfEmptyCells()
+{
+	TArray<ATT_GridCell*> arrayOfEmpty;
+	if (cellArray.Num() > 0)
+	{
+		for (int i = 0; i < cellArray.Num(); i++)
+		{
+			if (cellArray[i] && cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_none && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_destroyed)
+			{
+				arrayOfEmpty.Add(cellArray[i]);
+			}
+		}
+	}
+	return arrayOfEmpty;
+}
+
+ATT_GridCell* ATT_WorldGrid::GetRandomEmptyCell()
+{
+	TArray<ATT_GridCell*> arrayOfEmpty;
+	if (cellArray.Num() > 0)
+	{
+		for (int i = 0; i < cellArray.Num(); i++)
+		{
+			if (cellArray[i] && cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_none && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_destroyed)
+			{
+				arrayOfEmpty.Add(cellArray[i]);
+			}
+		}
+	}
+
+	int randNum;
+
+	if (arrayOfEmpty.Num() > 0)
+		randNum = FMath::RandRange(0, arrayOfEmpty.Num());
+
+	return arrayOfEmpty[randNum];
+}
+
 void ATT_WorldGrid::BeginPlay()
 {
 	Super::BeginPlay();
