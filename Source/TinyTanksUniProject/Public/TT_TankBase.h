@@ -66,7 +66,6 @@ public:
 		USphereComponent* tankOverlap;
 
 protected:
-
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* tankBaseMesh;
 

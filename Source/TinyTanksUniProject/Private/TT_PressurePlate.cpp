@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
+#include "TT_PressurePlate.h"
 #include "TT_TankBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Engine.h"
-#include "TT_PressurePlate.h"
 
 // Sets default values
 ATT_PressurePlate::ATT_PressurePlate()
