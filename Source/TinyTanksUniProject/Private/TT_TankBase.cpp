@@ -103,12 +103,13 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		ATT_SpringBoard* spring = Cast<ATT_SpringBoard>(OtherActor);
-
 		if (spring)
 		{
 			setLocation = spring->newActorLocation;
-			setLocation.Z = 30.0f;
-			SetActorLocation(setLocation, false, 0, ETeleportType::ResetPhysics);
+			setLocation.Z = 125.0f;
+//			SetActorLocation(setLocation, false, 0, ETeleportType::None);		
+
+			SetActorLocation(FMath::InterpEaseIn(currentLocation, setLocation, 1, 125));
 		}
 
 		ATT_Powerup* powerup = Cast<ATT_Powerup>(OtherActor);
