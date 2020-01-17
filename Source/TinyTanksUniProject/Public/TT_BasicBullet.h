@@ -60,7 +60,7 @@ public:
 		UParticleSystem* explosion;
 
 	UFUNCTION()
-		void SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FRotator fireRotation);
+		void SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FVector fireVel);
 
 protected:
 	virtual void BeginPlay() override;

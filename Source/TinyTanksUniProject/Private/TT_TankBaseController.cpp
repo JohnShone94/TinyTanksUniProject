@@ -5,6 +5,7 @@
 #include "TT_TankTurret.h"
 #include "TT_BasicBullet.h"
 #include "TT_TinyTanksGameMode.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Pawn.h"
 #include "EngineUtils.h"
 #include "TimerManager.h"
@@ -127,26 +128,30 @@ void ATT_TankBaseController::FireShot(float val)
 
 			if (turretPawn && bCanFire == true && (fireDirection.SizeSquared() > 0.0f))
 			{
-				const FRotator fireRotation = fireDirection.Rotation();
+				const FRotator fireRotation = FRotator(fireDirection.Rotation().Pitch, fireDirection.Rotation().Yaw, 0.0f);
 
-				const FVector spawnLocation = turretPawn->GetActorLocation() + fireRotation.RotateVector(turretPawn->gunOffset);
+				const FVector spawnLocation = turretPawn->fireLocation->GetComponentLocation();
 
 				UWorld* const world = GetWorld();
 				if (world != NULL)
 				{
 					FActorSpawnParameters SpawnParams;
+					SpawnParams.Owner = turretParent;
+					SpawnParams.Instigator = Instigator;
+
 					FTransform spawnTransform = FTransform(fireRotation, spawnLocation, FVector(1.0f, 1.0f, 1.0f));
+
 					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(turretParent->bullet, spawnTransform, SpawnParams);
 
 					if (bullet)
 					{
 						if (activeOffensivePowerup != EPowerupType::PT_none)
 						{
-							bullet->SetupBullet(turretParent, activeOffensivePowerup, fireRotation);
+							bullet->SetupBullet(turretParent, activeOffensivePowerup, fireRotation.Vector());
 							activeOffensivePowerup = EPowerupType::PT_none;
 						}
 						else
-							bullet->SetupBullet(turretParent, EPowerupType::PT_none, fireRotation);
+							bullet->SetupBullet(turretParent, EPowerupType::PT_none, fireDirection);
 
 						turretParent->TankHasFired();
 					}

@@ -3,6 +3,7 @@
 #include "TT_TankBase.h"
 #include "TT_Powerup.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Engine.h"
 #include "TT_TankTurret.h"
@@ -31,7 +32,7 @@ ATT_TankBase::ATT_TankBase()
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
 	tankOverlap->SetCollisionProfileName("OverlapAll");
 	tankOverlap->SetupAttachment(RootComponent);
-
+	
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface59.Tank_1_polySurface59'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
 	if (meshToUse)

@@ -70,13 +70,14 @@ public:
 
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* tankBaseMesh;
-protected:
 
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* shildMesh;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
+
+protected:
 
 	//The amount of hits a tank can take before it blows up.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)

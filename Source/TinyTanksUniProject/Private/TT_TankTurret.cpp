@@ -4,6 +4,7 @@
 #include "TT_TankTurret.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "TT_BasicBullet.h"
 #include "Engine.h"
@@ -16,7 +17,7 @@ ATT_TankTurret::ATT_TankTurret()
 	tankGunBase->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 	RootComponent = tankGunBase;
 
-	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface26.Tank_1_polySurface26'")));
+	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Aztank1_tanktop.Aztank1_tanktop'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
 	if (meshToUse)
 		tankGunBase->SetStaticMesh(meshToUse);

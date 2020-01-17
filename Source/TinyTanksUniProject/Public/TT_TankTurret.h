@@ -9,6 +9,7 @@
 class ATT_BasicBullet;
 class UStaticMeshComponent;
 class USceneComponent;
+class USphereComponent;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankTurret : public APawn
@@ -27,15 +28,15 @@ public:
 		float fireRate;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float rotateSpeed;
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		FVector turretForwardVector;
 
-protected:
-
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* tankGunBase;
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		USceneComponent* fireLocation;
+
+protected:
 
 	///////////////////
 	//// FUNCTIONS ////

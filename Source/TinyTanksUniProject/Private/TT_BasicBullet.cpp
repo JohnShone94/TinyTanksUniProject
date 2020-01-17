@@ -16,6 +16,12 @@ ATT_BasicBullet::ATT_BasicBullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	overlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Overlap Component"));
+	overlapSphere->SetCollisionProfileName("OverlapAll");
+	overlapSphere->SetSimulatePhysics(false);
+	overlapSphere->SetEnableGravity(false);
+	RootComponent = overlapSphere;
+
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Bullet_Low.Bullet_Low'")));
 	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
 
@@ -24,28 +30,15 @@ ATT_BasicBullet::ATT_BasicBullet()
 		bulletMesh->SetStaticMesh(meshToUse);
 	if (materialToUse)
 		bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
-	bulletMesh->SetCollisionProfileName("BlockAll");
 	bulletMesh->SetNotifyRigidBodyCollision(true);
 	bulletMesh->SetSimulatePhysics(false);
 	bulletMesh->SetEnableGravity(false);
-	RootComponent = bulletMesh;
+	bulletMesh->SetupAttachment(RootComponent);
 
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	projectileMovement->UpdatedComponent = RootComponent;
-	projectileMovement->InitialSpeed = 800.f;
-	projectileMovement->MaxSpeed = 9000.f;
-	projectileMovement->bRotationFollowsVelocity = true;
-	projectileMovement->bShouldBounce = true;
-	projectileMovement->Velocity = FVector(0.0f, 0.0f, 0.0f);
-	projectileMovement->Bounciness = 0.5f;
-	projectileMovement->Friction = -1.0f;
-	projectileMovement->ProjectileGravityScale = 0.0f;
-
-	overlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Overlap Component"));
-	overlapSphere->SetCollisionProfileName("OverlapAll");
-	overlapSphere->SetSimulatePhysics(false);
-	overlapSphere->SetEnableGravity(false);
-	overlapSphere->SetupAttachment(RootComponent);
+	projectileMovement->InitialSpeed = 600.0f;
+	projectileMovement->MaxSpeed = 6000.f;
 	
 	speedLoss = 1.0f;
 	InitialLifeSpan = 5.0f;
@@ -58,7 +51,7 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	if (OtherActor)
 	{
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
-		if (tank)
+		if (tank && tank != GetOwner())
 		{
 			if (currentBulletType == EPowerupType::PT_fastBullet)
 			{
@@ -137,18 +130,18 @@ void ATT_BasicBullet::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FRotator fireRotation)
+void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FVector fireVel)
 {	
 	owningPlayer = player;
 
 	currentBulletType = bulletType;
 	if (currentBulletType == EPowerupType::PT_fastBullet)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 2));
+		projectileMovement->Velocity = (fireVel * (600 * 2));
 	}
 	else if (currentBulletType == EPowerupType::PT_missileBullet)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * (projectileMovement->InitialSpeed * 1.25));
+		projectileMovement->Velocity = (fireVel * (600 * 1.25));
 
 		//UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Big_Missile.Big_Missile'")));
 		//if (meshToUse)
@@ -161,7 +154,7 @@ void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType,
 	}
 	else if (currentBulletType == EPowerupType::PT_stunBullet)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+		projectileMovement->Velocity = (fireVel * 600);
 
 		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Blue.Blue'")));
 		if (materialToUse)
@@ -171,7 +164,7 @@ void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType,
 	}
 	else if (currentBulletType == EPowerupType::PT_undergroundBullet)
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+		projectileMovement->Velocity = (fireVel * 600);
 
 		UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
 		if (materialToUse)
@@ -181,6 +174,6 @@ void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType,
 	}
 	else
 	{
-		projectileMovement->Velocity = (fireRotation.Vector() * projectileMovement->InitialSpeed);
+		projectileMovement->Velocity = (fireVel * 600);
 	}
 }
