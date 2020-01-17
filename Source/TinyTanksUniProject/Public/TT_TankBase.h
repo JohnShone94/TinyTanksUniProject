@@ -68,9 +68,12 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_BasicBullet> bullet;
 
-protected:
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* tankBaseMesh;
+protected:
+
+	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* shildMesh;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
@@ -97,6 +100,10 @@ protected:
 	//Set to true when the tank is stunned.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bIsStunned;
+
+	//Set to true when the tank is shilded.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bIsShilded;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
 		ATT_TinyTanksGameMode* gameMode;
@@ -146,6 +153,9 @@ public:
 
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		void ResetOffensivePowerup();
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void ActivateShild(bool val);
 
 	UFUNCTION(Category = "Tank")
 		void SetCurrentOffensivePowerup(EPowerupType powerup) { currentOffensivePowerup = powerup; };

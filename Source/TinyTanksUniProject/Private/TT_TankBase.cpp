@@ -20,13 +20,16 @@ ATT_TankBase::ATT_TankBase()
 	tankBaseMesh->SetSimulatePhysics(true);
 	tankBaseMesh->bIgnoreRadialForce = true;
 	tankBaseMesh->bIgnoreRadialImpulse = true;
-	tankBaseMesh->SetEnableGravity(false);
+	tankBaseMesh->SetEnableGravity(true);
 	RootComponent = tankBaseMesh;
+
+	shildMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
+	shildMesh->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	shildMesh->SetVisibility(false);
+	shildMesh->SetupAttachment(RootComponent);
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
 	tankOverlap->SetCollisionProfileName("OverlapAll");
-	tankOverlap->SetSimulatePhysics(false);
-	tankOverlap->SetEnableGravity(false);
 	tankOverlap->SetupAttachment(RootComponent);
 
 	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface59.Tank_1_polySurface59'")));
@@ -244,6 +247,12 @@ void ATT_TankBase::ResetDeffensivePowerup()
 void ATT_TankBase::ResetOffensivePowerup()
 {
 	currentOffensivePowerup = EPowerupType::PT_none;
+}
+
+void ATT_TankBase::ActivateShild(bool val)
+{
+	shildMesh->SetVisibility(val);
+	bIsShilded = val;
 }
 
 void ATT_TankBase::TankHasDied_Implementation()

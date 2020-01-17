@@ -12,7 +12,8 @@
 const FName ATT_TankBaseController::moveBinding("MoveBinding");
 const FName ATT_TankBaseController::rotateBinding("RotateBinding");
 const FName ATT_TankBaseController::fireBinding("FireBinding");
-const FName ATT_TankBaseController::specialBinding("SpecialBinding");
+const FName ATT_TankBaseController::activateSpecialBinding("ActivateSpecialBinding");
+const FName ATT_TankBaseController::useSpecialBinding("UseSpecialBinding");
 
 ATT_TankBaseController::ATT_TankBaseController()
 {
@@ -35,7 +36,8 @@ void ATT_TankBaseController::SetupInputComponent()
 		InputComponent->BindAxis("MoveBinding", this, &ATT_TankBaseController::MoveForward);
 		InputComponent->BindAxis("RotateBinding", this, &ATT_TankBaseController::Rotate);
 		InputComponent->BindAxis("FireBinding", this, &ATT_TankBaseController::FireShot);
-		InputComponent->BindAxis("SpecialBinding", this, &ATT_TankBaseController::ActivateSpecial);
+		InputComponent->BindAxis("ActivateSpecialBinding", this, &ATT_TankBaseController::ActivateSpecial);
+		InputComponent->BindAxis("UseSpecialBinding", this, &ATT_TankBaseController::UseSpecial);
 
 		if(InputComponent)
 			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(SetupInputComponent): Successfully setup Input Component."));
@@ -50,6 +52,26 @@ void ATT_TankBaseController::SetupInputComponent()
 void ATT_TankBaseController::ShotTimerExpired()
 {
 	bCanFire = true;
+}
+
+void ATT_TankBaseController::SpecialTimerExpired()
+{
+	if (tankPawn)
+	{
+		if (activeDeffensivePowerup == EPowerupType::PT_floating)
+		{
+			tankPawn->tankBaseMesh->SetEnableGravity(true);
+		}
+		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
+		{
+			tankPawn->ActivateShild(false);
+		}
+		else if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
+		{
+			tankPawn->moveSpeed = (tankPawn->moveSpeed / 2);
+		}
+		activeDeffensivePowerup = EPowerupType::PT_none;
+	}
 }
 
 void ATT_TankBaseController::MoveForward(float val)
@@ -120,11 +142,11 @@ void ATT_TankBaseController::FireShot(float val)
 					{
 						if (activeOffensivePowerup != EPowerupType::PT_none)
 						{
-							bullet->SetupBullet(activeOffensivePowerup, fireRotation);
+							bullet->SetupBullet(turretParent, activeOffensivePowerup, fireRotation);
 							activeOffensivePowerup = EPowerupType::PT_none;
 						}
 						else
-							bullet->SetupBullet(EPowerupType::PT_none, fireRotation);
+							bullet->SetupBullet(turretParent, EPowerupType::PT_none, fireRotation);
 
 						turretParent->TankHasFired();
 					}
@@ -157,4 +179,28 @@ void ATT_TankBaseController::ActivateSpecial(float val)
 			}
 		}
 	}
+}
+
+void ATT_TankBaseController::UseSpecial(float val)
+{
+	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f)
+	{
+		if (activeDeffensivePowerup == EPowerupType::PT_airblast)
+		{
+			
+		}
+		else if (activeDeffensivePowerup == EPowerupType::PT_floating)
+		{
+			tankPawn->tankBaseMesh->SetEnableGravity(false);
+		}
+		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
+		{
+			tankPawn->ActivateShild(true);
+		}
+		else if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
+		{
+			tankPawn->moveSpeed = (tankPawn->moveSpeed * 2);
+		}
+	}
+
 }

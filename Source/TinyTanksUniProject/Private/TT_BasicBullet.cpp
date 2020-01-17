@@ -64,10 +64,10 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 			{
 				tank->DamageTank();
 			}
-			else if (currentBulletType == EPowerupType::PT_missileBullet)
+			else if (currentBulletType == EPowerupType::PT_missileBullet && owningPlayer && (OtherActor != owningPlayer))
 			{
-				//tank->DamageTank();
-				//tank->DamageTank();
+				tank->DamageTank();
+				tank->DamageTank();
 			}
 			else if (currentBulletType == EPowerupType::PT_stunBullet)
 			{
@@ -114,7 +114,7 @@ void ATT_BasicBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 void ATT_BasicBullet::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
-	if (tank && currentBulletType == EPowerupType::PT_missileBullet)
+	if (tank && currentBulletType == EPowerupType::PT_missileBullet && owningPlayer && (OtherActor != owningPlayer))
 	{
 		tank->DamageTank();
 		tank->DamageTank();
@@ -137,8 +137,10 @@ void ATT_BasicBullet::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ATT_BasicBullet::SetupBullet(EPowerupType bulletType, FRotator fireRotation)
+void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FRotator fireRotation)
 {	
+	owningPlayer = player;
+
 	currentBulletType = bulletType;
 	if (currentBulletType == EPowerupType::PT_fastBullet)
 	{

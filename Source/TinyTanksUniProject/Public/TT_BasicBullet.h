@@ -15,11 +15,11 @@ class ATT_TankBase;
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
 {
-	GENERATED_BODY()	
+	GENERATED_BODY()
 
-	///////////////////
-	//// VARIABLES ////
-	///////////////////
+		///////////////////
+		//// VARIABLES ////
+		///////////////////
 
 protected:
 
@@ -37,6 +37,9 @@ protected:
 		int32 speedLoss;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* projectileMovement;
+
+	UPROPERTY()
+		ATT_TankBase* owningPlayer;
 
 	EPowerupType currentBulletType;
 
@@ -57,7 +60,7 @@ public:
 		UParticleSystem* explosion;
 
 	UFUNCTION()
-		void SetupBullet(EPowerupType bulletType, FRotator fireRotation);
+		void SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FRotator fireRotation);
 
 protected:
 	virtual void BeginPlay() override;

@@ -28,7 +28,8 @@ protected:
 	static const FName moveBinding;
 	static const FName rotateBinding;
 	static const FName fireBinding;
-	static const FName specialBinding;
+	static const FName activateSpecialBinding;
+	static const FName useSpecialBinding;
 
 	UPROPERTY()
 		ATT_TankBase* tankPawn;
@@ -53,6 +54,9 @@ protected:
 
 	//Handler for the timer.
 	FTimerHandle TimerHandle_ShotTimerExpired;
+
+	//Handler for the timer.
+	FTimerHandle TimerHandle_SpecialTimerExpired;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -87,7 +91,9 @@ protected:
 	void Rotate(float val);
 	void FireShot(float val);
 	void ActivateSpecial(float val);
+	void UseSpecial(float val);
 
 	void ShotTimerExpired();
+	void SpecialTimerExpired();
 
 };
