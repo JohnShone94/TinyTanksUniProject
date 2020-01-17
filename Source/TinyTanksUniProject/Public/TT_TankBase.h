@@ -104,6 +104,12 @@ protected:
 	UPROPERTY()
 		FVector setLocation;
 
+	UPROPERTY()
+		FVector currentLocation;
+
+	UPROPERTY()
+		FVector destination;
+
 	FTimerHandle TimerHandle_StunTimerExpired;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
