@@ -24,6 +24,8 @@ ATT_SpringBoard::ATT_SpringBoard()
 	SpringOverlap->SetEnableGravity(false);
 	SpringOverlap->SetupAttachment(RootComponent);
 
+	currentLocation = GetActorLocation;
+
 }
 
 // Called when the game starts or when spawned
@@ -39,6 +41,8 @@ void ATT_SpringBoard::BeginPlay()
 void ATT_SpringBoard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	DrawDebugLine(GetWorld(),currentLocation, newActorLocation, FColor(255,0,0))
 
 }
 void ATT_SpringBoard::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
