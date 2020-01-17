@@ -108,21 +108,27 @@ void ATT_TankBaseController::FireShot(float val)
 				const FRotator fireRotation = fireDirection.Rotation();
 
 				const FVector spawnLocation = turretPawn->GetActorLocation() + fireRotation.RotateVector(turretPawn->gunOffset);
+				spawnLocation = 
 
 				UWorld* const world = GetWorld();
 				if (world != NULL)
 				{
-					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(spawnLocation, fireRotation);
+					FActorSpawnParameters SpawnParams;
+					FTransform spawnTransform = FTransform(fireRotation, spawnLocation, FVector(1.0f, 1.0f, 1.0f));
+					ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(turretParent->bullet, spawnTransform, SpawnParams);
 
-					if (activeOffensivePowerup != EPowerupType::PT_none)
+					if (bullet)
 					{
-						bullet->SetupBullet(activeOffensivePowerup, fireRotation);
-						activeOffensivePowerup = EPowerupType::PT_none;
-					}
-					else
-						bullet->SetupBullet(EPowerupType::PT_none, fireRotation);
+						if (activeOffensivePowerup != EPowerupType::PT_none)
+						{
+							bullet->SetupBullet(activeOffensivePowerup, fireRotation);
+							activeOffensivePowerup = EPowerupType::PT_none;
+						}
+						else
+							bullet->SetupBullet(EPowerupType::PT_none, fireRotation);
 
-					turretParent->TankHasFired();
+						turretParent->TankHasFired();
+					}
 				}
 
 				bCanFire = false;

@@ -23,9 +23,9 @@ class TINYTANKSUNIPROJECT_API ATT_BasicBullet : public AActor
 
 protected:
 
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* bulletMesh;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* missileMesh;
 	UPROPERTY(EditAnywhere)
 		USphereComponent* overlapSphere;
@@ -35,7 +35,7 @@ protected:
 		int32 maxHitAmount;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		int32 speedLoss;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* projectileMovement;
 
 	EPowerupType currentBulletType;

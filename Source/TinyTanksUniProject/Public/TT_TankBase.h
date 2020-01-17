@@ -65,6 +65,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		USphereComponent* tankOverlap;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_BasicBullet> bullet;
+
 protected:
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* tankBaseMesh;
