@@ -23,7 +23,7 @@ ATT_TankBase::ATT_TankBase()
 	tankBaseMesh->SetEnableGravity(true);
 	RootComponent = tankBaseMesh;
 
-	shildMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
+	shildMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Shild Mesh"));
 	shildMesh->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	shildMesh->SetVisibility(false);
 	shildMesh->SetupAttachment(RootComponent);
