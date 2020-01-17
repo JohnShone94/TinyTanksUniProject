@@ -108,7 +108,6 @@ void ATT_TankBaseController::FireShot(float val)
 				const FRotator fireRotation = fireDirection.Rotation();
 
 				const FVector spawnLocation = turretPawn->GetActorLocation() + fireRotation.RotateVector(turretPawn->gunOffset);
-				spawnLocation = 
 
 				UWorld* const world = GetWorld();
 				if (world != NULL)
