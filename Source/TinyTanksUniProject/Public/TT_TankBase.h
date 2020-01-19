@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class ATT_BasicBullet;
+class ATT_MagicMissile;
 class ATT_TinyTanksGameMode;
 class ATT_Powerup;
 class ATT_PressurePlate;
@@ -67,6 +68,9 @@ public:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_BasicBullet> bullet;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_MagicMissile> magicMissile;
 
 	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* tankBaseMesh;

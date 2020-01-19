@@ -128,6 +128,8 @@ void ATT_BasicBullet::BeginPlay()
 void ATT_BasicBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
 }
 
 void ATT_BasicBullet::SetupBullet(ATT_TankBase* player, EPowerupType bulletType, FVector fireVel)

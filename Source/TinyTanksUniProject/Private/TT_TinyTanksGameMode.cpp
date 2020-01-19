@@ -305,7 +305,7 @@ void ATT_TinyTanksGameMode::RemoveTank()
 {
 	playersLeft = (playersLeft - 1);
 
-	if (playersLeft <= 1)
+	if (playersLeft <= 1 && mainCam)
 		mainCam->LastManIsStanding();
 }
 
