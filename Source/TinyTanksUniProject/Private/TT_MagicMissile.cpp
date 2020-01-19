@@ -83,22 +83,21 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 		{
 			currentPosition = traceStartPoint;
 			targetPosition = hit.Location;
-			isMoving = true;
 			//DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true);
 
-			if (GetActorLocation().Equals(targetPosition, 1.0f))
+			if (GetActorLocation().Equals(targetPosition, 1.0f) && isMoving)
 			{
 				if (hitAmount < maxHitAmount)
 				{
 					hitAmount++;
 
 					FVector riqochetVelocity;
-					FVector hitNormal = hit.Normal;
-					if (hitNormal.X == 1.0f || hitNormal.X == -1.0f)
+					//FVector hitNormal = hit.Normal;
+					if (FMath::IsNearlyEqual(hitNormal.X, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.X, -1.0f, 0.25f))
 					{
 						riqochetVelocity = FVector((velocity.X * -1.0f), velocity.Y, velocity.Z);
 					}
-					else if (hitNormal.Y == 1.0f || hitNormal.Y == -1.0f)
+					else if (FMath::IsNearlyEqual(hitNormal.Y, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.Y, -1.0f, 0.25f))
 					{
 						riqochetVelocity = FVector(velocity.X, (velocity.Y * -1.0f), velocity.Z);
 					}
@@ -107,6 +106,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 					traceEndPoint = currentPosition;
 					SetActorRotation(riqochetVelocity.Rotation());
 					moveMissileDeltaTime = 0.01f;
+					missileRootComp->MoveIgnoreActors.Empty();
 					isMoving = false;
 				}
 				else
@@ -116,20 +116,30 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 			}
 			else
 			{
-				FVector newLoc = FMath::Lerp(currentPosition, targetPosition, missileSpeed);
+				//FVector newLoc = FMath::Lerp(currentPosition, targetPosition, missileSpeed);
+				FVector newLoc = currentPosition + (velocity * missileSpeed);
 
 				FHitResult out;
 				SetActorLocation(newLoc, true, &out);
 
 				if (out.GetActor())
 				{
+					hitNormal = out.Normal;
+
 					ATT_StandardWall* wall = Cast<ATT_StandardWall>(out.GetActor());
-					if (wall)
+					if (wall) 
+					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
 						missileRootComp->IgnoreActorWhenMoving(wall, true);
+					}
 					else if (out.GetActor()->ActorHasTag("Arena_ArenaWall"))
+					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
 						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
+					}
 				}
 
+				isMoving = true;
 				currentPosition = newLoc;
 			}
 		}
@@ -139,7 +149,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 
 void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector HitNormal, const FHitResult & HitResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit Class: %s"), *OtherActor->GetName()));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit Class: %s"), *OtherActor->GetName()));
 
 	if (OtherActor->GetClass() == this->GetClass())
 	{

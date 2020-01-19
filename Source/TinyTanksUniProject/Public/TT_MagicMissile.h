@@ -61,6 +61,8 @@ public:
 	UPROPERTY()
 		EPowerupType currentBulletType;
 
+	FVector hitNormal;
+
 public:	
 	// Sets default values for this actor's properties
 	ATT_MagicMissile();
