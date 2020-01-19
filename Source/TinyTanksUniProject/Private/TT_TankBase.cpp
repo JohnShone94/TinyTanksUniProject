@@ -9,8 +9,11 @@
 #include "TT_TankTurret.h"
 #include "TT_TinyTanksGameMode.h"
 #include "TT_BasicBullet.h"
+#include "Math/UnrealMathVectorCommon.h"
 #include "TT_SpringBoard.h"
+#include "Math/InterpCurve.h"
 #include "TT_PressurePlate.h"
+#include "Math/UnrealMathUtility.h"
 
 ATT_TankBase::ATT_TankBase()
 {
@@ -54,6 +57,8 @@ ATT_TankBase::ATT_TankBase()
 	bIsStunned = false;
 	maxHealthPoints = 2;
 	currentHealthPoints = maxHealthPoints;
+
+	currentLocation = GetActorLocation();
 
 	stunTimer = 2.0f;
 }
@@ -102,14 +107,13 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		ATT_SpringBoard* spring = Cast<ATT_SpringBoard>(OtherActor);
-
 		if (spring)
 		{
-			setLocation.X = 1.0f;
-			setLocation.Y = 1.0f;
-			setLocation.Z = 1.0f;
-//			spring->newActorLocation = setLocation;  //need to get FVector from TT_SpringBoard class
-			SetActorLocation(setLocation, false, 0, ETeleportType::ResetPhysics);
+			setLocation = spring->newActorLocation;
+			setLocation.Z = 125.0f;
+//			SetActorLocation(setLocation, false, 0, ETeleportType::None);		
+
+			SetActorLocation(FMath::InterpEaseIn(currentLocation, setLocation, 1, 125));
 		}
 
 		ATT_Powerup* powerup = Cast<ATT_Powerup>(OtherActor);
