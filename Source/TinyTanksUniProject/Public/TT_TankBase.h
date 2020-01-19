@@ -15,8 +15,8 @@ class ATT_PressurePlate;
 class ATT_SpringBoard;
 class USphereComponent;
 
-UENUM()
-enum class EPowerupType
+UENUM(BlueprintType)
+enum class EPowerupType : uint8
 {
 	PT_none						UMETA(DiaplayName = "None"),
 
