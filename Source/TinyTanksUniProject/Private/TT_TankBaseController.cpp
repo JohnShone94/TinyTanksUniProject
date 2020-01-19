@@ -3,9 +3,9 @@
 
 #include "TT_TankBaseController.h"
 #include "TT_TankTurret.h"
-#include "TT_BasicBullet.h"
 #include "TT_MagicMissile.h"
 #include "TT_TinyTanksGameMode.h"
+
 #include "Components/SphereComponent.h"
 #include "GameFramework/Pawn.h"
 #include "EngineUtils.h"
@@ -143,23 +143,9 @@ void ATT_TankBaseController::FireShot(float val)
 
 					FTransform spawnTransform = FTransform(fireRotation, spawnLocation, FVector(1.0f, 1.0f, 1.0f));
 
-					//ATT_BasicBullet* bullet = world->SpawnActor<ATT_BasicBullet>(turretParent->bullet, spawnTransform, SpawnParams);
 					ATT_MagicMissile* bullet = world->SpawnActor<ATT_MagicMissile>(turretParent->magicMissile, spawnTransform, SpawnParams);
 					if(bullet)
 						bullet->SetupBullet(fireDirection, turretParent, activeOffensivePowerup);
-
-					//if (bullet)
-					//{
-					//	if (activeOffensivePowerup != EPowerupType::PT_none)
-					//	{
-					//		//bullet->SetupBullet(turretParent, activeOffensivePowerup, fireRotation.Vector());
-					//		activeOffensivePowerup = EPowerupType::PT_none;
-					//	}
-					//	else
-					//		//bullet->SetupBullet(turretParent, EPowerupType::PT_none, fireDirection);
-
-					//	turretParent->TankHasFired();
-					//}
 				}
 
 				bCanFire = false;

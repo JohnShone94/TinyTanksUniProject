@@ -32,11 +32,11 @@ public:
 		float gridStartX;
 	UPROPERTY(Category = "Default", EditAnywhere)
 		float gridStartY;
+
 	UPROPERTY(Category = "Default", EditAnywhere)
 		bool activate;
 	UPROPERTY(Category = "Default", EditAnywhere)
 		bool resetEverything;
-
 	UPROPERTY(Category = "Default", EditAnywhere)
 		bool reloadGrid;
 

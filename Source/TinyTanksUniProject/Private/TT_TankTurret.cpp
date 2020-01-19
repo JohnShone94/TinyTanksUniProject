@@ -6,7 +6,6 @@
 #include "Components/SceneComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
-#include "TT_BasicBullet.h"
 #include "Engine.h"
 
 ATT_TankTurret::ATT_TankTurret()
@@ -16,13 +15,6 @@ ATT_TankTurret::ATT_TankTurret()
 	tankGunBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Gun Base"));
 	tankGunBase->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 	RootComponent = tankGunBase;
-
-	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Aztank1_tanktop.Aztank1_tanktop'")));
-	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
-	if (meshToUse)
-		tankGunBase->SetStaticMesh(meshToUse);
-	if (materialToUse)
-		tankGunBase->GetStaticMesh()->SetMaterial(0, materialToUse);
 
 	fireLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Fire Location"));
 	fireLocation->SetupAttachment(RootComponent);
@@ -39,7 +31,6 @@ void ATT_TankTurret::BeginPlay()
 	Super::BeginPlay();
 	
 	turretForwardVector = tankGunBase->GetForwardVector();
-	gunOffset = FVector(60.0f, 0.0f, 0.0f);
 }
 
 void ATT_TankTurret::Tick(float DeltaTime)

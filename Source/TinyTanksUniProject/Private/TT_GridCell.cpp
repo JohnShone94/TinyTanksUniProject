@@ -75,7 +75,7 @@ void ATT_GridCell::RandomiseFloorTile()
 
 	FActorSpawnParameters SpawnParams;
 
-	ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTileOne, GetTransform(), SpawnParams);
+	ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTile, GetTransform(), SpawnParams);
 	currentFloorActor = actorRef;
 }
 

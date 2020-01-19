@@ -20,11 +20,11 @@ class TINYTANKSUNIPROJECT_API ATT_Boost : public AActor
 	///////////////////
 
 protected:	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 		UBoxComponent* boostCollision;
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* boostStaticMesh;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 		UParticleSystem* boostParticleSystem;
 
 	///////////////////

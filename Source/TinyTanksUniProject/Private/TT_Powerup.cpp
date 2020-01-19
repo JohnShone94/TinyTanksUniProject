@@ -4,7 +4,6 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PrimitiveComponent.h"
-#include "TT_BasicBullet.h"
 #include "TT_TankBase.h"
 #include "Engine.h"
 
@@ -15,15 +14,9 @@ ATT_Powerup::ATT_Powerup()
 	PrimaryActorTick.bCanEverTick = true;
 
 	powerupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Powerup Mesh"));
-	powerupMesh->SetCollisionProfileName("OverlapAll");
-	powerupMesh->SetSimulatePhysics(false);
-	powerupMesh->SetEnableGravity(false);
 	RootComponent = powerupMesh;
 
 	powerupOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Powerup Overlap Component"));
-	powerupOverlap->SetCollisionProfileName("OverlapAll");
-	powerupOverlap->SetSimulatePhysics(false);
-	powerupOverlap->SetEnableGravity(false);
 	powerupOverlap->SetupAttachment(RootComponent);
 
 
@@ -37,20 +30,7 @@ ATT_Powerup::ATT_Powerup()
 void ATT_Powerup::BeginPlay()
 {
 	Super::BeginPlay();	
-	//powerupOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_Powerup::OnOverlapBegin);
 }
-
-//void ATT_Powerup::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-//{
-//	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
-//	{
-//		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
-//		if (tank)
-//		{
-//			Destroy();
-//		}
-//	}
-//}
 
 // Called every frame
 void ATT_Powerup::Tick(float DeltaTime)

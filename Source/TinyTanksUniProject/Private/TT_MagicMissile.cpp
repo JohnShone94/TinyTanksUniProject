@@ -150,29 +150,36 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank && owningPlayer)
 		{
-			if (currentBulletType == EPowerupType::PT_fastBullet)
+			if (tank == owningPlayer && hitAmount > 0)
 			{
-				tank->DamageTank();
-			}
-			else if (currentBulletType == EPowerupType::PT_missileBullet)
-			{
-				tank->DamageTank();
-				tank->DamageTank();
-			}
-			else if (currentBulletType == EPowerupType::PT_stunBullet)
-			{
-				tank->StunTank();
-			}
-			else if (currentBulletType == EPowerupType::PT_undergroundBullet)
-			{
-				tank->DamageTank();
+
 			}
 			else
 			{
-				tank->DamageTank();
-			}
+				if (currentBulletType == EPowerupType::PT_fastBullet)
+				{
+					tank->DamageTank();
+				}
+				else if (currentBulletType == EPowerupType::PT_missileBullet)
+				{
+					tank->DamageTank();
+					tank->DamageTank();
+				}
+				else if (currentBulletType == EPowerupType::PT_stunBullet)
+				{
+					tank->StunTank();
+				}
+				else if (currentBulletType == EPowerupType::PT_undergroundBullet)
+				{
+					tank->DamageTank();
+				}
+				else
+				{
+					tank->DamageTank();
+				}
 
-			Destroy();
+				Destroy();
+			}
 		}
 		else
 		{

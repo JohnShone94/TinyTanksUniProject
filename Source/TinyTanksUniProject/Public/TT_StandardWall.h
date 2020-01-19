@@ -22,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* wallMesh;
 
 public:	

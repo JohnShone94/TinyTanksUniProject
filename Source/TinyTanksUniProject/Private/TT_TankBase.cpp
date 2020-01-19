@@ -2,17 +2,18 @@
 
 #include "TT_TankBase.h"
 #include "TT_Powerup.h"
+#include "TT_TankTurret.h"
+#include "TT_TinyTanksGameMode.h"
+#include "TT_MagicMissile.h"
+#include "TT_SpringBoard.h"
+#include "TT_PressurePlate.h"
+
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Engine.h"
-#include "TT_TankTurret.h"
-#include "TT_TinyTanksGameMode.h"
-#include "TT_BasicBullet.h"
 #include "Math/UnrealMathVectorCommon.h"
-#include "TT_SpringBoard.h"
 #include "Math/InterpCurve.h"
-#include "TT_PressurePlate.h"
 #include "Math/UnrealMathUtility.h"
 
 ATT_TankBase::ATT_TankBase()
@@ -20,28 +21,14 @@ ATT_TankBase::ATT_TankBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	tankBaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
-	tankBaseMesh->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	tankBaseMesh->SetSimulatePhysics(true);
-	tankBaseMesh->bIgnoreRadialForce = true;
-	tankBaseMesh->bIgnoreRadialImpulse = true;
-	tankBaseMesh->SetEnableGravity(true);
 	RootComponent = tankBaseMesh;
 
 	shildMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Shild Mesh"));
-	shildMesh->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	shildMesh->SetVisibility(false);
 	shildMesh->SetupAttachment(RootComponent);
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
-	tankOverlap->SetCollisionProfileName("OverlapAll");
 	tankOverlap->SetupAttachment(RootComponent);
-	
-	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Tank/Tank_1_polySurface59.Tank_1_polySurface59'")));
-	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Green.Green'")));
-	if (meshToUse)
-		tankBaseMesh->SetStaticMesh(meshToUse);
-	if (materialToUse)
-		tankBaseMesh->SetMaterial(0, materialToUse);
 
 	turretSlot = CreateDefaultSubobject<UChildActorComponent>(TEXT("Turret Slot"));
 	turretSlot->SetChildActorClass(ATT_TankTurret::StaticClass());
@@ -111,8 +98,6 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 		{
 			setLocation = spring->newActorLocation;
 			setLocation.Z = 125.0f;
-//			SetActorLocation(setLocation, false, 0, ETeleportType::None);		
-
 			SetActorLocation(FMath::InterpEaseIn(currentLocation, setLocation, 1, 125));
 		}
 

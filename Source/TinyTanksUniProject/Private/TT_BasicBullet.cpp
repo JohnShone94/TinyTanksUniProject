@@ -22,14 +22,7 @@ ATT_BasicBullet::ATT_BasicBullet()
 	overlapSphere->SetEnableGravity(false);
 	RootComponent = overlapSphere;
 
-	UStaticMesh* meshToUse = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("StaticMesh'/Game/Assets/Bullet/Bullet_Low.Bullet_Low'")));
-	UMaterial* materialToUse = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Blueprints/Red.Red'")));
-
 	bulletMesh = CreateDefaultSubobject<UStaticMeshComponent>("Bullet Mesh");
-	if(meshToUse)
-		bulletMesh->SetStaticMesh(meshToUse);
-	if (materialToUse)
-		bulletMesh->GetStaticMesh()->SetMaterial(0, materialToUse);
 	bulletMesh->SetNotifyRigidBodyCollision(true);
 	bulletMesh->SetSimulatePhysics(false);
 	bulletMesh->SetEnableGravity(false);

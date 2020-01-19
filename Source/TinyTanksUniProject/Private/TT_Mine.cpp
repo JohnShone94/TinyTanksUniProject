@@ -16,15 +16,9 @@ ATT_Mine::ATT_Mine()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mine Mesh"));
-	mineMesh->SetCollisionProfileName("OverlapAll");
-	mineMesh->SetSimulatePhysics(false);
-	mineMesh->SetEnableGravity(false);
 	RootComponent = mineMesh;
 
 	mineOverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Mine Overlap Component"));
-	mineOverlapSphere->SetCollisionProfileName("OverlapAll");
-	mineOverlapSphere->SetSimulatePhysics(false);
-	mineOverlapSphere->SetEnableGravity(false);
 	mineOverlapSphere->SetupAttachment(RootComponent);
 
 	countdown = 0;

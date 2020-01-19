@@ -36,8 +36,10 @@ TArray<ATT_GridCell*> ATT_WorldGrid::GetArrayOfEmptyCells()
 				arrayOfEmpty.Add(cellArray[i]);
 			}
 		}
+
+		return arrayOfEmpty;
 	}
-	return arrayOfEmpty;
+	return TArray<ATT_GridCell*>();
 }
 
 ATT_GridCell* ATT_WorldGrid::GetRandomEmptyCell()
@@ -57,9 +59,13 @@ ATT_GridCell* ATT_WorldGrid::GetRandomEmptyCell()
 	int randNum;
 
 	if (arrayOfEmpty.Num() > 0)
+	{
 		randNum = FMath::RandRange(0, arrayOfEmpty.Num());
+		ATT_GridCell* cell = arrayOfEmpty[randNum];
+		return cell;
+	}
 
-	return arrayOfEmpty[randNum];
+	return nullptr;
 }
 
 void ATT_WorldGrid::BeginPlay()

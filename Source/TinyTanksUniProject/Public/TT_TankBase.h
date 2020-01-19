@@ -7,7 +7,6 @@
 #include "TT_TankBase.generated.h"
 
 class UStaticMeshComponent;
-class ATT_BasicBullet;
 class ATT_MagicMissile;
 class ATT_TinyTanksGameMode;
 class ATT_Powerup;
@@ -44,91 +43,68 @@ class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
 
 public:
 	//The forward vector of the tank.
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadOnly)
 		FVector tankForwardVector;
-
-	/*UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		FVector newActorLocation;*/
-
 	//The speed of a tank when turning.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float rotateSpeed;
-
 	//The speed of a tank when moving forward.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float moveSpeed;
+	//The amount of hits a tank can take before it blows up.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 maxHealthPoints;
+
+	//Set to true when the tank is dead.
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bCanRockDestroy;
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		EPowerupType currentOffensivePowerup;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		EPowerupType currentDeffensivePowerup;
 
-	UPROPERTY(EditAnywhere)
-		USphereComponent* tankOverlap;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ATT_BasicBullet> bullet;
-
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_MagicMissile> magicMissile;
 
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UStaticMeshComponent* tankBaseMesh;
-
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UStaticMeshComponent* shildMesh;
-
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		USphereComponent* tankOverlap;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UStaticMeshComponent* tankBaseMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UStaticMeshComponent* shildMesh;
+
 protected:
-
-	//The amount of hits a tank can take before it blows up.
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		int32 maxHealthPoints;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		int32 powerupNumber;
-
 	//The amount of hits a tank has left before it blows up.
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		int32 currentHealthPoints;
-
 	//Set to true when the tank is dead.
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsDead;
-
-	//Set to true when the tank is dead.
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		bool bCanRockDestroy;
-
 	//Set to true when the tank is stunned.
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsStunned;
-
 	//Set to true when the tank is shilded.
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsShilded;
 
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TinyTanksGameMode* gameMode;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		float stunTimer;
-
-	UPROPERTY()
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector setLocation;
-
-	UPROPERTY()
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector currentLocation;
-
-	UPROPERTY()
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector destination;
-
-	FTimerHandle TimerHandle_StunTimerExpired;
-
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		ATT_Powerup* powerupInt;
+
+	FTimerHandle TimerHandle_StunTimerExpired;
 
 	///////////////////
 	//// FUNCTIONS ////

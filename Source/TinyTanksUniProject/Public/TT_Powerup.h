@@ -22,26 +22,26 @@ class TINYTANKSUNIPROJECT_API ATT_Powerup : public AActor
 
 public:	
 
+	UPROPERTY(Category = "Default", EditAnywhere)
+		float rotateSpeed;
+
+	UPROPERTY(Category = "Default", EditAnywhere)
+		float pitchValue;
+
+	UPROPERTY(Category = "Default", EditAnywhere)
+		float yawValue;
+
+	UPROPERTY(Category = "Default", EditAnywhere)
+		float rollValue;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		EPowerupType powerupType;
+
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* powerupMesh;
 
 	UPROPERTY(VisibleAnywhere)
 		USphereComponent* powerupOverlap;
-
-	UPROPERTY(EditAnywhere)
-		float rotateSpeed;
-
-	UPROPERTY(EditAnywhere)
-		float pitchValue;
-
-	UPROPERTY(EditAnywhere)
-		float yawValue;
-
-	UPROPERTY(EditAnywhere)
-		float rollValue;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType powerupType;
 
 protected:
 

@@ -9,7 +9,6 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 
-
 class ATT_TankSpawnPoint;
 class ATT_Mine;
 class ATT_StandardWall;
@@ -46,44 +45,27 @@ class TINYTANKSUNIPROJECT_API ATT_GridCell : public AActor
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TankSpawnPoint> tankSpawnPoint;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_Mine> mine;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_StandardWall> standardWall;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_StandardWall> standardLWall;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_StandardWall> standardTWall;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_DestructableWall> destructableWall;
-
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ATT_FloorTile> floorTileOne;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_FloorTile> floorTile;
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TrapDoor> trapDoor;
-
-
-	//UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<ATT_FloorTile> floorTileTwo;
-	//UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<ATT_FloorTile> floorTileThree;
-	//UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-	//	TSubclassOf<ATT_FloorTile> floorTileFour;
-
 
 	UPROPERTY(Category = "Default", EditAnywhere)
 		E_ItemToSpawn itemToSpawn;
 	UPROPERTY(Category = "Default", EditAnywhere)
 		E_FloorItemToSpawn floorItemToSpawn;
-
-	UPROPERTY(Category = "Default", VisibleAnywhere)
-		AActor* currentItemActor;
-	UPROPERTY(Category = "Default", VisibleAnywhere)
-		AActor* currentFloorActor;
-
 
 	UPROPERTY(Category = "Default", EditAnywhere)
 		bool rotateRight;
@@ -91,6 +73,12 @@ public:
 		bool rotateLeft;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere)
+		AActor* currentItemActor;
+	UPROPERTY(Category = "Default", VisibleAnywhere)
+		AActor* currentFloorActor;
+
+
+	UPROPERTY()
 		int32 rotationVal;
 
 protected:	

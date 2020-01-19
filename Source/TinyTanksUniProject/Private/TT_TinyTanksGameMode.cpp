@@ -6,7 +6,8 @@
 #include "TT_TankBase.h"
 #include "TT_TankTurret.h"
 #include "TT_TankSpawnPoint.h"
-#include "TT_BasicBullet.h"
+#include "TT_MagicMissile.h"
+
 #include "EngineUtils.h"
 #include "ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
@@ -250,9 +251,9 @@ void ATT_TinyTanksGameMode::ResetPlayers()
 		turretArray.Empty();
 	}
 
-	for (TActorIterator<ATT_BasicBullet> actorItr(GetWorld()); actorItr; ++actorItr)
+	for (TActorIterator<ATT_MagicMissile> actorItr(GetWorld()); actorItr; ++actorItr)
 	{
-		ATT_BasicBullet* actor = *actorItr;
+		ATT_MagicMissile* actor = *actorItr;
 
 		if (actor)
 		{

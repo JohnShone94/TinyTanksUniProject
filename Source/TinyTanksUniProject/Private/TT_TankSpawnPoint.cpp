@@ -17,9 +17,7 @@ ATT_TankSpawnPoint::ATT_TankSpawnPoint()
 ATT_TankBase* ATT_TankSpawnPoint::SpawnTank()
 {
 	FActorSpawnParameters SpawnParams;
-
 	ATT_TankBase* actorRef = GetWorld()->SpawnActor<ATT_TankBase>(tanktospawn, GetTransform(), SpawnParams);
-
 	return actorRef;
 }
 

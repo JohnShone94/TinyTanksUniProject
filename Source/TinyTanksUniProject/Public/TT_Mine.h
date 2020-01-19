@@ -23,34 +23,28 @@ class TINYTANKSUNIPROJECT_API ATT_Mine : public AActor
 	///////////////////
 
 public:	
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* mineMesh;
 
-	UPROPERTY(EditAnywhere)
-		USphereComponent* mineOverlapSphere;
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		UMaterial* flashOn;
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere)
 		UMaterial* flashOff;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 		UParticleSystem* explosion;
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* mineMesh;
+	UPROPERTY(VisibleAnywhere)
+		USphereComponent* mineOverlapSphere;
 
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TankBase* tank;
-
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bFlashOn;
-
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bCanFlash;
-
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsActivated;
-
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		int32 countdown;
 

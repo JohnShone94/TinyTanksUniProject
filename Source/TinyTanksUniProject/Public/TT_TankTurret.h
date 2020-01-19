@@ -6,7 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "TT_TankTurret.generated.h"
 
-class ATT_BasicBullet;
 class UStaticMeshComponent;
 class USceneComponent;
 class USphereComponent;
@@ -23,17 +22,15 @@ class TINYTANKSUNIPROJECT_API ATT_TankTurret : public APawn
 public:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		FVector gunOffset;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float fireRate;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float rotateSpeed;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		FVector turretForwardVector;
 
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		FVector turretForwardVector;
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		UStaticMeshComponent* tankGunBase;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		USceneComponent* fireLocation;
 
 protected:
