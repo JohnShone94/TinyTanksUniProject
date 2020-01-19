@@ -86,12 +86,17 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SetupInputComponent() override;
-
-	void MoveForward(float val);
-	void Rotate(float val);
-	void FireShot(float val);
-	void ActivateSpecial(float val);
-	void UseSpecial(float val);
+	
+	UFUNCTION(BlueprintCallable)
+		void MoveForward(float val);
+	UFUNCTION(BlueprintCallable)
+		void Rotate(float val);
+	UFUNCTION(BlueprintCallable)
+		void FireShot(float val);
+	UFUNCTION(BlueprintCallable)
+		void ActivateSpecial(float val);
+	UFUNCTION(BlueprintCallable)
+		void UseSpecial(float val);
 
 	void ShotTimerExpired();
 	void SpecialTimerExpired();
