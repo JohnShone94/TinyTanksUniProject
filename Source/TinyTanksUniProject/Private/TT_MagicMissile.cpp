@@ -165,12 +165,12 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 					ATT_StandardWall* wall = Cast<ATT_StandardWall>(out.GetActor());
 					if (wall) 
 					{
-						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
+						// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
 						missileRootComp->IgnoreActorWhenMoving(wall, true);
 					}
 					else if (out.GetActor()->ActorHasTag("Arena_ArenaWall"))
 					{
-						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
+						// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
 						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
 					}
 				}
