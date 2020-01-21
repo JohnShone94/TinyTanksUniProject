@@ -7,10 +7,12 @@
 #include "TT_TinyTanksGameMode.h"
 
 #include "Components/SphereComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/Pawn.h"
 #include "EngineUtils.h"
 #include "TimerManager.h"
 #include "DrawDebugHelpers.h"
+#include "Engine.h"
 
 const FName ATT_TankBaseController::moveBinding("MoveBinding");
 const FName ATT_TankBaseController::rotateBinding("RotateBinding");
@@ -183,20 +185,32 @@ void ATT_TankBaseController::UseSpecial(float val)
 	{
 		if (activeDeffensivePowerup == EPowerupType::PT_airblast)
 		{
-			
+			FHitResult out;
+			UKismetSystemLibrary::BoxTraceSingleByProfile(GetWorld(), tankPawn->GetActorLocation(), (tankPawn->GetActorLocation() + (tankPawn->GetTankForwardVector() * 2)), FVector(20.0f), tankPawn->GetActorRotation(), FName("TT_Player_Object"), true, TArray<AActor*>(), EDrawDebugTrace::Persistent, out, true, FLinearColor::Red);
+			if (out.GetActor())
+			{
+				ATT_TankBase* tank = Cast<ATT_TankBase>(out.GetActor());
+
+				if (tank)
+				{
+
+				}
+			}
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_floating)
 		{
 			tankPawn->tankBaseMesh->SetEnableGravity(false);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_SpecialTimerExpired, this, &ATT_TankBaseController::SpecialTimerExpired, 5.0f);
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
 		{
 			tankPawn->ActivateShild(true);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_SpecialTimerExpired, this, &ATT_TankBaseController::SpecialTimerExpired, 25.0f);
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
 		{
 			tankPawn->moveSpeed = (tankPawn->moveSpeed * 2);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_SpecialTimerExpired, this, &ATT_TankBaseController::SpecialTimerExpired, 3.0f);
 		}
 	}
-
 }

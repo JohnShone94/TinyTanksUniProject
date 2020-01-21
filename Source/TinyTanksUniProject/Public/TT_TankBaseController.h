@@ -49,6 +49,9 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		EPowerupType activeNeutralPowerup;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float airblastSphereRadius;
+
 	//Used to control the fireing.
 	uint32 bCanFire : 1;
 
@@ -82,6 +85,7 @@ protected:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bHasMissile;
+
 
 	virtual void BeginPlay() override;
 

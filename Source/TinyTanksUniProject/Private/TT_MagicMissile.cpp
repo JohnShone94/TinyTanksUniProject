@@ -57,7 +57,43 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 {
 	owningPlayer = player;
 	currentBulletType = bulletType;
-	velocity = ((fireVel * baseVelocity) * speedModifier);
+
+	switch (currentBulletType)
+	{
+	case EPowerupType::PT_none:
+	{
+		velocity = ((fireVel * baseVelocity) * speedModifier);
+
+		break;
+	}
+	case EPowerupType::PT_fastBullet:
+	{
+		velocity = ((fireVel * baseVelocity) * (speedModifier * 2));
+
+		break;
+	}
+	case EPowerupType::PT_missileBullet:
+	{
+		velocity = ((fireVel * baseVelocity) * speedModifier);
+		maxHitAmount += 2;
+
+		break;
+	}
+	case EPowerupType::PT_stunBullet:
+	{
+		velocity = ((fireVel * baseVelocity) * speedModifier);
+
+		break;
+	}
+	case EPowerupType::PT_undergroundBullet:
+	{
+		velocity = ((fireVel * baseVelocity) * speedModifier);
+
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 void ATT_MagicMissile::MoveMissile(float DeltaTime)
