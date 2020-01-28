@@ -15,6 +15,7 @@ class ATT_StandardWall;
 class ATT_DestructableWall;
 class ATT_FloorTile;
 class ATT_TrapDoor;
+class ATT_Spike;
 
 UENUM()
 enum class E_ItemToSpawn
@@ -32,9 +33,10 @@ enum class E_ItemToSpawn
 UENUM()
 enum class E_FloorItemToSpawn
 {
-	FITS_none				UMETA(DiaplayName = "Floor None"),
-	FITS_trapdoor			UMETA(DiaplayName = "Trapdoor"),
+	FITS_none				UMETA(DiaplayName = "No Tile"),
+	FITS_trapdoor			UMETA(DiaplayName = "Trapdoor Tile"),
 	FITS_tile				UMETA(DiaplayName = "Floor Tile"),
+	FITS_spike			UMETA(DiaplayName = "Spike Tile"),
 	FITS_destroyed			UMETA(DiaplayName = "Floor Destroyed"),
 };
 
@@ -61,6 +63,8 @@ public:
 		TSubclassOf<ATT_FloorTile> floorTile;
 	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TrapDoor> trapDoor;
+	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_Spike> spikeTile;
 
 	UPROPERTY(Category = "Default", EditAnywhere)
 		E_ItemToSpawn itemToSpawn;
