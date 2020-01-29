@@ -5,6 +5,7 @@
 #include "TT_DestructableWall.h"
 #include "TT_StandardWall.h"
 #include "EngineUtils.h"
+#include "TimerManager.h"
 #include "CollisionQueryParams.h"
 #include "Components/SphereComponent.h"
 #include "DrawDebugHelpers.h"
@@ -30,6 +31,7 @@ ATT_MagicMissile::ATT_MagicMissile()
 	baseVelocity = 600.0f;
 	moveMissileDeltaTime = 0.0f;
 	lifeLineDeltaTime = 0.0f;
+	bIsDestroyed = false;
 }
 
 // Called when the game starts or when spawned
@@ -43,14 +45,19 @@ void ATT_MagicMissile::BeginPlay()
 void ATT_MagicMissile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	MoveMissile(DeltaTime);
+
+	if (!bIsDestroyed)
+		MoveMissile(DeltaTime);
 
 	lifeLineDeltaTime += 0.1f;
 
 	if (lifeLineDeltaTime >= missileLifeTime)
-	{
-		Destroy();
-	}
+		RunBulletHitEffect();
+}
+
+void ATT_MagicMissile::DeathTimerExpired()
+{
+	this->Destroy();
 }
 
 void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPowerupType bulletType)
@@ -60,45 +67,45 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 
 	switch (currentBulletType)
 	{
-	case EPowerupType::PT_none:
-	{
-		velocity = ((fireVel * baseVelocity) * speedModifier);
+		case EPowerupType::PT_none:
+		{
+			velocity = ((fireVel * baseVelocity) * speedModifier);
 
-		break;
-	}
-	case EPowerupType::PT_fastBullet:
-	{
-		velocity = ((fireVel * baseVelocity) * (speedModifier * 2));
+			break;
+		}
+		case EPowerupType::PT_fastBullet:
+		{
+			velocity = ((fireVel * baseVelocity) * speedModifier);
 
-		break;
-	}
-	case EPowerupType::PT_missileBullet:
-	{
-		velocity = ((fireVel * baseVelocity) * speedModifier);
-		maxHitAmount += 2;
+			break;
+		}
+		case EPowerupType::PT_missileBullet:
+		{
+			velocity = ((fireVel * baseVelocity) * (speedModifier * 2));
+			maxHitAmount += 2;
+			RunMegaBulletEffect();
 
-		break;
-	}
-	case EPowerupType::PT_stunBullet:
-	{
-		velocity = ((fireVel * baseVelocity) * speedModifier);
+			break;
+		}
+		case EPowerupType::PT_stunBullet:
+		{
+			velocity = ((fireVel * baseVelocity) * speedModifier);
 
-		break;
-	}
-	case EPowerupType::PT_undergroundBullet:
-	{
-		velocity = ((fireVel * baseVelocity) * speedModifier);
+			break;
+		}
+		case EPowerupType::PT_undergroundBullet:
+		{
+			velocity = ((fireVel * baseVelocity) * speedModifier);
 
-		break;
-	}
-	default:
-		break;
+			break;
+		}
+		default:
+			break;
 	}
 }
 
 void ATT_MagicMissile::MoveMissile(float DeltaTime)
 {
-
 	traceStartPoint = this->GetActorLocation();
 	traceEndPoint = traceStartPoint + (velocity * moveMissileDeltaTime);
 	traceEndPoint.Z = traceStartPoint.Z;
@@ -147,7 +154,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 				}
 				else
 				{
-					Destroy();
+					RunBulletHitEffect();
 				}
 			}
 			else
@@ -189,19 +196,20 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 
 	if (OtherActor->GetClass() == this->GetClass())
 	{
-		Destroy();
+		RunBulletHitEffect();
 	}
 	else
 	{
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank && owningPlayer)
 		{
-			if (tank == owningPlayer && hitAmount > 0)
+			if (tank == owningPlayer && hitAmount <= 0)
 			{
 
 			}
 			else
 			{
+				missileRootComp->MoveIgnoreActors.Empty();
 				if (currentBulletType == EPowerupType::PT_fastBullet)
 				{
 					tank->DamageTank();
@@ -224,7 +232,7 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 					tank->DamageTank();
 				}
 
-				Destroy();
+				RunBulletHitEffect();
 			}
 		}
 		else
@@ -232,13 +240,20 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 			ATT_DestructableWall* dWall = Cast<ATT_DestructableWall>(OtherActor);
 			if (dWall)
 			{
-				Destroy();
+				RunBulletHitEffect();
 			}
 		}
 	}
 }
 
+void ATT_MagicMissile::RunBulletHitEffect_Implementation()
+{
+	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle_DeathTimerExpired);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Can be destroyed")));
+	bIsDestroyed = true;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_DeathTimerExpired, this, &ATT_MagicMissile::DeathTimerExpired, 0.5f);
+}
 
-void ATT_MagicMissile::CheckHitActor(AActor * hitActor)
+void ATT_MagicMissile::RunMegaBulletEffect_Implementation()
 {
 }

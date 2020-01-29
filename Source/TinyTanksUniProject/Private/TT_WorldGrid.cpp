@@ -60,7 +60,7 @@ ATT_GridCell* ATT_WorldGrid::GetRandomEmptyCell()
 
 	if (arrayOfEmpty.Num() > 0)
 	{
-		randNum = FMath::RandRange(0, arrayOfEmpty.Num());
+		randNum = FMath::RandRange(0, (arrayOfEmpty.Num() - 1));
 		ATT_GridCell* cell = arrayOfEmpty[randNum];
 		return cell;
 	}

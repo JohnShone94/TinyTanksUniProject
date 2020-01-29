@@ -51,6 +51,8 @@ public:
 		FHitResult hit;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		int32 hitAmount;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		bool bIsDestroyed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USphereComponent* missileRootComp;
@@ -63,6 +65,9 @@ public:
 
 	FVector hitNormal;
 
+	//Handler for the timer.
+	FTimerHandle TimerHandle_DeathTimerExpired;
+
 public:	
 	// Sets default values for this actor's properties
 	ATT_MagicMissile();
@@ -74,7 +79,6 @@ public:
 		void SetupBullet(FVector fireVel, ATT_TankBase* player, EPowerupType bulletType);
 
 	void MoveMissile(float DeltaTime);
-	void CheckHitActor(AActor* hitActor);
 
 protected:
 	// Called when the game starts or when spawned
@@ -82,5 +86,19 @@ protected:
 
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector HitNormal, const FHitResult& HitResult);
+
+
+	UFUNCTION(Category = "Bullet", BlueprintNativeEvent)
+		void RunBulletHitEffect();
+
+	virtual void RunBulletHitEffect_Implementation();
+
+	UFUNCTION(Category = "Bullet", BlueprintNativeEvent)
+		void RunMegaBulletEffect();
+
+	virtual void RunMegaBulletEffect_Implementation();
+
+
+	void DeathTimerExpired();
 
 };
