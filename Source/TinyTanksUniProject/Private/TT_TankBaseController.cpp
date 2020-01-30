@@ -83,16 +83,24 @@ void ATT_TankBaseController::MoveForward(float val)
 {
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
 	{
+
+		float speedMultiplier;
+		if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
+			speedMultiplier = 1.5f;
+		else
+			speedMultiplier = 1.0f;
+
 		//UE_LOG(LogTemp, Warning, TEXT("TANK FORWARD %f"), val);
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed) * val);
+
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed * speedMultiplier) * val);
 			tankPawn->AddActorWorldOffset(moveDirection, false, &Hit);
 		}
 		else if (val < 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* (tankPawn->moveSpeed / 2.5)) * val);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->moveSpeed * speedMultiplier) / 2.5)) * val);
 			tankPawn->AddActorWorldOffset(moveDirection, false, &Hit);
 		}
 	}
