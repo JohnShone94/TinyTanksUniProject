@@ -4,33 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "TT_TankBaseController.h"
 #include "TT_TankBase.generated.h"
 
 class UStaticMeshComponent;
 class ATT_MagicMissile;
-class ATT_TinyTanksGameMode;
 class ATT_Powerup;
 class ATT_PressurePlate;
 class ATT_SpringBoard;
+class ATT_TinyTanksGameMode;
 class USphereComponent;
-
-UENUM(BlueprintType)
-enum class EPowerupType : uint8
-{
-	PT_none						UMETA(DiaplayName = "None"),
-
-	PT_speedBoost				UMETA(DisplayName = "Speed Boost | Neutral"),
-
-	PT_airblast					UMETA(DisplayName = "Airblast | Defensive"),
-	PT_shild					UMETA(DisplayName = "Shild | Defensive"),
-	PT_smokeScreen				UMETA(DisplayName = "Smoke Screen | Defensive"),
-	PT_floating					UMETA(DisplayName = "Floating | Defensive"),
-
-	PT_fastBullet				UMETA(DisplayName = "Fast Bullet | Offensive"),
-	PT_missileBullet			UMETA(DisplayName = "Misslie Bullet | Offensive"),
-	PT_stunBullet				UMETA(DisplayName = "Stun Bullet | Offensive"),
-	PT_undergroundBullet		UMETA(DisplayName = "Undeground Bullet | Offensive"),
-};
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
@@ -104,6 +87,10 @@ protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		ATT_Powerup* powerupInt;
 
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		ESelectedTeam tankTeam;
+
+
 	FTimerHandle TimerHandle_StunTimerExpired;
 
 	///////////////////
@@ -122,6 +109,13 @@ public:
 
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		ESelectedTeam GetTankTeam() { return tankTeam; };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void SetTankTeam(ESelectedTeam team) { tankTeam = team; };
+
 
 	//Called when the tank dies.
 	UFUNCTION(Category = "Tank", BlueprintCallable)

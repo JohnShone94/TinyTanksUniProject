@@ -3,14 +3,52 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TT_TankBase.h"
 #include "GameFramework/PlayerController.h"
 #include "TT_TankBaseController.generated.h"
 
 
 class ATT_TankTurret;
+class ATT_TankBase;
 class ATT_TinyTanksGameMode;
 class APawn;
+
+UENUM(BlueprintType)
+enum class EPowerupType : uint8
+{
+	PT_none						UMETA(DiaplayName = "None"),
+
+	PT_speedBoost				UMETA(DisplayName = "Speed Boost | Neutral"),
+
+	PT_airblast					UMETA(DisplayName = "Airblast | Defensive"),
+	PT_shild					UMETA(DisplayName = "Shild | Defensive"),
+	PT_smokeScreen				UMETA(DisplayName = "Smoke Screen | Defensive"),
+	PT_floating					UMETA(DisplayName = "Floating | Defensive"),
+
+	PT_fastBullet				UMETA(DisplayName = "Fast Bullet | Offensive"),
+	PT_missileBullet			UMETA(DisplayName = "Misslie Bullet | Offensive"),
+	PT_stunBullet				UMETA(DisplayName = "Stun Bullet | Offensive"),
+	PT_undergroundBullet		UMETA(DisplayName = "Undeground Bullet | Offensive"),
+};
+
+UENUM(BlueprintType)
+enum class ESelectedTeam : uint8
+{
+	ST_none						UMETA(DiaplayName = "No Team"),
+
+	ST_blueBase					UMETA(DisplayName = "Blue Team | Base"),
+	ST_blueTurret				UMETA(DisplayName = "Blue Team | Turret"),
+
+	ST_redBase					UMETA(DiaplayName = "Red Team | Base"),
+	ST_redTurret				UMETA(DiaplayName = "Red Team | Turret"),
+
+	ST_greenBase				UMETA(DisplayName = "Green Team | Base"),
+	ST_greenTurret				UMETA(DisplayName = "Green Team | Turret"),
+
+	ST_yellowBase				UMETA(DisplayName = "Yellow Team | Base"),
+	ST_yellowTurret				UMETA(DisplayName = "Yellow Team | Turret"),
+
+};
+
 
 /**
  * 
@@ -52,6 +90,16 @@ protected:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float airblastSphereRadius;
 
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bHasFast;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bHasMissile;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		ESelectedTeam selectedTeam;
+
 	//Used to control the fireing.
 	uint32 bCanFire : 1;
 
@@ -73,18 +121,18 @@ public:
 	UFUNCTION()
 		void SetTurretPawn(ATT_TankTurret* turret) { turretPawn = turret; };
 
+	UFUNCTION(BlueprintCallable)
+		void SetPlayerTeam(ESelectedTeam team) { selectedTeam = team; };
+
+	UFUNCTION(BlueprintCallable)
+		ESelectedTeam GetPlayerTeam() { return selectedTeam; };
+
 	//UFUNCTION()
 	//	void PickupMissile();
 	//UFUNCTION()
 	//	void PickupFast();
 
 protected:
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		bool bHasFast;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		bool bHasMissile;
 
 
 	virtual void BeginPlay() override;

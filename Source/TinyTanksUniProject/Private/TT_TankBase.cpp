@@ -3,10 +3,10 @@
 #include "TT_TankBase.h"
 #include "TT_Powerup.h"
 #include "TT_TankTurret.h"
-#include "TT_TinyTanksGameMode.h"
 #include "TT_MagicMissile.h"
 #include "TT_SpringBoard.h"
 #include "TT_PressurePlate.h"
+#include "TT_TinyTanksGameMode.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"

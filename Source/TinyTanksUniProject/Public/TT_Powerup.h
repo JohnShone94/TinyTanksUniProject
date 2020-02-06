@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "TT_TankBase.h"
 #include "GameFramework/Actor.h"
+#include "TT_TankBaseController.h"
 #include "TT_Powerup.generated.h"
 
 class UStaticMeshComponent;

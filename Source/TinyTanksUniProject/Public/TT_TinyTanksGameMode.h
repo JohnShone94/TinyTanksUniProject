@@ -80,8 +80,8 @@ public:
 	UFUNCTION()
 		int32 GetPlayersLeft() { return playersLeft; };
 
-	UFUNCTION()
-		void AddTankToGM(ATT_TankBase* tank);
+	UFUNCTION(BlueprintCallable)
+		void PlayerPossessTank();
 
 	UFUNCTION(BlueprintCallable)
 		bool GetCanPlayersControlTanks() { return bCanPlayersControlTanks; };
@@ -92,7 +92,6 @@ public:
 		void SpawnPlayerTanks();
 	UFUNCTION(BlueprintCallable)
 		void SpawnPlayerControllers();
-
 
 protected:
 	virtual void BeginPlay() override;

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TT_TankBase.h"
+#include "TT_TankBaseController.h"
 #include "TT_MagicMissile.generated.h"
 
 class USphereComponent;
