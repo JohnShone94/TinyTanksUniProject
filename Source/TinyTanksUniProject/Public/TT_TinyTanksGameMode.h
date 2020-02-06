@@ -81,7 +81,7 @@ public:
 
 	//called when a tank dies.
 	UFUNCTION()
-		void RemoveTank(ATT_TankBase* tank);
+		void RemoveTank(ATT_TankBase* tank, bool addWin);
 
 	UFUNCTION()
 		int32 GetPlayersLeft() { return playersLeft; };

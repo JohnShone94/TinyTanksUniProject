@@ -58,7 +58,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UStaticMeshComponent* tankBaseMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		UStaticMeshComponent* shildMesh;
+		USphereComponent* shildCollison;
 
 protected:
 	//The amount of hits a tank has left before it blows up.
@@ -116,15 +116,9 @@ public:
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		void SetTankTeam(ESelectedTeam team);
 
-	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
-		void UpdateTankTeam();
-
-	virtual void UpdateTankTeam_Implementation();
-
-
 	//Called when the tank dies.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
-		void KillTank();
+		void KillTank(bool addWin = true);
 
 	//Called when the tank is stunned.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
@@ -191,6 +185,16 @@ public:
 		void TankHasFired();
 
 		virtual void TankHasFired_Implementation();
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void UpdateTankTeam();
+
+		virtual void UpdateTankTeam_Implementation();
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void ShieldActive();
+
+		virtual void ShieldActive_Implementation();
 
 protected:
 	// Called when the game starts or when spawned

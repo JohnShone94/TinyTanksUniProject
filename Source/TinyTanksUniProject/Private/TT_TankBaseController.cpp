@@ -66,14 +66,17 @@ void ATT_TankBaseController::SpecialTimerExpired()
 		if (activeDeffensivePowerup == EPowerupType::PT_floating)
 		{
 			tankPawn->tankBaseMesh->SetEnableGravity(true);
+			tankPawn->ResetDeffensivePowerup();
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
 		{
 			tankPawn->ActivateShild(false);
+			tankPawn->ResetDeffensivePowerup();
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
 		{
 			tankPawn->moveSpeed = (tankPawn->moveSpeed / 2);
+			tankPawn->ResetDeffensivePowerup();
 		}
 		activeDeffensivePowerup = EPowerupType::PT_none;
 	}
@@ -173,7 +176,6 @@ void ATT_TankBaseController::ActivateSpecial(float val)
 		if (tankPawn && (tankPawn->currentDeffensivePowerup == EPowerupType::PT_airblast || tankPawn->currentDeffensivePowerup == EPowerupType::PT_floating || tankPawn->currentDeffensivePowerup == EPowerupType::PT_shild || tankPawn->currentDeffensivePowerup == EPowerupType::PT_smokeScreen))
 		{
 			activeDeffensivePowerup = tankPawn->currentDeffensivePowerup;
-			tankPawn->ResetDeffensivePowerup();
 		}
 		else if (turretPawn)
 		{

@@ -23,9 +23,9 @@ ATT_TankBase::ATT_TankBase()
 	tankBaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
 	RootComponent = tankBaseMesh;
 
-	shildMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Shild Mesh"));
-	shildMesh->SetVisibility(false);
-	shildMesh->SetupAttachment(RootComponent);
+	shildCollison = CreateDefaultSubobject<USphereComponent>(TEXT("Shild Collison"));
+	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	shildCollison->SetupAttachment(RootComponent);
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
 	tankOverlap->SetupAttachment(RootComponent);
@@ -70,17 +70,13 @@ void ATT_TankBase::SetTankTeam(ESelectedTeam team)
 	UpdateTankTeam();
 }
 
-void ATT_TankBase::UpdateTankTeam_Implementation()
-{
-}
-
-void ATT_TankBase::KillTank()
+void ATT_TankBase::KillTank(bool addWin)
 {
 	if (!bIsDead)
 	{
 		bIsDead = true;
 		currentHealthPoints = 0;
-		gameMode->RemoveTank(this);
+		gameMode->RemoveTank(this, addWin);
 		TankHasDied();
 	}
 }
@@ -227,7 +223,7 @@ void ATT_TankBase::DamageTank()
 		if (currentHealthPoints <= 0)
 		{
 			bIsDead = true;
-			gameMode->RemoveTank(this);
+			gameMode->RemoveTank(this, true);
 			TankHasDied();
 
 			tankBaseMesh->SetVisibility(true);
@@ -251,8 +247,14 @@ void ATT_TankBase::ResetOffensivePowerup()
 
 void ATT_TankBase::ActivateShild(bool val)
 {
-	shildMesh->SetVisibility(val);
+	if(val)
+		shildCollison->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	else
+		shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	bIsShilded = val;
+
+	ShieldActive();
 }
 
 void ATT_TankBase::TankHasDied_Implementation()
@@ -264,5 +266,13 @@ void ATT_TankBase::TankHasBeenDamaged_Implementation()
 }
 
 void ATT_TankBase::TankHasFired_Implementation()
+{
+}
+
+void ATT_TankBase::ShieldActive_Implementation()
+{
+}
+
+void ATT_TankBase::UpdateTankTeam_Implementation()
 {
 }

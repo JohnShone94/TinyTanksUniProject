@@ -351,13 +351,14 @@ int32 ATT_TinyTanksGameMode::GetPlayerPositionFromCon(ATT_TankBaseController* co
 		return 0;
 }
 
-void ATT_TinyTanksGameMode::RemoveTank(ATT_TankBase* tank)
+void ATT_TinyTanksGameMode::RemoveTank(ATT_TankBase* tank, bool addWin)
 {
-	if (tank)
+	if (tank && addWin)
 	{
 		if (tank->GetTankTeam() == ESelectedTeam::ST_blueBase)
 			teamRedScore++;
-		else if (tank->GetTankTeam() == ESelectedTeam::ST_redBase)
+
+		if (tank->GetTankTeam() == ESelectedTeam::ST_redBase)
 			teamBlueScore++;
 	}
 
