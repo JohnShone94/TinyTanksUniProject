@@ -223,6 +223,7 @@ void ATT_TinyTanksGameMode::ResetPlayers()
 		{
 			playerArray[i]->AutoReceiveInput = EAutoReceiveInput::Disabled;
 			playerArray[i]->UnPossess();
+			playerArray[i]->AcknowledgedPawn = nullptr;
 			playerArray[i]->SetTankPawn(nullptr);
 			playerArray[i]->SetTurretPawn(nullptr);
 		}
@@ -350,8 +351,16 @@ int32 ATT_TinyTanksGameMode::GetPlayerPositionFromCon(ATT_TankBaseController* co
 		return 0;
 }
 
-void ATT_TinyTanksGameMode::RemoveTank()
+void ATT_TinyTanksGameMode::RemoveTank(ATT_TankBase* tank)
 {
+	if (tank)
+	{
+		if (tank->GetTankTeam() == ESelectedTeam::ST_blueBase)
+			teamRedScore++;
+		else if (tank->GetTankTeam() == ESelectedTeam::ST_redBase)
+			teamBlueScore++;
+	}
+
 	playersLeft = (playersLeft - 1);
 
 	if (playersLeft <= 1 && mainCam)

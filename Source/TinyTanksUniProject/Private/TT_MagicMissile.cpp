@@ -138,11 +138,11 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 					//FVector hitNormal = hit.Normal;
 					if (FMath::IsNearlyEqual(hitNormal.X, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.X, -1.0f, 0.25f))
 					{
-						riqochetVelocity = FVector((velocity.X * -1.0f), velocity.Y, velocity.Z);
+						riqochetVelocity = FVector((velocity.X * -1.0f), velocity.Y, 0.0f);
 					}
 					else if (FMath::IsNearlyEqual(hitNormal.Y, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.Y, -1.0f, 0.25f))
 					{
-						riqochetVelocity = FVector(velocity.X, (velocity.Y * -1.0f), velocity.Z);
+						riqochetVelocity = FVector(velocity.X, (velocity.Y * -1.0f), 0.0f);
 					}
 
 					velocity = riqochetVelocity;

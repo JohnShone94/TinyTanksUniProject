@@ -114,7 +114,12 @@ public:
 		ESelectedTeam GetTankTeam() { return tankTeam; };
 
 	UFUNCTION(Category = "Tank", BlueprintCallable)
-		void SetTankTeam(ESelectedTeam team) { tankTeam = team; };
+		void SetTankTeam(ESelectedTeam team);
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void UpdateTankTeam();
+
+	virtual void UpdateTankTeam_Implementation();
 
 
 	//Called when the tank dies.

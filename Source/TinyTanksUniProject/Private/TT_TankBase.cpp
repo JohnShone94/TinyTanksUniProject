@@ -64,13 +64,23 @@ void ATT_TankBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ATT_TankBase::SetTankTeam(ESelectedTeam team)
+{
+	tankTeam = team;
+	UpdateTankTeam();
+}
+
+void ATT_TankBase::UpdateTankTeam_Implementation()
+{
+}
+
 void ATT_TankBase::KillTank()
 {
 	if (!bIsDead)
 	{
 		bIsDead = true;
 		currentHealthPoints = 0;
-		gameMode->RemoveTank();
+		gameMode->RemoveTank(this);
 		TankHasDied();
 	}
 }
@@ -217,7 +227,7 @@ void ATT_TankBase::DamageTank()
 		if (currentHealthPoints <= 0)
 		{
 			bIsDead = true;
-			gameMode->RemoveTank();
+			gameMode->RemoveTank(this);
 			TankHasDied();
 
 			tankBaseMesh->SetVisibility(true);

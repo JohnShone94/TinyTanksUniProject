@@ -42,6 +42,12 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		ATT_MainCamera* mainCam;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 teamBlueScore;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 teamRedScore;
+
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bCanPlayersControlTanks;
@@ -75,7 +81,7 @@ public:
 
 	//called when a tank dies.
 	UFUNCTION()
-		void RemoveTank();
+		void RemoveTank(ATT_TankBase* tank);
 
 	UFUNCTION()
 		int32 GetPlayersLeft() { return playersLeft; };
