@@ -23,8 +23,8 @@ ATT_TankBase::ATT_TankBase()
 	tankBaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
 	RootComponent = tankBaseMesh;
 
-	shildCollison = CreateDefaultSubobject<USphereComponent>(TEXT("Shild Collison"));
-	shildCollison->SetupAttachment(RootComponent);
+	//shildCollison = CreateDefaultSubobject<USphereComponent>(TEXT("Shild Collison"));
+	//shildCollison->SetupAttachment(RootComponent);
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
 	tankOverlap->SetupAttachment(RootComponent);
@@ -55,7 +55,7 @@ void ATT_TankBase::BeginPlay()
 
 	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
 
-	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 }
@@ -248,10 +248,10 @@ void ATT_TankBase::ResetOffensivePowerup()
 
 void ATT_TankBase::ActivateShild(bool val)
 {
-	if(val)
-		shildCollison->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	else
-		shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//if(val)
+	//	shildCollison->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//else
+	//	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	bIsShilded = val;
 

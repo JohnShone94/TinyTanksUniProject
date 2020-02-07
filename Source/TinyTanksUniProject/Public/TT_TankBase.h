@@ -57,8 +57,8 @@ public:
 		USphereComponent* tankOverlap;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UStaticMeshComponent* tankBaseMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		USphereComponent* shildCollison;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//	USphereComponent* shildCollison;
 
 protected:
 	//The amount of hits a tank has left before it blows up.
