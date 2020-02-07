@@ -158,7 +158,7 @@ void ATT_TankBaseController::FireShot(float val)
 
 					ATT_MagicMissile* bullet = world->SpawnActor<ATT_MagicMissile>(turretParent->magicMissile, spawnTransform, SpawnParams);
 					if(bullet)
-						bullet->SetupBullet(fireDirection, turretParent, activeOffensivePowerup);
+						bullet->SetupBullet(fireDirection, turretParent, EPowerupType::PT_none);
 				}
 
 				bCanFire = false;

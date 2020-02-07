@@ -24,7 +24,6 @@ ATT_TankBase::ATT_TankBase()
 	RootComponent = tankBaseMesh;
 
 	shildCollison = CreateDefaultSubobject<USphereComponent>(TEXT("Shild Collison"));
-	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	shildCollison->SetupAttachment(RootComponent);
 
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
@@ -55,6 +54,8 @@ void ATT_TankBase::BeginPlay()
 	Super::BeginPlay();
 
 	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
+
+	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 }

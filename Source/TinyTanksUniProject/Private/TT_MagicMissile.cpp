@@ -180,6 +180,10 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 						// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
 						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
 					}
+					else if (out.GetActor() == owningPlayer && hitAmount < 1)
+					{
+						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
+					}
 				}
 
 				isMoving = true;
