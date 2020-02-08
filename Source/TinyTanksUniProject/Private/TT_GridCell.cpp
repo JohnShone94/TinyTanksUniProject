@@ -99,16 +99,19 @@ void ATT_GridCell::ReloadCell()
 	}
 	else
 	{
-		if(itemToSpawn == E_ItemToSpawn::ITS_destroyed && itemSelectionComp)
-			itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
-		else
+		if (itemToSpawn == E_ItemToSpawn::ITS_destroyed && itemSelectionComp)
+		{
 			itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 31.0f));
+			itemToSpawn = E_ItemToSpawn::ITS_none;
+		}
 	}
 
 	if (currentFloorActor)
 	{
 		if (floorSelectionComp)
-			floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
+		{
+			floorSelectionComp->SetVisibility(false);
+		}
 
 		if (floorItemToSpawn == E_FloorItemToSpawn::FITS_trapdoor)
 		{
@@ -118,8 +121,14 @@ void ATT_GridCell::ReloadCell()
 		else
 			currentFloorActor->SetActorLocation(GetActorLocation());
 	}
-	else if(floorSelectionComp)
-		floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
+	else
+	{
+		if (floorItemToSpawn == E_FloorItemToSpawn::FITS_destroyed && floorSelectionComp)
+		{
+			floorSelectionComp->SetVisibility(true);
+			floorItemToSpawn = E_FloorItemToSpawn::FITS_none;
+		}
+	}
 }
 
 void ATT_GridCell::HideCell(bool val)

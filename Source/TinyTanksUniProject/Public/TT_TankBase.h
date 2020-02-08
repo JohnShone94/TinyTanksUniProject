@@ -50,8 +50,11 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_MagicMissile> magicMissile;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
+	
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_TankTurret> turret;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent* tankOverlap;
@@ -89,6 +92,8 @@ protected:
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		ESelectedTeam tankTeam;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		ATT_TankTurret* myTurret;
 
 
 	FTimerHandle TimerHandle_StunTimerExpired;

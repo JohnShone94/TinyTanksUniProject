@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "TT_StandardWall.generated.h"
 
-class UStaticMeshComponent;
+class USceneComponent;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_StandardWall : public AActor
@@ -23,7 +23,7 @@ protected:
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UStaticMeshComponent* wallMesh;
+		USceneComponent* sceneLink;
 
 public:	
 	// Called every frame

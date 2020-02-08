@@ -30,7 +30,6 @@ ATT_TankBase::ATT_TankBase()
 	tankOverlap->SetupAttachment(RootComponent);
 
 	turretSlot = CreateDefaultSubobject<UChildActorComponent>(TEXT("Turret Slot"));
-	turretSlot->SetChildActorClass(ATT_TankTurret::StaticClass());
 	turretSlot->SetupAttachment(RootComponent);
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
@@ -57,6 +56,21 @@ void ATT_TankBase::BeginPlay()
 
 	//shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	if(turret)
+		turretSlot->SetChildActorClass(turret);
+
+
+	myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
+	if (myTurret)
+	{
+		UE_LOG(LogTemp, Log, TEXT("TankBase(BeginPlay): Attached my turret."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("TankBase(BeginPlay): Failed to attach my turret."));
+	}
+
+
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 }
 
@@ -76,8 +90,21 @@ void ATT_TankBase::KillTank(bool addWin)
 	if (!bIsDead)
 	{
 		bIsDead = true;
+
+		GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
+		tankBaseMesh->SetVisibility(true);
+
+		if (myTurret)
+		{
+			myTurret->GetTankGunBase()->SetVisibility(true);
+			myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
+		}
+		else
+			UE_LOG(LogTemp, Error, TEXT("TankBase(KillTank): Cant find myTurret."));
+
 		currentHealthPoints = 0;
 		gameMode->RemoveTank(this, addWin);
+
 		TankHasDied();
 	}
 }
@@ -218,20 +245,36 @@ void ATT_TankBase::DamageTank()
 		if (currentHealthPoints > 0)
 		{
 			TankHasBeenDamaged();
+			GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(0.5f, 0.3f, false, true, false, true, EDynamicForceFeedbackAction::Start);
+
+			if (myTurret)
+				myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(0.5f, 0.3f, false, true, false, true, EDynamicForceFeedbackAction::Start);
+			else
+				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Cant find myTurret."));
+
 			currentHealthPoints--;
 		}
 
 		if (currentHealthPoints <= 0)
 		{
 			bIsDead = true;
-			gameMode->RemoveTank(this, true);
-			TankHasDied();
+
+			GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
+
+			if (myTurret)
+			{
+				myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
+				myTurret->GetTankGunBase()->SetVisibility(true);
+			}
+			else
+				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Cant find myTurret."));
 
 			tankBaseMesh->SetVisibility(true);
 
-			ATT_TankTurret* myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
-			if (myTurret)
-				myTurret->GetTankGunBase()->SetVisibility(true);
+			gameMode->RemoveTank(this, true);
+			TankHasDied();
+
+
 		}
 	}
 }

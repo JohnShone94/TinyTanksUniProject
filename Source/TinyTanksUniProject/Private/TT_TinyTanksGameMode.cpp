@@ -390,13 +390,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (tankArray.Num() > 0)
 					{
-						for (int i = 0; i < tankArray.Num(); i++)
+						for (int p = 0; p < tankArray.Num(); p++)
 						{
-							if (tankArray[i]->GetTankTeam() == ESelectedTeam::ST_blueBase)
+							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_blueBase)
 							{
-								con->Possess(tankArray[i]);
-								con->AcknowledgePossession(tankArray[i]);
-								con->SetTankPawn(tankArray[i]);
+								con->Possess(tankArray[p]);
+								con->AcknowledgePossession(tankArray[p]);
+								con->SetTankPawn(tankArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Blue Team Base"), *con->GetName());
 							}
@@ -413,13 +413,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (turretArray.Num() > 0)
 					{
-						for (int i = 0; i < turretArray.Num(); i++)
+						for (int p = 0; p < turretArray.Num(); p++)
 						{
-							if (turretArray[i]->GetTurretTeam() == ESelectedTeam::ST_blueTurret)
+							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_blueTurret)
 							{
-								con->Possess(turretArray[i]);
-								con->AcknowledgePossession(turretArray[i]);
-								con->SetTurretPawn(turretArray[i]);
+								con->Possess(turretArray[p]);
+								con->AcknowledgePossession(turretArray[p]);
+								con->SetTurretPawn(turretArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Blue Team Turret"), *con->GetName());
 							}
@@ -436,13 +436,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (tankArray.Num() > 0)
 					{
-						for (int i = 0; i < tankArray.Num(); i++)
+						for (int p = 0; p < tankArray.Num(); p++)
 						{
-							if (tankArray[i]->GetTankTeam() == ESelectedTeam::ST_redBase)
+							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_redBase)
 							{
-								con->Possess(tankArray[i]);
-								con->AcknowledgePossession(tankArray[i]);
-								con->SetTankPawn(tankArray[i]);
+								con->Possess(tankArray[p]);
+								con->AcknowledgePossession(tankArray[p]);
+								con->SetTankPawn(tankArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Red Team Base"), *con->GetName());
 							}
@@ -459,13 +459,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (turretArray.Num() > 0)
 					{
-						for (int i = 0; i < turretArray.Num(); i++)
+						for (int p = 0; p < turretArray.Num(); p++)
 						{
-							if (turretArray[i]->GetTurretTeam() == ESelectedTeam::ST_redTurret)
+							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_redTurret)
 							{
-								con->Possess(turretArray[i]);
-								con->AcknowledgePossession(turretArray[i]);
-								con->SetTurretPawn(turretArray[i]);
+								con->Possess(turretArray[p]);
+								con->AcknowledgePossession(turretArray[p]);
+								con->SetTurretPawn(turretArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Red Team Turret"), *con->GetName());
 							}
@@ -482,13 +482,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (tankArray.Num() > 0)
 					{
-						for (int i = 0; i < tankArray.Num(); i++)
+						for (int p = 0; p < tankArray.Num(); p++)
 						{
-							if (tankArray[i]->GetTankTeam() == ESelectedTeam::ST_greenBase)
+							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_greenBase)
 							{
-								con->Possess(tankArray[i]);
-								con->AcknowledgePossession(tankArray[i]);
-								con->SetTankPawn(tankArray[i]);
+								con->Possess(tankArray[p]);
+								con->AcknowledgePossession(tankArray[p]);
+								con->SetTankPawn(tankArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Green Team Base"), *con->GetName());
 							}
@@ -505,13 +505,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (turretArray.Num() > 0)
 					{
-						for (int i = 0; i < turretArray.Num(); i++)
+						for (int p = 0; p < turretArray.Num(); p++)
 						{
-							if (turretArray[i]->GetTurretTeam() == ESelectedTeam::ST_greenTurret)
+							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_greenTurret)
 							{
-								con->Possess(turretArray[i]);
-								con->AcknowledgePossession(turretArray[i]);
-								con->SetTurretPawn(turretArray[i]);
+								con->Possess(turretArray[p]);
+								con->AcknowledgePossession(turretArray[p]);
+								con->SetTurretPawn(turretArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Green Team Turret"), *con->GetName());
 							}
@@ -528,13 +528,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (tankArray.Num() > 0)
 					{
-						for (int i = 0; i < tankArray.Num(); i++)
+						for (int p = 0; p < tankArray.Num(); p++)
 						{
-							if (tankArray[i]->GetTankTeam() == ESelectedTeam::ST_yellowBase)
+							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_yellowBase)
 							{
-								con->Possess(tankArray[i]);
-								con->AcknowledgePossession(tankArray[i]);
-								con->SetTankPawn(tankArray[i]);
+								con->Possess(tankArray[p]);
+								con->AcknowledgePossession(tankArray[p]);
+								con->SetTankPawn(tankArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Yellow Team Base"), *con->GetName());
 							}
@@ -551,13 +551,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 				{
 					if (turretArray.Num() > 0)
 					{
-						for (int i = 0; i < turretArray.Num(); i++)
+						for (int p = 0; p < turretArray.Num(); p++)
 						{
-							if (turretArray[i]->GetTurretTeam() == ESelectedTeam::ST_yellowTurret)
+							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_yellowTurret)
 							{
-								con->Possess(turretArray[i]);
-								con->AcknowledgePossession(turretArray[i]);
-								con->SetTurretPawn(turretArray[i]);
+								con->Possess(turretArray[p]);
+								con->AcknowledgePossession(turretArray[p]);
+								con->SetTurretPawn(turretArray[p]);
 
 								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Yellow Team Turret"), *con->GetName());
 							}
