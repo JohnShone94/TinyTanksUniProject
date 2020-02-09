@@ -72,6 +72,18 @@ void ATT_TankBase::BeginPlay()
 
 
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (gameMode)
+	{
+		moveSpeed = gameMode->tankSpeed;
+		rotateSpeed = gameMode->tankRotateSpeed;
+
+		myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
+		if (myTurret)
+		{
+			myTurret->rotateSpeed = gameMode->turretRotateSpeed;
+		}
+	}
 }
 
 void ATT_TankBase::Tick(float DeltaTime)
@@ -92,11 +104,11 @@ void ATT_TankBase::KillTank(bool addWin)
 		bIsDead = true;
 
 		GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
-		tankBaseMesh->SetVisibility(true);
+		tankBaseMesh->SetVisibility(false);
 
 		if (myTurret)
 		{
-			myTurret->GetTankGunBase()->SetVisibility(true);
+			myTurret->GetTankGunBase()->SetVisibility(false, true);
 			myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
 		}
 		else
@@ -264,12 +276,12 @@ void ATT_TankBase::DamageTank()
 			if (myTurret)
 			{
 				myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
-				myTurret->GetTankGunBase()->SetVisibility(true);
+				myTurret->GetTankGunBase()->SetVisibility(false, true);
 			}
 			else
 				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Cant find myTurret."));
 
-			tankBaseMesh->SetVisibility(true);
+			tankBaseMesh->SetVisibility(false);
 
 			gameMode->RemoveTank(this, true);
 			TankHasDied();

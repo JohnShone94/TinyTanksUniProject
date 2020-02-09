@@ -8,6 +8,7 @@
 #include "TT_TankSpawnPoint.h"
 #include "TT_MagicMissile.h"
 
+#include "Engine.h"
 #include "EngineUtils.h"
 #include "Engine/LocalPlayer.h"
 #include "ConstructorHelpers.h"
@@ -19,6 +20,11 @@ ATT_TinyTanksGameMode::ATT_TinyTanksGameMode()
 	DefaultPawnClass = nullptr;
 
 	bCanPlayersControlTanks = false;
+
+	tankSpeed = 3.5f;
+	tankRotateSpeed = 1.5f;
+	turretRotateSpeed = 1.5f;
+
 
 	PlayerControllerClass = ATT_TankBaseController::StaticClass();
 }
@@ -158,6 +164,60 @@ void ATT_TinyTanksGameMode::SpawnPlayerControllers()
 		SetupPlayerControllers(true);
 	}
 
+}
+
+void ATT_TinyTanksGameMode::UpdateTankSpeed(float speed)
+{
+	if (tankArray.Num() > 0)
+	{
+		for (int i = 0; i < tankArray.Num(); i++)
+		{
+			ATT_TankBase* tank = Cast<ATT_TankBase>(tankArray[i]);
+
+			if(tank)
+			{
+				tank->moveSpeed = (tank->moveSpeed + speed);
+				tankSpeed = tank->moveSpeed;
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Speed For: %s | %f"), *tank->GetName(), tank->moveSpeed), true, FVector2D(0.75f, 0.75f));
+			}
+		}
+	}
+}
+
+void ATT_TinyTanksGameMode::UpdateTankRotateSpeed(float speed)
+{
+	if (tankArray.Num() > 0)
+	{
+		for (int i = 0; i < tankArray.Num(); i++)
+		{
+			ATT_TankBase* tank = Cast<ATT_TankBase>(tankArray[i]);
+
+			if (tank)
+			{
+				tank->rotateSpeed = (tank->rotateSpeed + speed);
+				tankRotateSpeed = tank->rotateSpeed;
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Rotate Speed For: %s | %f"), *tank->GetName(), tank->rotateSpeed), true, FVector2D(0.75f, 0.75f));
+			}
+		}
+	}
+}
+
+void ATT_TinyTanksGameMode::UpdateTurretRotateSpeed(float speed)
+{
+	if (turretArray.Num() > 0)
+	{
+		for (int i = 0; i < turretArray.Num(); i++)
+		{
+			ATT_TankTurret* turret = Cast<ATT_TankTurret>(turretArray[i]);
+
+			if (turret)
+			{
+				turret->rotateSpeed = (turret->rotateSpeed + speed);
+				turretRotateSpeed = turret->rotateSpeed;
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Speed For: %s | %f"), *turret->GetName(), turret->rotateSpeed), true, FVector2D(0.75f, 0.75f));
+			}
+		}
+	}
 }
 
 void ATT_TinyTanksGameMode::AddPlayerConAtPosition(int i, ATT_TankBaseController* pController)

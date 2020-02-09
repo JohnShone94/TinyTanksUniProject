@@ -81,6 +81,9 @@ public:
 
 	void MoveMissile(float DeltaTime);
 
+	UFUNCTION(Category = "Missile", BlueprintPure)
+		ATT_TankBase* GetOwningPlayer() { return owningPlayer; };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

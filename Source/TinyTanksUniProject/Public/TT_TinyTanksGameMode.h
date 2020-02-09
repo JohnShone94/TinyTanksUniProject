@@ -48,6 +48,17 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 teamRedScore;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float tankSpeed;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float tankRotateSpeed;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float turretRotateSpeed;
+
+
+
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bCanPlayersControlTanks;
@@ -98,6 +109,15 @@ public:
 		void SpawnPlayerTanks();
 	UFUNCTION(BlueprintCallable)
 		void SpawnPlayerControllers();
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateTankSpeed(float speed);
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateTankRotateSpeed(float speed);
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateTurretRotateSpeed(float speed);
 
 protected:
 	virtual void BeginPlay() override;
