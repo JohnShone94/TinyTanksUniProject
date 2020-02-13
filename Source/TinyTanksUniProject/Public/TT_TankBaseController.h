@@ -38,14 +38,8 @@ enum class ESelectedTeam : uint8
 	ST_blueBase					UMETA(DisplayName = "Blue Team | Base"),
 	ST_blueTurret				UMETA(DisplayName = "Blue Team | Turret"),
 
-	ST_redBase					UMETA(DiaplayName = "Red Team | Base"),
-	ST_redTurret				UMETA(DiaplayName = "Red Team | Turret"),
-
 	ST_greenBase				UMETA(DisplayName = "Green Team | Base"),
 	ST_greenTurret				UMETA(DisplayName = "Green Team | Turret"),
-
-	ST_yellowBase				UMETA(DisplayName = "Yellow Team | Base"),
-	ST_yellowTurret				UMETA(DisplayName = "Yellow Team | Turret"),
 
 };
 

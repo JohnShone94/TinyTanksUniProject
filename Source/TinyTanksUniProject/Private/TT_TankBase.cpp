@@ -286,7 +286,6 @@ void ATT_TankBase::DamageTank()
 			gameMode->RemoveTank(this, true);
 			TankHasDied();
 
-
 		}
 	}
 }

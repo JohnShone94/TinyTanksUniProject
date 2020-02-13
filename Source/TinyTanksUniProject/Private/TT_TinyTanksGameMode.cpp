@@ -84,20 +84,8 @@ void ATT_TinyTanksGameMode::SpawnPlayerTanks()
 						}
 						case 2:
 						{
-							tank->SetTankTeam(ESelectedTeam::ST_redBase);
-							turret->SetTurretTeam(ESelectedTeam::ST_redTurret);
-							break;
-						}
-						case 3:
-						{
 							tank->SetTankTeam(ESelectedTeam::ST_greenBase);
 							turret->SetTurretTeam(ESelectedTeam::ST_greenTurret);
-							break;
-						}
-						case 4:
-						{
-							tank->SetTankTeam(ESelectedTeam::ST_yellowBase);
-							turret->SetTurretTeam(ESelectedTeam::ST_yellowTurret);
 							break;
 						}
 						default:
@@ -360,32 +348,12 @@ void ATT_TinyTanksGameMode::SetupPlayerControllers(bool bOverride)
 			}
 			case 2:
 			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_redBase);
+				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_greenBase);
 				break;
 			}
 			case 3:
 			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_redTurret);
-				break;
-			}
-			case 4:
-			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_greenBase);
-				break;
-			}
-			case 5:
-			{
 				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_greenTurret);
-				break;
-			}
-			case 6:
-			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_yellowBase);
-				break;
-			}
-			case 7:
-			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_yellowTurret);
 				break;
 			}
 			default:
@@ -418,7 +386,7 @@ void ATT_TinyTanksGameMode::RemoveTank(ATT_TankBase* tank, bool addWin)
 		if (tank->GetTankTeam() == ESelectedTeam::ST_blueBase)
 			teamRedScore++;
 
-		if (tank->GetTankTeam() == ESelectedTeam::ST_redBase)
+		if (tank->GetTankTeam() == ESelectedTeam::ST_greenBase)
 			teamBlueScore++;
 	}
 
@@ -492,52 +460,6 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 
 					break;
 				}
-				case ESelectedTeam::ST_redBase:
-				{
-					if (tankArray.Num() > 0)
-					{
-						for (int p = 0; p < tankArray.Num(); p++)
-						{
-							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_redBase)
-							{
-								con->Possess(tankArray[p]);
-								con->AcknowledgePossession(tankArray[p]);
-								con->SetTankPawn(tankArray[p]);
-
-								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Red Team Base"), *con->GetName());
-							}
-						}
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s failed to possess Red Team Base"), *con->GetName());
-					}
-
-					break;
-				}
-				case ESelectedTeam::ST_redTurret:
-				{
-					if (turretArray.Num() > 0)
-					{
-						for (int p = 0; p < turretArray.Num(); p++)
-						{
-							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_redTurret)
-							{
-								con->Possess(turretArray[p]);
-								con->AcknowledgePossession(turretArray[p]);
-								con->SetTurretPawn(turretArray[p]);
-
-								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Red Team Turret"), *con->GetName());
-							}
-						}
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s failed to possess Red Team Turret"), *con->GetName());
-					}
-
-					break;
-				}
 				case ESelectedTeam::ST_greenBase:
 				{
 					if (tankArray.Num() > 0)
@@ -580,52 +502,6 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 					else
 					{
 						UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s failed to possess Green Team Turret"), *con->GetName());
-					}
-
-					break;
-				}
-				case ESelectedTeam::ST_yellowBase:
-				{
-					if (tankArray.Num() > 0)
-					{
-						for (int p = 0; p < tankArray.Num(); p++)
-						{
-							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_yellowBase)
-							{
-								con->Possess(tankArray[p]);
-								con->AcknowledgePossession(tankArray[p]);
-								con->SetTankPawn(tankArray[p]);
-
-								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Yellow Team Base"), *con->GetName());
-							}
-						}
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s failed to possess Yellow Team Base"), *con->GetName());
-					}
-
-					break;
-				}
-				case ESelectedTeam::ST_yellowTurret:
-				{
-					if (turretArray.Num() > 0)
-					{
-						for (int p = 0; p < turretArray.Num(); p++)
-						{
-							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_yellowTurret)
-							{
-								con->Possess(turretArray[p]);
-								con->AcknowledgePossession(turretArray[p]);
-								con->SetTurretPawn(turretArray[p]);
-
-								UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s possessed Yellow Team Turret"), *con->GetName());
-							}
-						}
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s failed to possess Yellow Team Turret"), *con->GetName());
 					}
 
 					break;

@@ -15,7 +15,7 @@
 #include "Engine.h"
 
 const FName ATT_TankBaseController::moveBinding("MoveBinding");
-const FName ATT_TankBaseController::rotateBinding("RotateBinding");
+const FName ATT_TankBaseController::rotateBinding("RotateBind");
 const FName ATT_TankBaseController::fireBinding("FireBinding");
 const FName ATT_TankBaseController::activateSpecialBinding("ActivateSpecialBinding");
 const FName ATT_TankBaseController::useSpecialBinding("UseSpecialBinding");
@@ -39,7 +39,7 @@ void ATT_TankBaseController::SetupInputComponent()
 	if (InputComponent)
 	{
 		InputComponent->BindAxis("MoveBinding", this, &ATT_TankBaseController::MoveForward);
-		InputComponent->BindAxis("RotateBinding", this, &ATT_TankBaseController::Rotate);
+		InputComponent->BindAxis("RotateBind", this, &ATT_TankBaseController::Rotate);
 		InputComponent->BindAxis("FireBinding", this, &ATT_TankBaseController::FireShot);
 		InputComponent->BindAxis("ActivateSpecialBinding", this, &ATT_TankBaseController::ActivateSpecial);
 		InputComponent->BindAxis("UseSpecialBinding", this, &ATT_TankBaseController::UseSpecial);

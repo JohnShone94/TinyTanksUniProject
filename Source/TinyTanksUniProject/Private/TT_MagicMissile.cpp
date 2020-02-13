@@ -32,6 +32,7 @@ ATT_MagicMissile::ATT_MagicMissile()
 	moveMissileDeltaTime = 0.0f;
 	lifeLineDeltaTime = 0.0f;
 	bIsDestroyed = false;
+	bIsBlueTeam = false;
 }
 
 // Called when the game starts or when spawned
@@ -55,6 +56,11 @@ void ATT_MagicMissile::Tick(float DeltaTime)
 		RunBulletHitEffect();
 }
 
+void ATT_MagicMissile::SetupFinished_Implementation()
+{
+
+}
+
 void ATT_MagicMissile::DeathTimerExpired()
 {
 	this->Destroy();
@@ -64,6 +70,11 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 {
 	owningPlayer = player;
 	currentBulletType = bulletType;
+
+	if (player->GetTankTeam() == ESelectedTeam::ST_blueBase)
+		bIsBlueTeam = true;
+	else
+		bIsBlueTeam = false;
 
 	switch (currentBulletType)
 	{
@@ -102,6 +113,8 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 		default:
 			break;
 	}
+
+	SetupFinished();
 }
 
 void ATT_MagicMissile::MoveMissile(float DeltaTime)

@@ -27,6 +27,8 @@ public:
 		float missileSpeed;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 maxHitAmount;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bIsBlueTeam;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector velocity;
@@ -102,6 +104,10 @@ protected:
 
 	virtual void RunMegaBulletEffect_Implementation();
 
+	UFUNCTION(Category = "Bullet", BlueprintNativeEvent)
+		void SetupFinished();
+
+	virtual void SetupFinished_Implementation();
 
 	void DeathTimerExpired();
 
