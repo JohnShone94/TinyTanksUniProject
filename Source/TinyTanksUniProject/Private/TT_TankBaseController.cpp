@@ -25,7 +25,7 @@ ATT_TankBaseController::ATT_TankBaseController()
 	activeOffensivePowerup = EPowerupType::PT_none;
 }
 
-void ATT_TankBaseController::BeginPlay()
+ void ATT_TankBaseController::BeginPlay()
 {
 	Super::BeginPlay();
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
@@ -133,6 +133,8 @@ void ATT_TankBaseController::FireShot(float val)
 				const FRotator fireRotation = FRotator(fireDirection.Rotation().Pitch, fireDirection.Rotation().Yaw, 0.0f);
 
 				const FVector spawnLocation = turretPawn->fireLocation->GetComponentLocation();
+
+				tankPawn->TankHasFired_Implementation();
 
 				UWorld* const world = GetWorld();
 				if (world != NULL)
