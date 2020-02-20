@@ -66,6 +66,8 @@ public:
 	UPROPERTY()
 		EPowerupType currentBulletType;
 
+	bool finishedsetup;
+
 	FVector hitNormal;
 
 	//Handler for the timer.

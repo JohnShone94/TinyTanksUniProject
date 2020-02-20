@@ -33,6 +33,7 @@ ATT_MagicMissile::ATT_MagicMissile()
 	lifeLineDeltaTime = 0.0f;
 	bIsDestroyed = false;
 	bIsBlueTeam = false;
+	finishedsetup = false;
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +41,7 @@ void ATT_MagicMissile::BeginPlay()
 {
 	Super::BeginPlay();
 	missileRootComp->OnComponentHit.AddDynamic(this, &ATT_MagicMissile::OnHit);
+
 }
 
 // Called every frame
@@ -84,12 +86,6 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 
 			break;
 		}
-		case EPowerupType::PT_fastBullet:
-		{
-			velocity = ((fireVel * baseVelocity) * speedModifier);
-
-			break;
-		}
 		case EPowerupType::PT_missileBullet:
 		{
 			velocity = ((fireVel * baseVelocity) * (speedModifier * 2));
@@ -104,105 +100,101 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 
 			break;
 		}
-		case EPowerupType::PT_undergroundBullet:
-		{
-			velocity = ((fireVel * baseVelocity) * speedModifier);
-
-			break;
-		}
 		default:
 			break;
 	}
+
+	finishedsetup = true;
 
 	SetupFinished();
 }
 
 void ATT_MagicMissile::MoveMissile(float DeltaTime)
 {
-	traceStartPoint = this->GetActorLocation();
-	traceEndPoint = traceStartPoint + (velocity * moveMissileDeltaTime);
-	traceEndPoint.Z = traceStartPoint.Z;
-	moveMissileDeltaTime += 10.0f;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("DeltaTime: %f"), testDeltaTime));
-
-	FCollisionQueryParams collisionParams;
-	collisionParams.AddIgnoredActor(this);
-
 	UWorld* world = this->GetWorld();
-	if (world)
+	if (world && !bIsDestroyed)
 	{
-		hasHitSomething = GetWorld()->LineTraceSingleByChannel(hit, traceStartPoint, traceEndPoint, ECC_GameTraceChannel7, collisionParams);
+		traceStartPoint = this->GetActorLocation();
+		traceEndPoint = traceStartPoint + (velocity * moveMissileDeltaTime);
+		traceEndPoint.Z = traceStartPoint.Z;
+		moveMissileDeltaTime += 10.0f;
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("DeltaTime: %f"), testDeltaTime));
 
-		//DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Red, true);
+		FCollisionQueryParams collisionParams;
+		collisionParams.AddIgnoredActor(this);
 
-		if (hasHitSomething && hit.GetActor())
-		{
-			currentPosition = traceStartPoint;
-			targetPosition = hit.Location;
-			//DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true);
+			hasHitSomething = GetWorld()->LineTraceSingleByChannel(hit, traceStartPoint, traceEndPoint, ECC_GameTraceChannel7, collisionParams);
 
-			if (GetActorLocation().Equals(targetPosition, 1.0f) && isMoving)
+			//DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Red, true);
+
+			if (hasHitSomething && hit.GetActor())
 			{
-				if (hitAmount < maxHitAmount)
+				currentPosition = traceStartPoint;
+				targetPosition = hit.Location;
+				//DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true);
+
+				if (GetActorLocation().Equals(targetPosition, 1.0f) && isMoving)
 				{
-					hitAmount++;
-
-					FVector riqochetVelocity;
-					//FVector hitNormal = hit.Normal;
-					if (FMath::IsNearlyEqual(hitNormal.X, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.X, -1.0f, 0.25f))
+					if (hitAmount < maxHitAmount)
 					{
-						riqochetVelocity = FVector((velocity.X * -1.0f), velocity.Y, 0.0f);
-					}
-					else if (FMath::IsNearlyEqual(hitNormal.Y, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.Y, -1.0f, 0.25f))
-					{
-						riqochetVelocity = FVector(velocity.X, (velocity.Y * -1.0f), 0.0f);
-					}
+						hitAmount++;
 
-					velocity = riqochetVelocity;
-					traceEndPoint = currentPosition;
-					SetActorRotation(riqochetVelocity.Rotation());
-					moveMissileDeltaTime = 0.01f;
-					missileRootComp->MoveIgnoreActors.Empty();
-					isMoving = false;
+						FVector riqochetVelocity;
+						//FVector hitNormal = hit.Normal;
+						if (FMath::IsNearlyEqual(hitNormal.X, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.X, -1.0f, 0.25f))
+						{
+							riqochetVelocity = FVector((velocity.X * -1.0f), velocity.Y, 0.0f);
+						}
+						else if (FMath::IsNearlyEqual(hitNormal.Y, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.Y, -1.0f, 0.25f))
+						{
+							riqochetVelocity = FVector(velocity.X, (velocity.Y * -1.0f), 0.0f);
+						}
+
+						velocity = riqochetVelocity;
+						traceEndPoint = currentPosition;
+						SetActorRotation(riqochetVelocity.Rotation());
+						moveMissileDeltaTime = 0.01f;
+						missileRootComp->MoveIgnoreActors.Empty();
+						isMoving = false;
+					}
+					else
+					{
+						RunBulletHitEffect();
+					}
 				}
 				else
 				{
-					RunBulletHitEffect();
+					//FVector newLoc = FMath::Lerp(currentPosition, targetPosition, missileSpeed);
+					FVector newLoc = currentPosition + (velocity * missileSpeed);
+
+					FHitResult out;
+					SetActorLocation(newLoc, true, &out);
+
+					if (out.GetActor())
+					{
+						hitNormal = out.Normal;
+
+						ATT_StandardWall* wall = Cast<ATT_StandardWall>(out.GetActor());
+						if (wall) 
+						{
+							//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit Wall with Vector: %s"), *hitNormal.ToString()));
+							missileRootComp->IgnoreActorWhenMoving(wall, true);
+						}
+						else if (out.GetActor()->ActorHasTag("Arena_ArenaWall"))
+						{
+							//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit arena wall with Vector: %s"), *hitNormal.ToString()));
+							missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
+						}
+						else if (out.GetActor() == owningPlayer && hitAmount < 1)
+						{
+							missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
+						}
+					}
+
+					isMoving = true;
+					currentPosition = newLoc;
 				}
 			}
-			else
-			{
-				//FVector newLoc = FMath::Lerp(currentPosition, targetPosition, missileSpeed);
-				FVector newLoc = currentPosition + (velocity * missileSpeed);
-
-				FHitResult out;
-				SetActorLocation(newLoc, true, &out);
-
-				if (out.GetActor())
-				{
-					hitNormal = out.Normal;
-
-					ATT_StandardWall* wall = Cast<ATT_StandardWall>(out.GetActor());
-					if (wall) 
-					{
-						// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
-						missileRootComp->IgnoreActorWhenMoving(wall, true);
-					}
-					else if (out.GetActor()->ActorHasTag("Arena_ArenaWall"))
-					{
-						// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Vector: %s"), *hitNormal.ToString()));
-						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
-					}
-					else if (out.GetActor() == owningPlayer && hitAmount < 1)
-					{
-						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
-					}
-				}
-
-				isMoving = true;
-				currentPosition = newLoc;
-			}
-		}
 	}
 
 }
@@ -215,7 +207,7 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 	{
 		RunBulletHitEffect();
 	}
-	else
+	else if(!bIsDestroyed)
 	{
 		ATT_TankBase* tank = Cast<ATT_TankBase>(OtherActor);
 		if (tank && owningPlayer)
@@ -228,26 +220,18 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 			{
 				missileRootComp->MoveIgnoreActors.Empty();
 				if (currentBulletType == EPowerupType::PT_fastBullet)
-				{
 					tank->DamageTank();
-				}
 				else if (currentBulletType == EPowerupType::PT_missileBullet)
 				{
 					tank->DamageTank();
 					tank->DamageTank();
 				}
 				else if (currentBulletType == EPowerupType::PT_stunBullet)
-				{
 					tank->StunTank();
-				}
 				else if (currentBulletType == EPowerupType::PT_undergroundBullet)
-				{
 					tank->DamageTank();
-				}
 				else
-				{
 					tank->DamageTank();
-				}
 
 				RunBulletHitEffect();
 			}
@@ -256,9 +240,7 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 		{
 			ATT_DestructableWall* dWall = Cast<ATT_DestructableWall>(OtherActor);
 			if (dWall)
-			{
 				RunBulletHitEffect();
-			}
 		}
 	}
 }
