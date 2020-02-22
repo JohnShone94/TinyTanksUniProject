@@ -17,17 +17,18 @@ enum class EPowerupType : uint8
 {
 	PT_none						UMETA(DiaplayName = "None"),
 
-	PT_speedBoost				UMETA(DisplayName = "Speed Boost | Neutral"),
-
-	PT_airblast					UMETA(DisplayName = "Airblast | Defensive"),
 	PT_shild					UMETA(DisplayName = "Shild | Defensive"),
-	PT_smokeScreen				UMETA(DisplayName = "Smoke Screen | Defensive"),
 	PT_floating					UMETA(DisplayName = "Floating | Defensive"),
 
-	PT_fastBullet				UMETA(DisplayName = "Fast Bullet | Offensive"),
+	//PT_smokeScreen			UMETA(DisplayName = "Smoke Screen | Defensive"),
+	//PT_speedBoost				UMETA(DisplayName = "Speed Boost | Defensive"),
+	//PT_airblast				UMETA(DisplayName = "Airblast | Defensive"),
+
 	PT_missileBullet			UMETA(DisplayName = "Misslie Bullet | Offensive"),
 	PT_stunBullet				UMETA(DisplayName = "Stun Bullet | Offensive"),
-	PT_undergroundBullet		UMETA(DisplayName = "Undeground Bullet | Offensive"),
+
+	//PT_fastBullet				UMETA(DisplayName = "Fast Bullet | Offensive"),
+	//PT_undergroundBullet		UMETA(DisplayName = "Undeground Bullet | Offensive"),
 };
 
 UENUM(BlueprintType)
@@ -57,51 +58,28 @@ class TINYTANKSUNIPROJECT_API ATT_TankBaseController : public APlayerController
 	///////////////////
 
 protected:
-	static const FName moveBinding;
-	static const FName rotateBinding;
-	static const FName fireBinding;
-	static const FName activateSpecialBinding;
-	static const FName useSpecialBinding;
-
-	UPROPERTY()
-		ATT_TankBase* tankPawn;
-	UPROPERTY()
-		ATT_TankTurret* turretPawn;
-	UPROPERTY()
-		ATT_TinyTanksGameMode* gameMode;
-
-	//Set when the base is rotating, used to stop the player from moving while rotating.
-	UPROPERTY()
-		bool rotatingBase;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType activeOffensivePowerup;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType activeDeffensivePowerup;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType activeNeutralPowerup;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		float airblastSphereRadius;
-
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		bool bHasFast;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		bool bHasMissile;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ESelectedTeam selectedTeam;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TankBase* tankPawn;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TankTurret* turretPawn;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TinyTanksGameMode* gameMode;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		EPowerupType activeOffensivePowerup;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		EPowerupType activeDeffensivePowerup;
 
+private:
 	//Used to control the fireing.
 	uint32 bCanFire : 1;
 
 	//Handler for the timer.
-	FTimerHandle TimerHandle_ShotTimerExpired;
+	FTimerHandle fireMissileTimerHandle;
 
 	//Handler for the timer.
-	FTimerHandle TimerHandle_SpecialTimerExpired;
+	FTimerHandle powerupTimerHandle;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -110,40 +88,32 @@ protected:
 public:
 	ATT_TankBaseController();
 
-	UFUNCTION()
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void SetTankPawn(ATT_TankBase* tank) { tankPawn = tank; };
-	UFUNCTION()
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void SetTurretPawn(ATT_TankTurret* turret) { turretPawn = turret; };
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void SetPlayerTeam(ESelectedTeam team) { selectedTeam = team; };
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		ESelectedTeam GetPlayerTeam() { return selectedTeam; };
 
-	//UFUNCTION()
-	//	void PickupMissile();
-	//UFUNCTION()
-	//	void PickupFast();
-
 protected:
-
-
 	virtual void BeginPlay() override;
 
 	virtual void SetupInputComponent() override;
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void MoveForward(float val);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void Rotate(float val);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void FireShot(float val);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void ActivateSpecial(float val);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void UseSpecial(float val);
 
+private:
 	void ShotTimerExpired();
 	void SpecialTimerExpired();
 

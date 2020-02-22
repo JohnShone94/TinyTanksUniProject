@@ -8,12 +8,13 @@
 #include "TT_TankBase.generated.h"
 
 class UStaticMeshComponent;
+class USphereComponent;
 class ATT_MagicMissile;
 class ATT_Powerup;
 class ATT_PressurePlate;
 class ATT_SpringBoard;
 class ATT_TinyTanksGameMode;
-class USphereComponent;
+class ATT_Shield;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
@@ -37,7 +38,6 @@ public:
 	//The amount of hits a tank can take before it blows up.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 maxHealthPoints;
-
 	//Set to true when the tank is dead.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bCanRockDestroy;
@@ -52,6 +52,9 @@ public:
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		ATT_Shield* myShield;
 	
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TankTurret> turret;
@@ -76,6 +79,9 @@ protected:
 	//Set to true when the tank is shilded.
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsShilded;
+	//Set to true when the tank is floating.
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		bool bIsFloating;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TinyTanksGameMode* gameMode;
@@ -142,6 +148,9 @@ public:
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		void ActivateShild(bool val);
 
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void ActivateFloating(bool val);
+
 	UFUNCTION(Category = "Tank")
 		void SetCurrentOffensivePowerup(EPowerupType powerup) { currentOffensivePowerup = powerup; };
 
@@ -167,6 +176,12 @@ public:
 	//Called when another class needs to detect if the tank is stunned.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		bool GetIsStunned() { return bIsStunned; };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		bool GetIsShilded() { return bIsShilded; };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		bool GetIsFloating() { return bIsFloating; };
 
 	//Called when another class needs to get the max health points.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
@@ -200,6 +215,11 @@ public:
 		void ShieldActive();
 
 		virtual void ShieldActive_Implementation();
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void FloatingActive();
+
+		virtual void FloatingActive_Implementation();
 
 protected:
 	// Called when the game starts or when spawned

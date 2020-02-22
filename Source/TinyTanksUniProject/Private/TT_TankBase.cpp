@@ -48,6 +48,10 @@ ATT_TankBase::ATT_TankBase()
 	stunTimer = 2.0f;
 }
 
+void ATT_TankBase::FloatingActive_Implementation()
+{
+}
+
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -152,62 +156,12 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 		{
 			switch (powerup->GetPowerupType())
 			{
-				case EPowerupType::PT_fastBullet:
-				{
-					if (currentOffensivePowerup == EPowerupType::PT_none)
-					{
-						powerup->Destroy();
-						currentOffensivePowerup = EPowerupType::PT_fastBullet;
-					}
-
-					break;
-				}
-				case EPowerupType::PT_missileBullet:
-				{
-					if (currentOffensivePowerup == EPowerupType::PT_none)
-					{
-						powerup->Destroy();
-						currentOffensivePowerup = EPowerupType::PT_missileBullet;
-					}
-
-					break;
-				}
-				case EPowerupType::PT_undergroundBullet:
-				{
-					if (currentOffensivePowerup == EPowerupType::PT_none)
-					{
-						powerup->Destroy();
-						currentOffensivePowerup = EPowerupType::PT_undergroundBullet;
-					}
-
-					break;
-				}
-				case EPowerupType::PT_stunBullet:
-				{
-					if (currentOffensivePowerup == EPowerupType::PT_none)
-					{
-						powerup->Destroy();
-						currentOffensivePowerup = EPowerupType::PT_stunBullet;
-					}
-
-					break;
-				}
-				case EPowerupType::PT_airblast:
+				case EPowerupType::PT_floating:
 				{
 					if (currentDeffensivePowerup == EPowerupType::PT_none)
 					{
 						powerup->Destroy();
-						currentDeffensivePowerup = EPowerupType::PT_airblast;
-					}
-
-					break;
-				}
-				case EPowerupType::PT_smokeScreen:
-				{
-					if (currentDeffensivePowerup == EPowerupType::PT_none)
-					{
-						powerup->Destroy();
-						currentDeffensivePowerup = EPowerupType::PT_smokeScreen;
+						currentDeffensivePowerup = EPowerupType::PT_floating;
 					}
 
 					break;
@@ -222,23 +176,75 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 
 					break;
 				}
-				case EPowerupType::PT_floating:
+				case EPowerupType::PT_missileBullet:
 				{
-					if (currentDeffensivePowerup == EPowerupType::PT_none)
+					if (currentOffensivePowerup == EPowerupType::PT_none)
 					{
 						powerup->Destroy();
-						currentDeffensivePowerup = EPowerupType::PT_floating;
+						currentOffensivePowerup = EPowerupType::PT_missileBullet;
 					}
 
 					break;
 				}
-				case EPowerupType::PT_none:
+				case EPowerupType::PT_stunBullet:
 				{
+					if (currentOffensivePowerup == EPowerupType::PT_none)
+					{
+						powerup->Destroy();
+						currentOffensivePowerup = EPowerupType::PT_stunBullet;
+					}
+
 					break;
 				}
-				case EPowerupType::PT_speedBoost:
+
+				//case EPowerupType::PT_fastBullet:
+				//{
+				//	if (currentOffensivePowerup == EPowerupType::PT_none)
+				//	{
+				//		powerup->Destroy();
+				//		currentOffensivePowerup = EPowerupType::PT_fastBullet;
+				//	}
+
+				//	break;
+				//}
+				//case EPowerupType::PT_undergroundBullet:
+				//{
+				//	if (currentOffensivePowerup == EPowerupType::PT_none)
+				//	{
+				//		powerup->Destroy();
+				//		currentOffensivePowerup = EPowerupType::PT_undergroundBullet;
+				//	}
+
+				//	break;
+				//}
+				//case EPowerupType::PT_airblast:
+				//{
+				//	if (currentDeffensivePowerup == EPowerupType::PT_none)
+				//	{
+				//		powerup->Destroy();
+				//		currentDeffensivePowerup = EPowerupType::PT_airblast;
+				//	}
+
+				//	break;
+				//}
+				//case EPowerupType::PT_smokeScreen:
+				//{
+				//	if (currentDeffensivePowerup == EPowerupType::PT_none)
+				//	{
+				//		powerup->Destroy();
+				//		currentDeffensivePowerup = EPowerupType::PT_smokeScreen;
+				//	}
+
+				//	break;
+				//}
+				//case EPowerupType::PT_speedBoost:
+				//{
+				//	//apply temp speedboost
+				//	break;
+				//}
+
+				case EPowerupType::PT_none:
 				{
-					//apply temp speedboost
 					break;
 				}
 				default:
@@ -308,8 +314,13 @@ void ATT_TankBase::ActivateShild(bool val)
 	//	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	bIsShilded = val;
-
 	ShieldActive();
+}
+
+void ATT_TankBase::ActivateFloating(bool val)
+{
+	bIsFloating = val;
+	FloatingActive();
 }
 
 void ATT_TankBase::TankHasDied_Implementation()

@@ -31,7 +31,7 @@ TArray<ATT_GridCell*> ATT_WorldGrid::GetArrayOfEmptyCells()
 	{
 		for (int i = 0; i < cellArray.Num(); i++)
 		{
-			if (cellArray[i] && cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_none && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_destroyed)
+			if (cellArray[i] && (cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_none || cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_destroyed) && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_destroyed && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_none)
 			{
 				arrayOfEmpty.Add(cellArray[i]);
 			}
