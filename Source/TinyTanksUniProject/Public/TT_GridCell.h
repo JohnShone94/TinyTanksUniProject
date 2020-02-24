@@ -60,7 +60,7 @@ public:
 	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_DestructableWall> destructableWall;
 	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<ATT_FloorTile> floorTile;
+		TArray<TSubclassOf<ATT_FloorTile>> floorTiles;
 	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TrapDoor> trapDoor;
 	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)

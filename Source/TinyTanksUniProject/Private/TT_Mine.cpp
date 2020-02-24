@@ -47,6 +47,8 @@ void ATT_Mine::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class A
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 		tank = Cast<ATT_TankBase>(OtherActor);
+
+
 }
 
 void ATT_Mine::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
@@ -56,6 +58,8 @@ void ATT_Mine::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor * OtherA
 		ATT_TankBase* leavingTank = Cast<ATT_TankBase>(OtherActor);
 		if (leavingTank)
 			tank = nullptr;
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("overlap"));
 	}
 }
 
@@ -63,8 +67,10 @@ void ATT_Mine::OnMineOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("overlap"));
 		if(tank)
 		{
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("tank"));
 			mineMesh->SetVisibility(true);
 			bCanFlash = false;
 			GetWorld()->GetTimerManager().SetTimer(bombCountdown, this, &ATT_Mine::ChangeBomb, 0.2f, true, 0.5f);
@@ -94,10 +100,12 @@ void ATT_Mine::ChangeBomb()
 
 	if (countdown >= 6)
 	{
-		if (tank)
-			tank->StunTank();
+		MineDetonate();
 
 		Destroy();
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation());
 	}
+}
+void ATT_Mine::MineDetonate_Implementation()
+{
+
 }

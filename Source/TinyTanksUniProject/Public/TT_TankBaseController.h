@@ -70,6 +70,8 @@ protected:
 		EPowerupType activeOffensivePowerup;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		EPowerupType activeDeffensivePowerup;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		float speedMultiplier;
 
 private:
 	//Used to control the fireing.
@@ -80,6 +82,8 @@ private:
 
 	//Handler for the timer.
 	FTimerHandle powerupTimerHandle;
+
+	float i;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -99,7 +103,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 	
 	UFUNCTION(Category = "PlayerCon", BlueprintCallable)

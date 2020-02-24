@@ -41,6 +41,8 @@ void ATT_TankTurret::BeginPlay()
 	Super::BeginPlay();
 	
 	turretForwardVector = tankGunBase->GetForwardVector();
+
+	turretCurrentRotation = GetActorRotation();
 }
 
 void ATT_TankTurret::Tick(float DeltaTime)
