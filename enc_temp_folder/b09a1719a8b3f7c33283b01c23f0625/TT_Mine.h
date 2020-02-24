@@ -37,10 +37,6 @@ public:
 		USphereComponent* mineActivationSphere;
 	UPROPERTY(VisibleAnywhere)
 		USphereComponent* mineOverlapSphere;
-	UFUNCTION(Category = "Mine", BlueprintNativeEvent)
-		void MineDetonate();
-
-	virtual void MineDetonate_Implementation();
 
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)

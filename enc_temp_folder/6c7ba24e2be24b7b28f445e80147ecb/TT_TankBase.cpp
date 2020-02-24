@@ -45,7 +45,7 @@ ATT_TankBase::ATT_TankBase()
 
 	currentLocation = GetActorLocation();
 
-	stunTimer = 0.0f;
+	stunTimer = 2.0f;
 }
 
 void ATT_TankBase::FloatingActive_Implementation()
