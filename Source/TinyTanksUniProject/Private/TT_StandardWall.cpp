@@ -2,7 +2,7 @@
 
 
 #include "TT_StandardWall.h"
-#include "Components/StaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 
 
 // Sets default values
@@ -11,8 +11,8 @@ ATT_StandardWall::ATT_StandardWall()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	wallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Wall Mesh"));
-	RootComponent = wallMesh;
+	sceneLink = CreateDefaultSubobject<USceneComponent>(TEXT("Wall Scene Link"));
+	RootComponent = sceneLink;
 
 }
 

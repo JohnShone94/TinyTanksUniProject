@@ -26,6 +26,16 @@ ATT_TankTurret::ATT_TankTurret()
 	fireRate = 1.25f;
 }
 
+void ATT_TankTurret::SetTurretTeam(ESelectedTeam team)
+{
+	turretTeam = team;
+	UpdateTankTeam();
+}
+
+void ATT_TankTurret::UpdateTankTeam_Implementation()
+{
+}
+
 void ATT_TankTurret::BeginPlay()
 {
 	Super::BeginPlay();

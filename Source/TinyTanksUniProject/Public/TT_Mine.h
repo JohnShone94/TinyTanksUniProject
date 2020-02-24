@@ -34,6 +34,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* mineMesh;
 	UPROPERTY(VisibleAnywhere)
+		USphereComponent* mineActivationSphere;
+	UPROPERTY(VisibleAnywhere)
 		USphereComponent* mineOverlapSphere;
 
 protected:

@@ -31,7 +31,7 @@ TArray<ATT_GridCell*> ATT_WorldGrid::GetArrayOfEmptyCells()
 	{
 		for (int i = 0; i < cellArray.Num(); i++)
 		{
-			if (cellArray[i] && cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_none && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_destroyed)
+			if (cellArray[i] && (cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_none || cellArray[i]->itemToSpawn == E_ItemToSpawn::ITS_destroyed) && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_destroyed && cellArray[i]->floorItemToSpawn != E_FloorItemToSpawn::FITS_none)
 			{
 				arrayOfEmpty.Add(cellArray[i]);
 			}
@@ -60,7 +60,7 @@ ATT_GridCell* ATT_WorldGrid::GetRandomEmptyCell()
 
 	if (arrayOfEmpty.Num() > 0)
 	{
-		randNum = FMath::RandRange(0, arrayOfEmpty.Num());
+		randNum = FMath::RandRange(0, (arrayOfEmpty.Num() - 1));
 		ATT_GridCell* cell = arrayOfEmpty[randNum];
 		return cell;
 	}
@@ -176,12 +176,16 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATT_WorldGrid, reloadGrid))
 	{
-		if (cellArray.Num() > 0)
+		if (cellArray.Num() > 0 && cellLocations.Num() > 0)
 		{
 			for (int i = 0; i < cellArray.Num(); i++)
 			{
+
 				if (cellArray[i])
+				{
+					cellArray[i]->SetActorLocation(cellLocations[i]);
 					cellArray[i]->ReloadCell();
+				}
 			}
 		}
 		reloadGrid = false;

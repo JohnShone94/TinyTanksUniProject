@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "TT_TankBaseController.h"
 #include "TT_TankTurret.generated.h"
 
 class UStaticMeshComponent;
@@ -28,12 +29,17 @@ public:
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		FVector turretForwardVector;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		ESelectedTeam turretTeam;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		UStaticMeshComponent* tankGunBase;
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		USceneComponent* fireLocation;
 
+
 protected:
+
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -49,6 +55,19 @@ public:
 		FVector GetForwardVector();
 	UFUNCTION()
 		UStaticMeshComponent* GetTankGunBase() { return tankGunBase; };
+
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		ESelectedTeam GetTurretTeam() { return turretTeam; };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void SetTurretTeam(ESelectedTeam team);
+
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void UpdateTankTeam();
+
+	virtual void UpdateTankTeam_Implementation();
 
 protected:
 	virtual void BeginPlay() override;

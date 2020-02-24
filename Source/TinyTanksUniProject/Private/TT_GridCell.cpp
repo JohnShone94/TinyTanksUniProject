@@ -10,6 +10,7 @@
 #include "TT_Mine.h"
 #include "TT_TankSpawnPoint.h"
 #include "TT_TrapDoor.h"
+#include "TT_Spike.h"
 
 // Sets default values
 ATT_GridCell::ATT_GridCell()
@@ -98,16 +99,19 @@ void ATT_GridCell::ReloadCell()
 	}
 	else
 	{
-		if(itemToSpawn == E_ItemToSpawn::ITS_destroyed && itemSelectionComp)
-			itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 94.0f));
-		else
+		if (itemToSpawn == E_ItemToSpawn::ITS_destroyed && itemSelectionComp)
+		{
 			itemSelectionComp->SetRelativeLocation(FVector(0.0f, 0.0f, 31.0f));
+			itemToSpawn = E_ItemToSpawn::ITS_none;
+		}
 	}
 
 	if (currentFloorActor)
 	{
 		if (floorSelectionComp)
-			floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
+		{
+			floorSelectionComp->SetVisibility(false);
+		}
 
 		if (floorItemToSpawn == E_FloorItemToSpawn::FITS_trapdoor)
 		{
@@ -117,8 +121,14 @@ void ATT_GridCell::ReloadCell()
 		else
 			currentFloorActor->SetActorLocation(GetActorLocation());
 	}
-	else if(floorSelectionComp)
-		floorSelectionComp->SetRelativeScale3D(FVector(0.465f, 0.465f, 0.05f));
+	else
+	{
+		if (floorItemToSpawn == E_FloorItemToSpawn::FITS_destroyed && floorSelectionComp)
+		{
+			floorSelectionComp->SetVisibility(true);
+			floorItemToSpawn = E_FloorItemToSpawn::FITS_none;
+		}
+	}
 }
 
 void ATT_GridCell::HideCell(bool val)
@@ -323,6 +333,26 @@ void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 				FActorSpawnParameters SpawnParams;
 
 				ATT_TrapDoor* actorRef = GetWorld()->SpawnActor<ATT_TrapDoor>(trapDoor, newLoc, SpawnParams);
+				currentFloorActor = actorRef;
+
+				break;
+			}
+			case E_FloorItemToSpawn::FITS_spike:
+			{
+				FTransform newLoc = FTransform(GetActorRotation(), (FVector(GetTransform().GetLocation().X, GetTransform().GetLocation().Y, 26.0f)), FVector(1.0f, 1.0f, 1.0f));
+
+				if (currentFloorActor)
+				{
+					currentFloorActor->Destroy();
+					currentFloorActor = nullptr;
+				}
+
+				if (floorSelectionComp)
+					floorSelectionComp->SetVisibility(false);
+
+				FActorSpawnParameters SpawnParams;
+
+				ATT_Spike* actorRef = GetWorld()->SpawnActor<ATT_Spike>(spikeTile, GetTransform(), SpawnParams);
 				currentFloorActor = actorRef;
 
 				break;

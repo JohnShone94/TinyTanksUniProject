@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "TT_TrapDoor.generated.h"
 
+
+class USceneComponent;
+
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TrapDoor : public AActor
 {
@@ -19,8 +22,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UStaticMeshComponent* trapDoorMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		USceneComponent* sceneLink;
 
 public:	
 	// Called every frame

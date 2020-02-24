@@ -7,21 +7,16 @@
 #include "TT_TinyTanksGameMode.h"
 
 #include "Components/SphereComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/Pawn.h"
 #include "EngineUtils.h"
 #include "TimerManager.h"
 #include "DrawDebugHelpers.h"
-
-const FName ATT_TankBaseController::moveBinding("MoveBinding");
-const FName ATT_TankBaseController::rotateBinding("RotateBinding");
-const FName ATT_TankBaseController::fireBinding("FireBinding");
-const FName ATT_TankBaseController::activateSpecialBinding("ActivateSpecialBinding");
-const FName ATT_TankBaseController::useSpecialBinding("UseSpecialBinding");
+#include "Engine.h"
 
 ATT_TankBaseController::ATT_TankBaseController()
 {
 	bCanFire = true;
-	rotatingBase = false;
 	activeOffensivePowerup = EPowerupType::PT_none;
 }
 
@@ -37,7 +32,7 @@ void ATT_TankBaseController::SetupInputComponent()
 	if (InputComponent)
 	{
 		InputComponent->BindAxis("MoveBinding", this, &ATT_TankBaseController::MoveForward);
-		InputComponent->BindAxis("RotateBinding", this, &ATT_TankBaseController::Rotate);
+		InputComponent->BindAxis("RotateBind", this, &ATT_TankBaseController::Rotate);
 		InputComponent->BindAxis("FireBinding", this, &ATT_TankBaseController::FireShot);
 		InputComponent->BindAxis("ActivateSpecialBinding", this, &ATT_TankBaseController::ActivateSpecial);
 		InputComponent->BindAxis("UseSpecialBinding", this, &ATT_TankBaseController::UseSpecial);
@@ -63,15 +58,13 @@ void ATT_TankBaseController::SpecialTimerExpired()
 	{
 		if (activeDeffensivePowerup == EPowerupType::PT_floating)
 		{
-			tankPawn->tankBaseMesh->SetEnableGravity(true);
+			tankPawn->ActivateFloating(false);
+			tankPawn->ResetDeffensivePowerup();
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
 		{
 			tankPawn->ActivateShild(false);
-		}
-		else if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
-		{
-			tankPawn->moveSpeed = (tankPawn->moveSpeed / 2);
+			tankPawn->ResetDeffensivePowerup();
 		}
 		activeDeffensivePowerup = EPowerupType::PT_none;
 	}
@@ -79,26 +72,29 @@ void ATT_TankBaseController::SpecialTimerExpired()
 
 void ATT_TankBaseController::MoveForward(float val)
 {
-	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && !rotatingBase && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
+	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
 	{
+
+		float speedMultiplier;
+		speedMultiplier = 1.0f;
+
 		//UE_LOG(LogTemp, Warning, TEXT("TANK FORWARD %f"), val);
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed) * val);
-			tankPawn->AddActorWorldOffset(moveDirection, false, &Hit);
+
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed * speedMultiplier) * val);
+			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
 		}
 		else if (val < 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* (tankPawn->moveSpeed / 2.5)) * val);
-			tankPawn->AddActorWorldOffset(moveDirection, false, &Hit);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->moveSpeed * speedMultiplier) / 2.5)) * val);
+			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
 		}
 	}
 }
 void ATT_TankBaseController::Rotate(float val)
 {
-	if(val == 0.0f)
-		rotatingBase = false;
 
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
@@ -148,11 +144,17 @@ void ATT_TankBaseController::FireShot(float val)
 					ATT_MagicMissile* bullet = world->SpawnActor<ATT_MagicMissile>(turretParent->magicMissile, spawnTransform, SpawnParams);
 					if(bullet)
 						bullet->SetupBullet(fireDirection, turretParent, activeOffensivePowerup);
+					
+					if (activeOffensivePowerup != EPowerupType::PT_none)
+					{
+						turretParent->ResetOffensivePowerup();
+						activeOffensivePowerup = EPowerupType::PT_none;
+					}
 				}
 
 				bCanFire = false;
 
-				world->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ATT_TankBaseController::ShotTimerExpired, turretPawn->fireRate);
+				world->GetTimerManager().SetTimer(fireMissileTimerHandle, this, &ATT_TankBaseController::ShotTimerExpired, turretPawn->fireRate);
 			}
 		}
 	}
@@ -160,20 +162,18 @@ void ATT_TankBaseController::FireShot(float val)
 
 void ATT_TankBaseController::ActivateSpecial(float val)
 {
-	if (gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f)
+	if (gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f )
 	{
-		if (tankPawn && (tankPawn->currentDeffensivePowerup == EPowerupType::PT_airblast || tankPawn->currentDeffensivePowerup == EPowerupType::PT_floating || tankPawn->currentDeffensivePowerup == EPowerupType::PT_shild || tankPawn->currentDeffensivePowerup == EPowerupType::PT_smokeScreen))
+		if (tankPawn && (tankPawn->currentDeffensivePowerup == EPowerupType::PT_shild || tankPawn->currentDeffensivePowerup == EPowerupType::PT_floating) && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
 		{
 			activeDeffensivePowerup = tankPawn->currentDeffensivePowerup;
-			tankPawn->ResetDeffensivePowerup();
 		}
 		else if (turretPawn)
 		{
 			ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
-			if (turretParent && (turretParent->currentOffensivePowerup == EPowerupType::PT_stunBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_undergroundBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_missileBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_fastBullet))
+			if (turretParent && (turretParent->currentOffensivePowerup == EPowerupType::PT_stunBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_missileBullet))
 			{
 				activeOffensivePowerup = turretParent->currentOffensivePowerup;
-				turretParent->ResetOffensivePowerup();
 			}
 		}
 	}
@@ -181,24 +181,17 @@ void ATT_TankBaseController::ActivateSpecial(float val)
 
 void ATT_TankBaseController::UseSpecial(float val)
 {
-	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f)
+	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
 	{
-		if (activeDeffensivePowerup == EPowerupType::PT_airblast)
+		if (activeDeffensivePowerup == EPowerupType::PT_floating)
 		{
-			
-		}
-		else if (activeDeffensivePowerup == EPowerupType::PT_floating)
-		{
-			tankPawn->tankBaseMesh->SetEnableGravity(false);
+			tankPawn->ActivateFloating(true);
+			GetWorld()->GetTimerManager().SetTimer(powerupTimerHandle, this, &ATT_TankBaseController::SpecialTimerExpired, 5.0f);
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
 		{
 			tankPawn->ActivateShild(true);
-		}
-		else if (activeDeffensivePowerup == EPowerupType::PT_speedBoost)
-		{
-			tankPawn->moveSpeed = (tankPawn->moveSpeed * 2);
+			GetWorld()->GetTimerManager().SetTimer(powerupTimerHandle, this, &ATT_TankBaseController::SpecialTimerExpired, 5.0f);
 		}
 	}
-
 }

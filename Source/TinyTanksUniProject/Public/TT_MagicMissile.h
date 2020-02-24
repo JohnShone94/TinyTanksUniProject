@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TT_TankBase.h"
+#include "TT_TankBaseController.h"
 #include "TT_MagicMissile.generated.h"
 
 class USphereComponent;
@@ -26,6 +27,8 @@ public:
 		float missileSpeed;
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 maxHitAmount;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bIsBlueTeam;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector velocity;
@@ -51,6 +54,8 @@ public:
 		FHitResult hit;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		int32 hitAmount;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		bool bIsDestroyed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USphereComponent* missileRootComp;
@@ -61,7 +66,12 @@ public:
 	UPROPERTY()
 		EPowerupType currentBulletType;
 
+	bool finishedsetup;
+
 	FVector hitNormal;
+
+	//Handler for the timer.
+	FTimerHandle TimerHandle_DeathTimerExpired;
 
 public:	
 	// Sets default values for this actor's properties
@@ -74,7 +84,9 @@ public:
 		void SetupBullet(FVector fireVel, ATT_TankBase* player, EPowerupType bulletType);
 
 	void MoveMissile(float DeltaTime);
-	void CheckHitActor(AActor* hitActor);
+
+	UFUNCTION(Category = "Missile", BlueprintPure)
+		ATT_TankBase* GetOwningPlayer() { return owningPlayer; };
 
 protected:
 	// Called when the game starts or when spawned
@@ -82,5 +94,23 @@ protected:
 
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector HitNormal, const FHitResult& HitResult);
+
+
+	UFUNCTION(Category = "Bullet", BlueprintNativeEvent)
+		void RunBulletHitEffect();
+
+	virtual void RunBulletHitEffect_Implementation();
+
+	UFUNCTION(Category = "Bullet", BlueprintNativeEvent)
+		void RunMegaBulletEffect();
+
+	virtual void RunMegaBulletEffect_Implementation();
+
+	UFUNCTION(Category = "Bullet", BlueprintNativeEvent)
+		void SetupFinished();
+
+	virtual void SetupFinished_Implementation();
+
+	void DeathTimerExpired();
 
 };

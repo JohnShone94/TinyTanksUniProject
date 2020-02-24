@@ -4,33 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "TT_TankBaseController.h"
 #include "TT_TankBase.generated.h"
 
 class UStaticMeshComponent;
+class USphereComponent;
 class ATT_MagicMissile;
-class ATT_TinyTanksGameMode;
 class ATT_Powerup;
 class ATT_PressurePlate;
 class ATT_SpringBoard;
-class USphereComponent;
-
-UENUM(BlueprintType)
-enum class EPowerupType : uint8
-{
-	PT_none						UMETA(DiaplayName = "None"),
-
-	PT_speedBoost				UMETA(DisplayName = "Speed Boost | Neutral"),
-
-	PT_airblast					UMETA(DisplayName = "Airblast | Defensive"),
-	PT_shild					UMETA(DisplayName = "Shild | Defensive"),
-	PT_smokeScreen				UMETA(DisplayName = "Smoke Screen | Defensive"),
-	PT_floating					UMETA(DisplayName = "Floating | Defensive"),
-
-	PT_fastBullet				UMETA(DisplayName = "Fast Bullet | Offensive"),
-	PT_missileBullet			UMETA(DisplayName = "Misslie Bullet | Offensive"),
-	PT_stunBullet				UMETA(DisplayName = "Stun Bullet | Offensive"),
-	PT_undergroundBullet		UMETA(DisplayName = "Undeground Bullet | Offensive"),
-};
+class ATT_TinyTanksGameMode;
+class ATT_Shield;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
@@ -54,7 +38,6 @@ public:
 	//The amount of hits a tank can take before it blows up.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 maxHealthPoints;
-
 	//Set to true when the tank is dead.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		bool bCanRockDestroy;
@@ -67,15 +50,21 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_MagicMissile> magicMissile;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		UChildActorComponent* turretSlot;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		ATT_Shield* myShield;
+	
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_TankTurret> turret;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent* tankOverlap;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UStaticMeshComponent* tankBaseMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		UStaticMeshComponent* shildMesh;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//	USphereComponent* shildCollison;
 
 protected:
 	//The amount of hits a tank has left before it blows up.
@@ -90,6 +79,9 @@ protected:
 	//Set to true when the tank is shilded.
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsShilded;
+	//Set to true when the tank is floating.
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		bool bIsFloating;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TinyTanksGameMode* gameMode;
@@ -103,6 +95,12 @@ protected:
 		FVector destination;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		ATT_Powerup* powerupInt;
+
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		ESelectedTeam tankTeam;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		ATT_TankTurret* myTurret;
+
 
 	FTimerHandle TimerHandle_StunTimerExpired;
 
@@ -123,9 +121,15 @@ public:
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
 
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		ESelectedTeam GetTankTeam() { return tankTeam; };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void SetTankTeam(ESelectedTeam team);
+
 	//Called when the tank dies.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
-		void KillTank();
+		void KillTank(bool addWin = true);
 
 	//Called when the tank is stunned.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
@@ -143,6 +147,9 @@ public:
 
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		void ActivateShild(bool val);
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void ActivateFloating(bool val);
 
 	UFUNCTION(Category = "Tank")
 		void SetCurrentOffensivePowerup(EPowerupType powerup) { currentOffensivePowerup = powerup; };
@@ -170,6 +177,12 @@ public:
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		bool GetIsStunned() { return bIsStunned; };
 
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		bool GetIsShilded() { return bIsShilded; };
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		bool GetIsFloating() { return bIsFloating; };
+
 	//Called when another class needs to get the max health points.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
 		int32 GetMaxHealthPoints() { return maxHealthPoints; };
@@ -192,6 +205,21 @@ public:
 		void TankHasFired();
 
 		virtual void TankHasFired_Implementation();
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void UpdateTankTeam();
+
+		virtual void UpdateTankTeam_Implementation();
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void ShieldActive();
+
+		virtual void ShieldActive_Implementation();
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void FloatingActive();
+
+		virtual void FloatingActive_Implementation();
 
 protected:
 	// Called when the game starts or when spawned

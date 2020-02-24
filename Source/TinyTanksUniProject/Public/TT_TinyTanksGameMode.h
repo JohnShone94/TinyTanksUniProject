@@ -42,6 +42,23 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		ATT_MainCamera* mainCam;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 teamBlueScore;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		int32 teamRedScore;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float tankSpeed;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float tankRotateSpeed;
+
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		float turretRotateSpeed;
+
+
+
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bCanPlayersControlTanks;
@@ -75,13 +92,13 @@ public:
 
 	//called when a tank dies.
 	UFUNCTION()
-		void RemoveTank();
+		void RemoveTank(ATT_TankBase* tank, bool addWin);
 
 	UFUNCTION()
 		int32 GetPlayersLeft() { return playersLeft; };
 
-	UFUNCTION()
-		void AddTankToGM(ATT_TankBase* tank);
+	UFUNCTION(BlueprintCallable)
+		void PlayerPossessTank();
 
 	UFUNCTION(BlueprintCallable)
 		bool GetCanPlayersControlTanks() { return bCanPlayersControlTanks; };
@@ -93,6 +110,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SpawnPlayerControllers();
 
+	UFUNCTION(BlueprintCallable)
+		void UpdateTankSpeed(float speed);
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateTankRotateSpeed(float speed);
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateTurretRotateSpeed(float speed);
 
 protected:
 	virtual void BeginPlay() override;

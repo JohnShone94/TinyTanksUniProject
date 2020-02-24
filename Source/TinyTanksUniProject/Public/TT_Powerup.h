@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "TT_TankBase.h"
 #include "GameFramework/Actor.h"
+#include "TT_TankBaseController.h"
 #include "TT_Powerup.generated.h"
 
 class UStaticMeshComponent;
@@ -37,10 +38,10 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		EPowerupType powerupType;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* powerupMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USphereComponent* powerupOverlap;
 
 protected:

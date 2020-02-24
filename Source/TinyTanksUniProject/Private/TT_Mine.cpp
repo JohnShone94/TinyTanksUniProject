@@ -21,6 +21,10 @@ ATT_Mine::ATT_Mine()
 	mineOverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Mine Overlap Component"));
 	mineOverlapSphere->SetupAttachment(RootComponent);
 
+	mineActivationSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Mine Activation Component"));
+	mineActivationSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnMineOverlapBegin);
+	mineActivationSphere->SetupAttachment(RootComponent);
+
 	countdown = 0;
 	bFlashOn = true;	
 	bCanFlash = true;
@@ -30,9 +34,10 @@ ATT_Mine::ATT_Mine()
 void ATT_Mine::BeginPlay()
 {
 	Super::BeginPlay();
-
-	mineMesh->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnMineOverlapBegin);
 	mineMesh->SetVisibility(false);
+
+
+	//mineActivationSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnMineOverlapBegin);
 
 	mineOverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_Mine::OnOverlapBegin);
 	mineOverlapSphere->OnComponentEndOverlap.AddDynamic(this, &ATT_Mine::OnOverlapEnd);
@@ -58,7 +63,7 @@ void ATT_Mine::OnMineOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		if(tank && bCanFlash)
+		if(tank)
 		{
 			mineMesh->SetVisibility(true);
 			bCanFlash = false;
