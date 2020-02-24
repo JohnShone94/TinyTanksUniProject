@@ -74,10 +74,15 @@ void ATT_GridCell::RandomiseFloorTile()
 	if(floorSelectionComp)
 		floorSelectionComp->SetVisibility(false);
 
-	FActorSpawnParameters SpawnParams;
+	if (floorTiles.Num() > 0)
+	{
+		int32 index = FMath::RandRange(0, (floorTiles.Num() - 1));
 
-	ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTile, GetTransform(), SpawnParams);
-	currentFloorActor = actorRef;
+		FActorSpawnParameters SpawnParams;
+
+		ATT_FloorTile* actorRef = GetWorld()->SpawnActor<ATT_FloorTile>(floorTiles[index], GetTransform(), SpawnParams);
+		currentFloorActor = actorRef;
+	}
 }
 
 void ATT_GridCell::ReloadCell()

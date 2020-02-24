@@ -167,7 +167,7 @@ void ATT_WorldGrid::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 		{
 			for (int i = 0; i < cellArray.Num(); i++)
 			{
-				if (cellArray[i] && (cellArray[i]->floorItemToSpawn == E_FloorItemToSpawn::FITS_tile || cellArray[i]->floorItemToSpawn == E_FloorItemToSpawn::FITS_none))
+				if (cellArray[i] && (cellArray[i]->floorItemToSpawn == E_FloorItemToSpawn::FITS_tile))
 					cellArray[i]->RandomiseFloorTile();
 			}
 		}
