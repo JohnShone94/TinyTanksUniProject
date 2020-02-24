@@ -30,6 +30,8 @@ public:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		FVector turretForwardVector;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+		FRotator turretCurrentRotation;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		ESelectedTeam turretTeam;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)

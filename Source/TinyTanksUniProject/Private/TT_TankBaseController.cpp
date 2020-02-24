@@ -18,12 +18,22 @@ ATT_TankBaseController::ATT_TankBaseController()
 {
 	bCanFire = true;
 	activeOffensivePowerup = EPowerupType::PT_none;
+	speedMultiplier = 1.0f;
+
+	i = 0.0f;
 }
 
- void ATT_TankBaseController::BeginPlay()
+void ATT_TankBaseController::BeginPlay()
 {
 	Super::BeginPlay();
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+}
+
+void ATT_TankBaseController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	speedMultiplier = (1.0f + (DeltaTime * 10));
 }
 
 void ATT_TankBaseController::SetupInputComponent()
@@ -45,7 +55,6 @@ void ATT_TankBaseController::SetupInputComponent()
 		UE_LOG(LogTemp, Error, TEXT("TankBaseController(SetupInputComponent): Failed to setup Input Component."));
 	}
 }
-
 
 void ATT_TankBaseController::ShotTimerExpired()
 {
@@ -74,22 +83,20 @@ void ATT_TankBaseController::MoveForward(float val)
 {
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
 	{
-
-		float speedMultiplier;
-		speedMultiplier = 1.0f;
-
-		//UE_LOG(LogTemp, Warning, TEXT("TANK FORWARD %f"), val);
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
-
 			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed * speedMultiplier) * val);
 			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
+
+			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->moveSpeed, speedMultiplier, val, ((tankPawn->moveSpeed * speedMultiplier) * val));
 		}
 		else if (val < 0.0f)
 		{
 			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->moveSpeed * speedMultiplier) / 2.5)) * val);
 			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
+
+			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->moveSpeed, speedMultiplier, val, ((tankPawn->moveSpeed * speedMultiplier) * val));
 		}
 	}
 }
@@ -99,8 +106,12 @@ void ATT_TankBaseController::Rotate(float val)
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("TANK TURN %f"), val);
-		const FRotator rotateDirection = (FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * val);
+		const FRotator rotateDirection = ((FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * speedMultiplier) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);
+
+		ATT_TankTurret* turret = Cast<ATT_TankTurret>(tankPawn->turretSlot->GetChildActor());
+		if (turret)
+			turret->SetActorRotation(turret->turretCurrentRotation);
 	}
 
 	if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
@@ -109,8 +120,9 @@ void ATT_TankBaseController::Rotate(float val)
 		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("TURRET ROTATE %f"), val);
-			const FRotator rotateDirection = (FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * val);
+			const FRotator rotateDirection = ((FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * speedMultiplier) * val);
 			turretPawn->AddActorWorldRotation(rotateDirection);
+			turretPawn->turretCurrentRotation = turretPawn->GetActorRotation();
 		}
 	}
 }
@@ -129,8 +141,6 @@ void ATT_TankBaseController::FireShot(float val)
 				const FRotator fireRotation = FRotator(fireDirection.Rotation().Pitch, fireDirection.Rotation().Yaw, 0.0f);
 
 				const FVector spawnLocation = turretPawn->fireLocation->GetComponentLocation();
-
-				tankPawn->TankHasFired_Implementation();
 
 				UWorld* const world = GetWorld();
 				if (world != NULL)
