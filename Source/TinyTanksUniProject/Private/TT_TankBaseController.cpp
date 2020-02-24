@@ -130,7 +130,7 @@ void ATT_TankBaseController::FireShot(float val)
 
 				const FVector spawnLocation = turretPawn->fireLocation->GetComponentLocation();
 
-				tankPawn->TankHasFired_Implementation();
+				turretParent->TankHasFired();
 
 				UWorld* const world = GetWorld();
 				if (world != NULL)
