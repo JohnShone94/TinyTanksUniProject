@@ -249,7 +249,7 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 			else
 			{
 				ATT_Shield* shield = Cast<ATT_Shield>(OtherActor);
-				if (shield && tank->myShield && shield == tank->myShield)
+				if (shield && tank && tank->myShield && shield == tank->myShield)
 				{
 
 				}
