@@ -39,7 +39,6 @@ public:
 		USphereComponent* mineOverlapSphere;
 	UFUNCTION(Category = "Mine", BlueprintNativeEvent)
 		void MineDetonate();
-
 	virtual void MineDetonate_Implementation();
 
 protected:
