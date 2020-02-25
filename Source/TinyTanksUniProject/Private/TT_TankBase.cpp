@@ -108,7 +108,9 @@ void ATT_TankBase::KillTank(bool addWin)
 		bIsDead = true;
 
 		GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
-		tankBaseMesh->SetVisibility(false);
+		
+		if(tankBaseMesh)
+			tankBaseMesh->SetVisibility(false);
 
 		if (myTurret)
 		{
@@ -119,7 +121,9 @@ void ATT_TankBase::KillTank(bool addWin)
 			UE_LOG(LogTemp, Error, TEXT("TankBase(KillTank): Cant find myTurret."));
 
 		currentHealthPoints = 0;
-		gameMode->RemoveTank(this, addWin);
+
+		if(gameMode)
+			gameMode->RemoveTank(this, addWin);
 
 		TankHasDied();
 	}
@@ -130,7 +134,8 @@ void ATT_TankBase::StunTank()
 	if (!bIsStunned)
 		bIsStunned = true;
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle_StunTimerExpired, this, &ATT_TankBase::StunTimerExpired, stunTimer);
+	if(GetWorld())
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_StunTimerExpired, this, &ATT_TankBase::StunTimerExpired, stunTimer);
 }
 
 void ATT_TankBase::StunTimerExpired()
@@ -287,9 +292,12 @@ void ATT_TankBase::DamageTank()
 			else
 				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Cant find myTurret."));
 
-			tankBaseMesh->SetVisibility(false);
+			if(tankBaseMesh)
+				tankBaseMesh->SetVisibility(false);
 
-			gameMode->RemoveTank(this, true);
+			if(gameMode)
+				gameMode->RemoveTank(this, true);
+			
 			TankHasDied();
 
 		}
