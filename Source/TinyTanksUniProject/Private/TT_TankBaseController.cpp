@@ -34,8 +34,7 @@ void ATT_TankBaseController::BeginPlay()
 void ATT_TankBaseController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	speedMultiplier = (1.0f + (DeltaTime * 10));
+
 }
 
 void ATT_TankBaseController::SetupInputComponent()
@@ -86,15 +85,19 @@ void ATT_TankBaseController::MoveForward(float val)
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->tankMoveSpeed * speedMultiplier) * val);
-			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
+			const FVector moveDirection = (tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
+			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), true, &Hit);
+			if (Hit.GetActor() && Hit.GetActor()->ActorHasTag("PlayerIgnore"))
+			{
+				tankPawn->MoveIgnoreActorAdd(Hit.GetActor());
+			}
 
 			//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
 		}
 		else if (val < 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->tankMoveSpeed * speedMultiplier) / 2.5)) * val);
-			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * speedMultiplier) / 2.5)) * val);
+			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), true, &Hit);
 
 			//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
 		}
