@@ -7,6 +7,7 @@
 #include "TT_SpringBoard.h"
 #include "TT_PressurePlate.h"
 #include "TT_TinyTanksGameMode.h"
+#include "TT_PowerupHolder.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
@@ -32,11 +33,14 @@ ATT_TankBase::ATT_TankBase()
 	turretSlot = CreateDefaultSubobject<UChildActorComponent>(TEXT("Turret Slot"));
 	turretSlot->SetupAttachment(RootComponent);
 
+	powerupHolder = CreateDefaultSubobject<UChildActorComponent>(TEXT("Powerhup Holder Slot"));
+	powerupHolder->SetupAttachment(RootComponent);
+
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
 
-	moveSpeed = 2.0f;
-	rotateSpeed = 1.25f;
+	tankMoveSpeed = 2.0f;
+	tankRotationSpeed = 1.25f;
 
 	bIsDead = false;
 	bIsStunned = false;
@@ -74,13 +78,22 @@ void ATT_TankBase::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("TankBase(BeginPlay): Failed to attach my turret."));
 	}
 
+	myPowerupHolder = Cast<ATT_PowerupHolder>(powerupHolder->GetChildActor());
+	if (myPowerupHolder)
+	{
+		myPowerupHolder->SetOwningTank(this);
+		UE_LOG(LogTemp, Log, TEXT("TankBase(BeginPlay): Attached my powerup holder."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("TankBase(BeginPlay): Failed to attach my powerup holder."));
+	}
 
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
-
 	if (gameMode)
 	{
-		moveSpeed = gameMode->tankSpeed;
-		rotateSpeed = gameMode->tankRotateSpeed;
+		tankMoveSpeed = gameMode->tankSpeed;
+		tankRotationSpeed = gameMode->tankRotateSpeed;
 
 		myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
 		if (myTurret)
@@ -88,6 +101,7 @@ void ATT_TankBase::BeginPlay()
 			myTurret->rotateSpeed = gameMode->turretRotateSpeed;
 		}
 	}
+
 }
 
 void ATT_TankBase::Tick(float DeltaTime)
@@ -257,6 +271,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					break;
 				}
 			}
+			myPowerupHolder->UpdatePowerupHolder();
 		}
 	}
 }
