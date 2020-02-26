@@ -174,8 +174,8 @@ void ATT_TankBaseController::FireShot(float val)
 						turretTankParent->ResetOffensivePowerup();
 						activeOffensivePowerup = EPowerupType::PT_none;
 
-						if (tankPawn->GetAttchedPowerupHolder())
-							tankPawn->GetAttchedPowerupHolder()->UpdatePowerupHolder();
+						if (turretTankParent->GetAttchedPowerupHolder())
+							turretTankParent->GetAttchedPowerupHolder()->UpdatePowerupHolder();
 
 					}
 				}
