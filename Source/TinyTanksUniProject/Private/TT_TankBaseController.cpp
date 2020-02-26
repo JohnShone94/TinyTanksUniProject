@@ -89,14 +89,14 @@ void ATT_TankBaseController::MoveForward(float val)
 			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->tankMoveSpeed * speedMultiplier) * val);
 			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
 
-			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
+			//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
 		}
 		else if (val < 0.0f)
 		{
 			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->tankMoveSpeed * speedMultiplier) / 2.5)) * val);
 			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
 
-			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
+			//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
 		}
 	}
 }
