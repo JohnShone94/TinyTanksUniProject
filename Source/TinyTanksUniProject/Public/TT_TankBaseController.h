@@ -60,10 +60,18 @@ class TINYTANKSUNIPROJECT_API ATT_TankBaseController : public APlayerController
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ESelectedTeam selectedTeam;
+
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TankBase* tankPawn;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TankTurret* tankTurretChild;
+
+
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TankTurret* turretPawn;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TankBase* turretTankParent;
+
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TinyTanksGameMode* gameMode;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
@@ -120,5 +128,7 @@ protected:
 private:
 	void ShotTimerExpired();
 	void SpecialTimerExpired();
+
+	bool GrabSecondaryActors();
 
 };

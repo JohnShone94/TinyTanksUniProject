@@ -66,6 +66,8 @@ void ATT_TankBase::BeginPlay()
 
 	if(turret)
 		turretSlot->SetChildActorClass(turret);
+	if (powerupHolderClass)
+		powerupHolder->SetChildActorClass(powerupHolderClass);
 
 
 	myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
@@ -216,52 +218,6 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					break;
 				}
 
-				//case EPowerupType::PT_fastBullet:
-				//{
-				//	if (currentOffensivePowerup == EPowerupType::PT_none)
-				//	{
-				//		powerup->Destroy();
-				//		currentOffensivePowerup = EPowerupType::PT_fastBullet;
-				//	}
-
-				//	break;
-				//}
-				//case EPowerupType::PT_undergroundBullet:
-				//{
-				//	if (currentOffensivePowerup == EPowerupType::PT_none)
-				//	{
-				//		powerup->Destroy();
-				//		currentOffensivePowerup = EPowerupType::PT_undergroundBullet;
-				//	}
-
-				//	break;
-				//}
-				//case EPowerupType::PT_airblast:
-				//{
-				//	if (currentDeffensivePowerup == EPowerupType::PT_none)
-				//	{
-				//		powerup->Destroy();
-				//		currentDeffensivePowerup = EPowerupType::PT_airblast;
-				//	}
-
-				//	break;
-				//}
-				//case EPowerupType::PT_smokeScreen:
-				//{
-				//	if (currentDeffensivePowerup == EPowerupType::PT_none)
-				//	{
-				//		powerup->Destroy();
-				//		currentDeffensivePowerup = EPowerupType::PT_smokeScreen;
-				//	}
-
-				//	break;
-				//}
-				//case EPowerupType::PT_speedBoost:
-				//{
-				//	//apply temp speedboost
-				//	break;
-				//}
-
 				case EPowerupType::PT_none:
 				{
 					break;
@@ -271,7 +227,8 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					break;
 				}
 			}
-			myPowerupHolder->UpdatePowerupHolder();
+			if(myPowerupHolder)
+				myPowerupHolder->UpdatePowerupHolder();
 		}
 	}
 }
@@ -331,11 +288,6 @@ void ATT_TankBase::ResetOffensivePowerup()
 
 void ATT_TankBase::ActivateShild(bool val)
 {
-	//if(val)
-	//	shildCollison->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	//else
-	//	shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 	bIsShilded = val;
 	ShieldActive();
 }

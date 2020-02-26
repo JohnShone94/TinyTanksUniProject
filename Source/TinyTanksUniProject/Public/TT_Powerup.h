@@ -11,6 +11,7 @@
 class UStaticMeshComponent;
 class UMaterial;
 class USphereComponent;
+class USceneComponent;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_Powerup : public AActor
@@ -38,10 +39,13 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		EPowerupType powerupType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		USceneComponent* powerupRootScene;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UStaticMeshComponent* powerupMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent* powerupOverlap;
 
 protected:

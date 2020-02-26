@@ -23,6 +23,8 @@ void ATT_PowerupHolder::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	holderCurrentRotation = GetActorRotation();
+
 }
 
 void ATT_PowerupHolder::UpdatePowerupHolder_Implementation()

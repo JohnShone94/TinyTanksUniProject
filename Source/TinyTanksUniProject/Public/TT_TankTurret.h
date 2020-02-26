@@ -27,9 +27,9 @@ public:
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		float rotateSpeed;
 
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadwrite)
 		FVector turretForwardVector;
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadwrite)
 		FRotator turretCurrentRotation;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
 		ESelectedTeam turretTeam;

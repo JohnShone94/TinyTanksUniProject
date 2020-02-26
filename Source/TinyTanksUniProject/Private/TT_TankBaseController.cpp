@@ -5,6 +5,7 @@
 #include "TT_TankTurret.h"
 #include "TT_MagicMissile.h"
 #include "TT_TinyTanksGameMode.h"
+#include "TT_PowerupHolder.h"
 
 #include "Components/SphereComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -19,7 +20,6 @@ ATT_TankBaseController::ATT_TankBaseController()
 	bCanFire = true;
 	activeOffensivePowerup = EPowerupType::PT_none;
 	speedMultiplier = 1.0f;
-
 	i = 0.0f;
 }
 
@@ -27,6 +27,8 @@ void ATT_TankBaseController::BeginPlay()
 {
 	Super::BeginPlay();
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
+
+	GrabSecondaryActors();
 }
 
 void ATT_TankBaseController::Tick(float DeltaTime)
@@ -68,12 +70,10 @@ void ATT_TankBaseController::SpecialTimerExpired()
 		if (activeDeffensivePowerup == EPowerupType::PT_floating)
 		{
 			tankPawn->ActivateFloating(false);
-			tankPawn->ResetDeffensivePowerup();
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
 		{
 			tankPawn->ActivateShild(false);
-			tankPawn->ResetDeffensivePowerup();
 		}
 		activeDeffensivePowerup = EPowerupType::PT_none;
 	}
@@ -109,15 +109,22 @@ void ATT_TankBaseController::Rotate(float val)
 		const FRotator rotateDirection = ((FRotator(0.0f, tankPawn->tankRotationSpeed, 0.0f) * speedMultiplier) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);
 
-		ATT_TankTurret* turret = Cast<ATT_TankTurret>(tankPawn->GetAttachedTurret());
-		if (turret)
-			turret->SetActorRotation(turret->turretCurrentRotation);
+		if (tankPawn->GetAttchedPowerupHolder())
+			tankPawn->GetAttchedPowerupHolder()->SetActorRotation(tankPawn->GetAttchedPowerupHolder()->holderCurrentRotation);
+
+		if (tankTurretChild)
+			tankTurretChild->SetActorRotation(tankTurretChild->turretCurrentRotation);
+		else if(GrabSecondaryActors() && tankTurretChild)
+			tankTurretChild->SetActorRotation(tankTurretChild->turretCurrentRotation);
+
 	}
 
 	if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
 	{
-		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
-		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
+		if (!turretTankParent)
+			GrabSecondaryActors();
+
+		if (turretTankParent && !turretTankParent->GetIsDead() && !turretTankParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("TURRET ROTATE %f"), val);
 			const FRotator rotateDirection = ((FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * speedMultiplier) * val);
@@ -131,8 +138,10 @@ void ATT_TankBaseController::FireShot(float val)
 {
 	if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
 	{
-		ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
-		if (turretParent && !turretParent->GetIsDead() && !turretParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
+		if (!turretTankParent)
+			GrabSecondaryActors();
+
+		if (turretTankParent && !turretTankParent->GetIsDead() && !turretTankParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
 		{
 			const FVector fireDirection = turretPawn->GetForwardVector();
 
@@ -146,19 +155,28 @@ void ATT_TankBaseController::FireShot(float val)
 				if (world != NULL)
 				{
 					FActorSpawnParameters SpawnParams;
-					SpawnParams.Owner = turretParent;
+					SpawnParams.Owner = turretTankParent;
 					SpawnParams.Instigator = Instigator;
 
 					FTransform spawnTransform = FTransform(fireRotation, spawnLocation, FVector(1.0f, 1.0f, 1.0f));
 
-					ATT_MagicMissile* bullet = world->SpawnActor<ATT_MagicMissile>(turretParent->magicMissile, spawnTransform, SpawnParams);
+					ATT_MagicMissile* bullet = world->SpawnActor<ATT_MagicMissile>(turretTankParent->magicMissile, spawnTransform, SpawnParams);
 					if(bullet)
-						bullet->SetupBullet(fireDirection, turretParent, activeOffensivePowerup);
+						bullet->SetupBullet(fireDirection, turretTankParent, activeOffensivePowerup);
 					
+					if ((turretTankParent->GetCurrentOffensivePowerup() == EPowerupType::PT_stunBullet || turretTankParent->GetCurrentOffensivePowerup() == EPowerupType::PT_missileBullet))
+					{
+						activeOffensivePowerup = turretTankParent->GetCurrentOffensivePowerup();
+					}
+
 					if (activeOffensivePowerup != EPowerupType::PT_none)
 					{
-						turretParent->ResetOffensivePowerup();
+						turretTankParent->ResetOffensivePowerup();
 						activeOffensivePowerup = EPowerupType::PT_none;
+
+						if (tankPawn->GetAttchedPowerupHolder())
+							tankPawn->GetAttchedPowerupHolder()->UpdatePowerupHolder();
+
 					}
 				}
 
@@ -172,36 +190,84 @@ void ATT_TankBaseController::FireShot(float val)
 
 void ATT_TankBaseController::ActivateSpecial(float val)
 {
-	if (gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f )
-	{
-		if (tankPawn && (tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_shild || tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_floating) && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
-		{
-			activeDeffensivePowerup = tankPawn->GetCurrentDeffensivePowerup();
-		}
-		else if (turretPawn)
-		{
-			ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
-			if (turretParent && (turretParent->GetCurrentOffensivePowerup() == EPowerupType::PT_stunBullet || turretParent->GetCurrentOffensivePowerup() == EPowerupType::PT_missileBullet))
-			{
-				activeOffensivePowerup = turretParent->GetCurrentOffensivePowerup();
-			}
-		}
-	}
+	//if (gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f )
+	//{
+	//	if (tankPawn && (tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_shild || tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_floating) && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
+	//	{
+	//		activeDeffensivePowerup = tankPawn->GetCurrentDeffensivePowerup();
+	//	}
+	//	else if (turretPawn)
+	//	{
+	//		if (!turretTankParent)
+	//			GrabSecondaryActors();
+
+	//		if (turretTankParent && (turretTankParent->GetCurrentOffensivePowerup() == EPowerupType::PT_stunBullet || turretTankParent->GetCurrentOffensivePowerup() == EPowerupType::PT_missileBullet))
+	//		{
+	//			activeOffensivePowerup = turretTankParent->GetCurrentOffensivePowerup();
+	//		}
+	//	}
+	//}
 }
 
 void ATT_TankBaseController::UseSpecial(float val)
 {
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
 	{
+
+		if ((tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_shild || tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_floating) && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
+		{
+			activeDeffensivePowerup = tankPawn->GetCurrentDeffensivePowerup();
+		}
+
 		if (activeDeffensivePowerup == EPowerupType::PT_floating)
 		{
 			tankPawn->ActivateFloating(true);
+			tankPawn->ResetDeffensivePowerup();
 			GetWorld()->GetTimerManager().SetTimer(powerupTimerHandle, this, &ATT_TankBaseController::SpecialTimerExpired, 5.0f);
 		}
 		else if (activeDeffensivePowerup == EPowerupType::PT_shild)
 		{
 			tankPawn->ActivateShild(true);
+			tankPawn->ResetDeffensivePowerup();
 			GetWorld()->GetTimerManager().SetTimer(powerupTimerHandle, this, &ATT_TankBaseController::SpecialTimerExpired, 5.0f);
 		}
+
+		if (tankPawn->GetAttchedPowerupHolder())
+			tankPawn->GetAttchedPowerupHolder()->UpdatePowerupHolder();
 	}
+}
+
+bool ATT_TankBaseController::GrabSecondaryActors()
+{
+	if (tankPawn)
+	{
+		tankTurretChild = Cast<ATT_TankTurret>(tankPawn->GetAttachedTurret());
+		if (tankTurretChild)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(BeginPlay): Successfully grabbed the child turret of tank: %s"), *tankPawn->GetName());
+			return true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("TankBaseController(BeginPlay): Failed to grab the child turret of tank: %s"), *tankPawn->GetName());
+			return false;
+		}
+	}
+
+	if (turretPawn)
+	{
+		turretTankParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
+		if (turretTankParent)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(BeginPlay): Successfully grabbed the adult tank of turret: %s"), *turretPawn->GetName());
+			return true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("TankBaseController(BeginPlay): Failed to grab the adult tank of turret: %s"), *turretPawn->GetName());
+			return false;
+		}
+	}
+
+	return false; //Only returns false here if both of the above statements fail. 
 }

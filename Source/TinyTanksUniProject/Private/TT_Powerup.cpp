@@ -13,8 +13,11 @@ ATT_Powerup::ATT_Powerup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	powerupRootScene = CreateDefaultSubobject<USceneComponent>(TEXT("Powerup Root Scene"));
+	RootComponent = powerupRootScene;
+
 	powerupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Powerup Mesh"));
-	RootComponent = powerupMesh;
+	powerupMesh->SetupAttachment(RootComponent);
 
 	powerupOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Powerup Overlap Component"));
 	powerupOverlap->SetupAttachment(RootComponent);

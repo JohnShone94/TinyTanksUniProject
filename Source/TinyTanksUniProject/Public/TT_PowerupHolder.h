@@ -19,6 +19,9 @@ public:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ATT_TankBase* owningTank;
 
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadwrite)
+		FRotator holderCurrentRotation;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
