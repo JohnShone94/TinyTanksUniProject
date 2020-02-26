@@ -193,7 +193,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 					else
 					{
 						ATT_Shield* shield = Cast<ATT_Shield>(out.GetActor());
-						if (shield && owningPlayer && owningPlayer->myShield && shield == owningPlayer->myShield)
+						if (shield && owningPlayer && owningPlayer->GetShield() && shield == owningPlayer->GetShield())
 						{
 							missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
 						}
@@ -249,7 +249,7 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 			else
 			{
 				ATT_Shield* shield = Cast<ATT_Shield>(OtherActor);
-				if (shield && tank && tank->myShield && shield == tank->myShield)
+				if (shield && tank && tank->GetShield() && shield == tank->GetShield())
 				{
 
 				}

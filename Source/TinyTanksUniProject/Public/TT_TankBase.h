@@ -15,6 +15,7 @@ class ATT_PressurePlate;
 class ATT_SpringBoard;
 class ATT_TinyTanksGameMode;
 class ATT_Shield;
+class ATT_PowerupHolder;
 
 UCLASS()
 class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
@@ -26,15 +27,12 @@ class TINYTANKSUNIPROJECT_API ATT_TankBase : public APawn
 	///////////////////
 
 public:
-	//The forward vector of the tank.
-	UPROPERTY(Category = "Default", VisibleDefaultsOnly, BlueprintReadOnly)
-		FVector tankForwardVector;
 	//The speed of a tank when turning.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		float rotateSpeed;
+		float tankRotationSpeed;
 	//The speed of a tank when moving forward.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		float moveSpeed;
+		float tankMoveSpeed;
 	//The amount of hits a tank can take before it blows up.
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		int32 maxHealthPoints;
@@ -43,33 +41,37 @@ public:
 		bool bCanRockDestroy;
 
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType currentOffensivePowerup;
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		EPowerupType currentDeffensivePowerup;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_MagicMissile> magicMissile;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		UChildActorComponent* turretSlot;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_Shield* myShield;
-	
 	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_TankTurret> turret;
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<ATT_PowerupHolder> powerupHolderClass;
+
+protected:
+
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TinyTanksGameMode* gameMode;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_TankTurret* myTurret;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_Shield* myShield;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_PowerupHolder* myPowerupHolder;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent* tankOverlap;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UStaticMeshComponent* tankBaseMesh;
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//	USphereComponent* shildCollison;
 
-protected:
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		UChildActorComponent* turretSlot;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		UChildActorComponent* powerupHolder;
+
 	//The amount of hits a tank has left before it blows up.
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		int32 currentHealthPoints;
+
 	//Set to true when the tank is dead.
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bIsDead;
@@ -84,23 +86,24 @@ protected:
 		bool bIsFloating;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
-		ATT_TinyTanksGameMode* gameMode;
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		float stunTimer;
+
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector setLocation;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector currentLocation;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		FVector destination;
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
-		ATT_Powerup* powerupInt;
+	//The forward vector of the tank.
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		FVector tankForwardVector;
 
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		ESelectedTeam tankTeam;
-	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadwrite)
-		ATT_TankTurret* myTurret;
-
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		EPowerupType currentOffensivePowerup;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		EPowerupType currentDeffensivePowerup;
 
 	FTimerHandle TimerHandle_StunTimerExpired;
 
@@ -116,16 +119,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(Category = "Tank", BlueprintCallable)
-		UChildActorComponent* GetTurretSlot() { return turretSlot; };
-
-	UFUNCTION(Category = "Tank", BlueprintCallable)
-		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
-
-	UFUNCTION(Category = "Tank", BlueprintCallable)
-		ESelectedTeam GetTankTeam() { return tankTeam; };
-
-	UFUNCTION(Category = "Tank", BlueprintCallable)
 		void SetTankTeam(ESelectedTeam team);
+
+	UFUNCTION(Category = "Tank", BlueprintCallable)
+		void SetMyShield(ATT_Shield* shield) { myShield = shield; };
 
 	//Called when the tank dies.
 	UFUNCTION(Category = "Tank", BlueprintCallable)
@@ -155,41 +152,68 @@ public:
 		void SetCurrentOffensivePowerup(EPowerupType powerup) { currentOffensivePowerup = powerup; };
 
 	UFUNCTION(Category = "Tank", BlueprintCallable)
-		EPowerupType GetCurrentOffensivePowerup() { return currentOffensivePowerup; };
-
-	UFUNCTION(Category = "Tank", BlueprintCallable)
 		void ResetDeffensivePowerup();
 
 	UFUNCTION(Category = "Tank")
 		void SetCurrentDeffensivePowerup(EPowerupType powerup) { currentDeffensivePowerup = powerup; };
 
-	UFUNCTION(Category = "Tank", BlueprintCallable)
-		EPowerupType GetCurrentDeffensivePowerup() { return currentDeffensivePowerup; };
 	
+	/////////////
+	// GETTERS //
+	/////////////
+
 	//Called when another class needs to detect if the tank is dead.
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		bool GetIsDead() { return bIsDead; };
 
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		bool GetCanRockDestroy() { return bCanRockDestroy; };
 
 	//Called when another class needs to detect if the tank is stunned.
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		bool GetIsStunned() { return bIsStunned; };
 
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		bool GetIsShilded() { return bIsShilded; };
 
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		bool GetIsFloating() { return bIsFloating; };
 
 	//Called when another class needs to get the max health points.
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		int32 GetMaxHealthPoints() { return maxHealthPoints; };
 
 	//Called when another class needs to get the current health points
-	UFUNCTION(Category = "Tank", BlueprintCallable)
+	UFUNCTION(Category = "Tank", BlueprintPure)
 		int32 GetCurrentHealthPoints() { return currentHealthPoints; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		EPowerupType GetCurrentDeffensivePowerup() { return currentDeffensivePowerup; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		EPowerupType GetCurrentOffensivePowerup() { return currentOffensivePowerup; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		UChildActorComponent* GetTurretSlot() { return turretSlot; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		ATT_TankTurret* GetAttachedTurret() { return myTurret; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		ATT_Shield* GetShield() { return myShield; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		ATT_PowerupHolder* GetAttchedPowerupHolder() { return myPowerupHolder; };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		FVector GetTankForwardVector() { return tankBaseMesh->GetForwardVector(); };
+
+	UFUNCTION(Category = "Tank", BlueprintPure)
+		ESelectedTeam GetTankTeam() { return tankTeam; };
+
+	//////////////////////////////////////////////////////////////////////////////////////
+	// BLUEPRINT NATIVE EVENTS -- THESE EVENTS ARE CALLED IN CODE AND EFFECT BLUEPRINTS //
+	//////////////////////////////////////////////////////////////////////////////////////
 
 	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
 		void TankHasDied();

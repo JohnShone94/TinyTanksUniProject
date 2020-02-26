@@ -86,17 +86,17 @@ void ATT_TankBaseController::MoveForward(float val)
 		FHitResult Hit(1.0f);
 		if (val > 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->moveSpeed * speedMultiplier) * val);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * tankPawn->tankMoveSpeed * speedMultiplier) * val);
 			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
 
-			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->moveSpeed, speedMultiplier, val, ((tankPawn->moveSpeed * speedMultiplier) * val));
+			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
 		}
 		else if (val < 0.0f)
 		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->moveSpeed * speedMultiplier) / 2.5)) * val);
+			const FVector moveDirection = ((tankPawn->GetTankForwardVector()* ((tankPawn->tankMoveSpeed * speedMultiplier) / 2.5)) * val);
 			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
 
-			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->moveSpeed, speedMultiplier, val, ((tankPawn->moveSpeed * speedMultiplier) * val));
+			UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
 		}
 	}
 }
@@ -106,10 +106,10 @@ void ATT_TankBaseController::Rotate(float val)
 	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("TANK TURN %f"), val);
-		const FRotator rotateDirection = ((FRotator(0.0f, tankPawn->rotateSpeed, 0.0f) * speedMultiplier) * val);
+		const FRotator rotateDirection = ((FRotator(0.0f, tankPawn->tankRotationSpeed, 0.0f) * speedMultiplier) * val);
 		tankPawn->AddActorWorldRotation(rotateDirection);
 
-		ATT_TankTurret* turret = Cast<ATT_TankTurret>(tankPawn->turretSlot->GetChildActor());
+		ATT_TankTurret* turret = Cast<ATT_TankTurret>(tankPawn->GetAttachedTurret());
 		if (turret)
 			turret->SetActorRotation(turret->turretCurrentRotation);
 	}
@@ -174,16 +174,16 @@ void ATT_TankBaseController::ActivateSpecial(float val)
 {
 	if (gameMode && gameMode->GetCanPlayersControlTanks() && val > 0.0f )
 	{
-		if (tankPawn && (tankPawn->currentDeffensivePowerup == EPowerupType::PT_shild || tankPawn->currentDeffensivePowerup == EPowerupType::PT_floating) && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
+		if (tankPawn && (tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_shild || tankPawn->GetCurrentDeffensivePowerup() == EPowerupType::PT_floating) && !tankPawn->GetIsFloating() && !tankPawn->GetIsShilded())
 		{
-			activeDeffensivePowerup = tankPawn->currentDeffensivePowerup;
+			activeDeffensivePowerup = tankPawn->GetCurrentDeffensivePowerup();
 		}
 		else if (turretPawn)
 		{
 			ATT_TankBase* turretParent = Cast<ATT_TankBase>(turretPawn->GetParentActor());
-			if (turretParent && (turretParent->currentOffensivePowerup == EPowerupType::PT_stunBullet || turretParent->currentOffensivePowerup == EPowerupType::PT_missileBullet))
+			if (turretParent && (turretParent->GetCurrentOffensivePowerup() == EPowerupType::PT_stunBullet || turretParent->GetCurrentOffensivePowerup() == EPowerupType::PT_missileBullet))
 			{
-				activeOffensivePowerup = turretParent->currentOffensivePowerup;
+				activeOffensivePowerup = turretParent->GetCurrentOffensivePowerup();
 			}
 		}
 	}

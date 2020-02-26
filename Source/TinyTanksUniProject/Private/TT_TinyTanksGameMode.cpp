@@ -164,9 +164,9 @@ void ATT_TinyTanksGameMode::UpdateTankSpeed(float speed)
 
 			if(tank)
 			{
-				tank->moveSpeed = (tank->moveSpeed + speed);
-				tankSpeed = tank->moveSpeed;
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Speed For: %s | %f"), *tank->GetName(), tank->moveSpeed), true, FVector2D(0.75f, 0.75f));
+				tank->tankMoveSpeed = (tank->tankMoveSpeed + speed);
+				tankSpeed = tank->tankMoveSpeed;
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Speed For: %s | %f"), *tank->GetName(), tank->tankMoveSpeed), true, FVector2D(0.75f, 0.75f));
 			}
 		}
 	}
@@ -182,9 +182,9 @@ void ATT_TinyTanksGameMode::UpdateTankRotateSpeed(float speed)
 
 			if (tank)
 			{
-				tank->rotateSpeed = (tank->rotateSpeed + speed);
-				tankRotateSpeed = tank->rotateSpeed;
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Rotate Speed For: %s | %f"), *tank->GetName(), tank->rotateSpeed), true, FVector2D(0.75f, 0.75f));
+				tank->tankRotationSpeed = (tank->tankRotationSpeed + speed);
+				tankRotateSpeed = tank->tankRotationSpeed;
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("New Rotate Speed For: %s | %f"), *tank->GetName(), tank->tankRotationSpeed), true, FVector2D(0.75f, 0.75f));
 			}
 		}
 	}
