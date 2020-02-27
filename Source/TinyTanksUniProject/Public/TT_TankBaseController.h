@@ -36,11 +36,11 @@ enum class ESelectedTeam : uint8
 {
 	ST_none						UMETA(DiaplayName = "No Team"),
 
-	ST_blueBase					UMETA(DisplayName = "Blue Team | Base"),
-	ST_blueTurret				UMETA(DisplayName = "Blue Team | Turret"),
+	ST_teamOneBase				UMETA(DisplayName = "Team One | Base"),
+	ST_teamOneTurret			UMETA(DisplayName = "Team One | Turret"),
 
-	ST_greenBase				UMETA(DisplayName = "Green Team | Base"),
-	ST_greenTurret				UMETA(DisplayName = "Green Team | Turret"),
+	ST_teamTwoBase				UMETA(DisplayName = "Team Two | Base"),
+	ST_teamTwoTurret			UMETA(DisplayName = "Team Two | Turret"),
 
 };
 
@@ -122,8 +122,6 @@ protected:
 		void Rotate(float val);
 	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void FireShot(float val);
-	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
-		void ActivateSpecial(float val);
 	UFUNCTION(Category = "PlayerCon", BlueprintCallable)
 		void UseSpecial(float val);
 

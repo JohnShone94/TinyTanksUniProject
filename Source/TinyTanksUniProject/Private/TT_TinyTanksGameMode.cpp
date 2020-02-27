@@ -58,10 +58,10 @@ void ATT_TinyTanksGameMode::RemoveTank(ATT_TankBase* tank, bool addWin)
 {
 	if (tank && addWin)
 	{
-		if (tank->GetTankTeam() == ESelectedTeam::ST_blueBase)
+		if (tank->GetTankTeam() == ESelectedTeam::ST_teamOneBase)
 			teamTwoScore++;
 
-		if (tank->GetTankTeam() == ESelectedTeam::ST_greenBase)
+		if (tank->GetTankTeam() == ESelectedTeam::ST_teamTwoBase)
 			teamOneScore++;
 	}
 
@@ -248,14 +248,14 @@ void ATT_TinyTanksGameMode::SpawnPlayerTanks()
 						{
 						case 1:
 						{
-							tank->SetTankTeam(ESelectedTeam::ST_blueBase);
-							turret->SetTurretTeam(ESelectedTeam::ST_blueTurret);
+							tank->SetTankTeam(ESelectedTeam::ST_teamOneBase);
+							turret->SetTurretTeam(ESelectedTeam::ST_teamOneTurret);
 							break;
 						}
 						case 2:
 						{
-							tank->SetTankTeam(ESelectedTeam::ST_greenBase);
-							turret->SetTurretTeam(ESelectedTeam::ST_greenTurret);
+							tank->SetTankTeam(ESelectedTeam::ST_teamTwoBase);
+							turret->SetTurretTeam(ESelectedTeam::ST_teamTwoTurret);
 							break;
 						}
 						default:
@@ -298,22 +298,22 @@ void ATT_TinyTanksGameMode::SetupPlayerControllers(bool bOverride)
 			{
 			case 0:
 			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_blueBase);
+				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_teamOneBase);
 				break;
 			}
 			case 1:
 			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_blueTurret);
+				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_teamOneTurret);
 				break;
 			}
 			case 2:
 			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_greenBase);
+				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_teamTwoBase);
 				break;
 			}
 			case 3:
 			{
-				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_greenTurret);
+				playerArray[i]->SetPlayerTeam(ESelectedTeam::ST_teamTwoTurret);
 				break;
 			}
 			default:
@@ -341,13 +341,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 					UE_LOG(LogTemp, Warning, TEXT("GameMode(PlayerPossessTank): %s failed to possess anything as it has no team selected."), *con->GetName());
 					break;
 				}
-				case ESelectedTeam::ST_blueBase:
+				case ESelectedTeam::ST_teamOneBase:
 				{
 					if (tankArray.Num() > 0)
 					{
 						for (int p = 0; p < tankArray.Num(); p++)
 						{
-							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_blueBase)
+							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_teamOneBase)
 							{
 								con->Possess(tankArray[p]);
 								con->AcknowledgePossession(tankArray[p]);
@@ -364,13 +364,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 
 					break;
 				}
-				case ESelectedTeam::ST_blueTurret:
+				case ESelectedTeam::ST_teamOneTurret:
 				{
 					if (turretArray.Num() > 0)
 					{
 						for (int p = 0; p < turretArray.Num(); p++)
 						{
-							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_blueTurret)
+							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_teamOneTurret)
 							{
 								con->Possess(turretArray[p]);
 								con->AcknowledgePossession(turretArray[p]);
@@ -387,13 +387,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 
 					break;
 				}
-				case ESelectedTeam::ST_greenBase:
+				case ESelectedTeam::ST_teamTwoBase:
 				{
 					if (tankArray.Num() > 0)
 					{
 						for (int p = 0; p < tankArray.Num(); p++)
 						{
-							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_greenBase)
+							if (tankArray[p]->GetTankTeam() == ESelectedTeam::ST_teamTwoBase)
 							{
 								con->Possess(tankArray[p]);
 								con->AcknowledgePossession(tankArray[p]);
@@ -410,13 +410,13 @@ void ATT_TinyTanksGameMode::PlayerPossessTank()
 
 					break;
 				}
-				case ESelectedTeam::ST_greenTurret:
+				case ESelectedTeam::ST_teamTwoTurret:
 				{
 					if (turretArray.Num() > 0)
 					{
 						for (int p = 0; p < turretArray.Num(); p++)
 						{
-							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_greenTurret)
+							if (turretArray[p]->GetTurretTeam() == ESelectedTeam::ST_teamTwoTurret)
 							{
 								con->Possess(turretArray[p]);
 								con->AcknowledgePossession(turretArray[p]);

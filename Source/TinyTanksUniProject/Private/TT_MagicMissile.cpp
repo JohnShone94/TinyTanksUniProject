@@ -74,7 +74,7 @@ void ATT_MagicMissile::SetupBullet(FVector fireVel, ATT_TankBase* player, EPower
 	owningPlayer = player;
 	currentBulletType = bulletType;
 
-	if (player->GetTankTeam() == ESelectedTeam::ST_blueBase)
+	if (player->GetTankTeam() == ESelectedTeam::ST_teamOneBase)
 		bIsBlueTeam = true;
 	else
 		bIsBlueTeam = false;
@@ -132,7 +132,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 		{
 			currentPosition = traceStartPoint;
 			targetPosition = hit.Location;
-			DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true);
+			DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true, 5.0f);
 
 			if (GetActorLocation().Equals(targetPosition, 1.0f) && isMoving)
 			{
@@ -142,13 +142,17 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 
 					FVector riqochetVelocity;
 					//FVector hitNormal = hit.Normal;
-					if (FMath::IsNearlyEqual(hitNormal.X, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.X, -1.0f, 0.25f))
+					if (FMath::IsNearlyEqual(hitNormal.X, 1.0f, 0.1f) || FMath::IsNearlyEqual(hitNormal.X, -1.0f, 0.1f))
 					{
 						riqochetVelocity = FVector((velocity.X * -1.0f), velocity.Y, 0.0f);
 					}
-					else if (FMath::IsNearlyEqual(hitNormal.Y, 1.0f, 0.25f) || FMath::IsNearlyEqual(hitNormal.Y, -1.0f, 0.25f))
+					else if (FMath::IsNearlyEqual(hitNormal.Y, 1.0f, 0.1f) || FMath::IsNearlyEqual(hitNormal.Y, -1.0f, 0.1f))
 					{
 						riqochetVelocity = FVector(velocity.X, (velocity.Y * -1.0f), 0.0f);
+					}
+					else
+					{
+						riqochetVelocity = FVector((velocity.X * -1.0f), (velocity.Y * -1.0f), 0.0f);
 					}
 
 					velocity = riqochetVelocity;
@@ -178,12 +182,12 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 					ATT_StandardWall* wall = Cast<ATT_StandardWall>(out.GetActor());
 					if (wall) 
 					{
-						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit Wall with Vector: %s"), *hitNormal.ToString()));
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit Wall with Vector: %s"), *hitNormal.ToString()), true, FVector2D(2.0f, 2.0f));
 						missileRootComp->IgnoreActorWhenMoving(wall, true);
 					}
 					else if (out.GetActor()->ActorHasTag("Arena_ArenaWall"))
 					{
-						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit arena wall with Vector: %s"), *hitNormal.ToString()));
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit arena wall with Vector: %s"), *hitNormal.ToString()), true, FVector2D(2.0f, 2.0f));
 						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
 					}
 					else if (out.GetActor() == owningPlayer && hitAmount < 1)
