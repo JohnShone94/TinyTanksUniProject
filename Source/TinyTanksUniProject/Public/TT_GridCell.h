@@ -67,7 +67,7 @@ public:
 	UPROPERTY(Category = "Default | SpawnItems", EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<ATT_Spike> spikeTile;
 
-	UPROPERTY(Category = "Default", EditAnywhere)
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
 		E_ItemToSpawn itemToSpawn;
 	UPROPERTY(Category = "Default", EditAnywhere)
 		E_FloorItemToSpawn floorItemToSpawn;
