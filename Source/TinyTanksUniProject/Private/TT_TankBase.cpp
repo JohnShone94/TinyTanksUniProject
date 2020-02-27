@@ -53,6 +53,10 @@ void ATT_TankBase::FloatingActive_Implementation()
 {
 }
 
+void ATT_TankBase::PickedupPowerup_Implementation()
+{
+}
+
 void ATT_TankBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -175,6 +179,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					{
 						powerup->Destroy();
 						currentDeffensivePowerup = EPowerupType::PT_floating;
+						PickedupPowerup();
 					}
 
 					break;
@@ -185,6 +190,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					{
 						powerup->Destroy();
 						currentDeffensivePowerup = EPowerupType::PT_shild;
+						PickedupPowerup();
 					}
 
 					break;
@@ -195,6 +201,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					{
 						powerup->Destroy();
 						currentOffensivePowerup = EPowerupType::PT_missileBullet;
+						PickedupPowerup();
 					}
 
 					break;
@@ -205,6 +212,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					{
 						powerup->Destroy();
 						currentOffensivePowerup = EPowerupType::PT_stunBullet;
+						PickedupPowerup();
 					}
 
 					break;
@@ -219,6 +227,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 					break;
 				}
 			}
+
 			if(myPowerupHolder)
 				myPowerupHolder->UpdatePowerupHolder();
 		}

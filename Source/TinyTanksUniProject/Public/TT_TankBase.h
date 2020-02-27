@@ -245,6 +245,12 @@ public:
 
 		virtual void FloatingActive_Implementation();
 
+
+	UFUNCTION(Category = "Tank", BlueprintNativeEvent)
+		void PickedupPowerup();
+
+		virtual void PickedupPowerup_Implementation();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
