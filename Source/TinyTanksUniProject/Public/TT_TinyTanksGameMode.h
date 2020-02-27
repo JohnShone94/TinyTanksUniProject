@@ -23,6 +23,10 @@ class TINYTANKSUNIPROJECT_API ATT_TinyTanksGameMode : public AGameModeBase
 	//// VARIABLES ////
 	///////////////////
 
+public:
+	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
+		bool bDebugActive;
+
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		bool bHasGameStarted;

@@ -193,6 +193,8 @@ void ATT_TankBaseController::FireShot(float val)
 							turretTankParent->GetAttchedPowerupHolder()->UpdatePowerupHolder();
 
 					}
+
+					turretTankParent->TankHasFired();
 				}
 
 				bCanFire = false;
