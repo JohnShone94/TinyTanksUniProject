@@ -19,7 +19,8 @@ ATT_TankBaseController::ATT_TankBaseController()
 {
 	bCanFire = true;
 	activeOffensivePowerup = EPowerupType::PT_none;
-	speedMultiplier = 1.0f;
+	speedMultiplier = 0.0f;
+	rotateMultiplier = 0.0f;
 	i = 0.0f;
 }
 
@@ -34,6 +35,68 @@ void ATT_TankBaseController::BeginPlay()
 void ATT_TankBaseController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (speedMultiplier != 0.0f)
+	{
+		if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+		{
+			FHitResult Hit(1.0f);
+			if (speedMultiplier > 0.0f)
+			{
+				FVector oldLocation = tankPawn->GetActorLocation();
+				const FVector moveDirection = (tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * DeltaTime) * speedMultiplier));
+				tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
+				if (Hit.GetActor() && Hit.GetActor()->ActorHasTag("PlayerIgnore"))
+				{
+					tankPawn->MoveIgnoreActorAdd(Hit.GetActor());
+				}
+
+				UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, DeltaTime: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, DeltaTime, ((tankPawn->tankMoveSpeed * DeltaTime) * speedMultiplier));
+
+				float difference = (oldLocation - tankPawn->GetActorLocation()).Size();
+			}
+			else if (speedMultiplier < 0.0f)
+			{
+				const FVector moveDirection = ((tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * DeltaTime) / 2.5)) * speedMultiplier);
+				tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
+
+				//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
+			}
+		}
+	}
+
+	if (rotateMultiplier != 0.0f)
+	{
+		if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("TANK TURN %f"), val);
+			const FRotator rotateDirection = ((FRotator(0.0f, tankPawn->tankRotationSpeed, 0.0f) * DeltaTime) * rotateMultiplier);
+			tankPawn->AddActorWorldRotation(rotateDirection);
+
+			if (tankPawn->GetAttchedPowerupHolder())
+				tankPawn->GetAttchedPowerupHolder()->SetActorRotation(tankPawn->GetAttchedPowerupHolder()->holderCurrentRotation);
+
+			if (tankTurretChild)
+				tankTurretChild->SetActorRotation(tankTurretChild->turretCurrentRotation);
+			else if (GrabSecondaryActors() && tankTurretChild)
+				tankTurretChild->SetActorRotation(tankTurretChild->turretCurrentRotation);
+
+		}
+
+		if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
+		{
+			if (!turretTankParent)
+				GrabSecondaryActors();
+
+			if (turretTankParent && !turretTankParent->GetIsDead() && !turretTankParent->GetIsStunned() && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("TURRET ROTATE %f"), val);
+				const FRotator rotateDirection = ((FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * DeltaTime) * rotateMultiplier);
+				turretPawn->AddActorWorldRotation(rotateDirection);
+				turretPawn->turretCurrentRotation = turretPawn->GetActorRotation();
+			}
+		}
+	}
 
 }
 
@@ -80,61 +143,11 @@ void ATT_TankBaseController::SpecialTimerExpired()
 
 void ATT_TankBaseController::MoveForward(float val)
 {
-	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3) )
-	{
-		FHitResult Hit(1.0f);
-		if (val > 0.0f)
-		{
-			const FVector moveDirection = (tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
-			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), true, &Hit);
-			if (Hit.GetActor() && Hit.GetActor()->ActorHasTag("PlayerIgnore"))
-			{
-				tankPawn->MoveIgnoreActorAdd(Hit.GetActor());
-			}
-
-			//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
-		}
-		else if (val < 0.0f)
-		{
-			const FVector moveDirection = ((tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * speedMultiplier) / 2.5)) * val);
-			tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), true, &Hit);
-
-			//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, Controller Val: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, val, ((tankPawn->tankMoveSpeed * speedMultiplier) * val));
-		}
-	}
+	speedMultiplier = val;
 }
 void ATT_TankBaseController::Rotate(float val)
 {
-
-	if (tankPawn && gameMode && gameMode->GetCanPlayersControlTanks() && !tankPawn->GetIsDead() && !tankPawn->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 1 || gameMode->GetPlayerPositionFromCon(this) == 3))
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("TANK TURN %f"), val);
-		const FRotator rotateDirection = ((FRotator(0.0f, tankPawn->tankRotationSpeed, 0.0f) * speedMultiplier) * val);
-		tankPawn->AddActorWorldRotation(rotateDirection);
-
-		if (tankPawn->GetAttchedPowerupHolder())
-			tankPawn->GetAttchedPowerupHolder()->SetActorRotation(tankPawn->GetAttchedPowerupHolder()->holderCurrentRotation);
-
-		if (tankTurretChild)
-			tankTurretChild->SetActorRotation(tankTurretChild->turretCurrentRotation);
-		else if(GrabSecondaryActors() && tankTurretChild)
-			tankTurretChild->SetActorRotation(tankTurretChild->turretCurrentRotation);
-
-	}
-
-	if (turretPawn && gameMode && gameMode->GetCanPlayersControlTanks())
-	{
-		if (!turretTankParent)
-			GrabSecondaryActors();
-
-		if (turretTankParent && !turretTankParent->GetIsDead() && !turretTankParent->GetIsStunned() && val != 0.0f && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4))
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("TURRET ROTATE %f"), val);
-			const FRotator rotateDirection = ((FRotator(0.0f, turretPawn->rotateSpeed, 0.0f) * speedMultiplier) * val);
-			turretPawn->AddActorWorldRotation(rotateDirection);
-			turretPawn->turretCurrentRotation = turretPawn->GetActorRotation();
-		}
-	}
+	rotateMultiplier = val;
 }
 
 void ATT_TankBaseController::FireShot(float val)

@@ -80,6 +80,8 @@ protected:
 		EPowerupType activeDeffensivePowerup;
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
 		float speedMultiplier;
+	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		float rotateMultiplier;
 
 private:
 	//Used to control the fireing.
