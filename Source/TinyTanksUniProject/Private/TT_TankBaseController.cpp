@@ -46,14 +46,13 @@ void ATT_TankBaseController::Tick(float DeltaTime)
 				FVector oldLocation = tankPawn->GetActorLocation();
 				const FVector moveDirection = (tankPawn->GetTankForwardVector() * ((tankPawn->tankMoveSpeed * DeltaTime) * speedMultiplier));
 				tankPawn->AddActorWorldOffset(FVector(moveDirection.X, moveDirection.Y, 0.0f), false, &Hit);
-				if (Hit.GetActor() && Hit.GetActor()->ActorHasTag("PlayerIgnore"))
-				{
-					tankPawn->MoveIgnoreActorAdd(Hit.GetActor());
-				}
+			
+				//if (Hit.GetActor() && Hit.GetActor()->ActorHasTag("PlayerIgnore"))
+				//{
+				//	tankPawn->MoveIgnoreActorAdd(Hit.GetActor());
+				//}
 
-				UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, DeltaTime: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, DeltaTime, ((tankPawn->tankMoveSpeed * DeltaTime) * speedMultiplier));
-
-				float difference = (oldLocation - tankPawn->GetActorLocation()).Size();
+				//UE_LOG(LogTemp, Warning, TEXT("TankBaseController(MoveTank): Tank Speed: %f, Speed Multiplier: %f, DeltaTime: %f, Overall Speed: %f"), tankPawn->tankMoveSpeed, speedMultiplier, DeltaTime, ((tankPawn->tankMoveSpeed * DeltaTime) * speedMultiplier));
 			}
 			else if (speedMultiplier < 0.0f)
 			{

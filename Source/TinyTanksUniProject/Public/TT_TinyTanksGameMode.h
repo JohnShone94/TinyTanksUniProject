@@ -23,48 +23,36 @@ class TINYTANKSUNIPROJECT_API ATT_TinyTanksGameMode : public AGameModeBase
 	//// VARIABLES ////
 	///////////////////
 
-public:
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TMap<int32, ATT_TankBaseController*> playerMap;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TArray<ATT_TankBase*> tankArray;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TArray<ATT_TankTurret*> turretArray;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		TArray<ATT_TankBaseController*> playerArray;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_TankBase* tanktospawn;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		ATT_MainCamera* mainCam;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		int32 teamBlueScore;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		int32 teamRedScore;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		float tankSpeed;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		float tankRotateSpeed;
-
-	UPROPERTY(Category = "Default", EditAnywhere, BlueprintReadWrite)
-		float turretRotateSpeed;
-
-
-
 protected:
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
-		bool bCanPlayersControlTanks;
+		bool bHasGameStarted;
 
 	UPROPERTY(Category = "Default", VisibleAnywhere, BlueprintReadOnly)
+		ATT_MainCamera* mainCam;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		bool bCanPlayersControlTanks;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
 		int32 playersLeft;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		TMap<int32, ATT_TankBaseController*> playerMap;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		TArray<ATT_TankBase*> tankArray;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		TArray<ATT_TankTurret*> turretArray;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		TArray<ATT_TankBaseController*> playerArray;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		int32 teamOneScore;
+
+	UPROPERTY(Category = "Default | Players", VisibleAnywhere, BlueprintReadOnly)
+		int32 teamTwoScore;
 
 	///////////////////
 	//// FUNCTIONS ////
@@ -76,48 +64,66 @@ public:
 	UFUNCTION()
 		void AddPlayerConAtPosition(int32 i, ATT_TankBaseController* pController);
 
-	//Resets the controllers possessions.
-	UFUNCTION(BlueprintCallable)
-		void ResetPlayers();
-
-	//Tells the player controllers to posses a tank/turret.
-	UFUNCTION(BlueprintCallable)
-		void SetupPlayerControllers(bool bOverride = false);
-
-	UFUNCTION()
-		ATT_TankBaseController* GetPlayerConAtPosition(int32 i);
-	
-	UFUNCTION()
-		int32 GetPlayerPositionFromCon(ATT_TankBaseController* con);
-
 	//called when a tank dies.
 	UFUNCTION()
 		void RemoveTank(ATT_TankBase* tank, bool addWin);
 
-	UFUNCTION()
-		int32 GetPlayersLeft() { return playersLeft; };
+	//Resets the controllers possessions.
+	UFUNCTION(Category = "Gamemode | Players", BlueprintCallable)
+		void ResetPlayers();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "Gamemode | Players", BlueprintCallable)
 		void PlayerPossessTank();
 
-	UFUNCTION(BlueprintCallable)
-		bool GetCanPlayersControlTanks() { return bCanPlayersControlTanks; };
-
-	UFUNCTION(BlueprintCallable)
-		void SetCanPlayersControlTanks(bool val) { bCanPlayersControlTanks = val; };
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Category = "Gamemode | Players", BlueprintCallable)
 		void SpawnPlayerTanks();
-	UFUNCTION(BlueprintCallable)
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintCallable)
 		void SpawnPlayerControllers();
 
-	UFUNCTION(BlueprintCallable)
-		void UpdateTankSpeed(float speed);
+	//Tells the player controllers to possess a tank/turret.
+	UFUNCTION(Category = "Gamemode | Players", BlueprintCallable)
+		void SetupPlayerControllers(bool bOverride = false);
 
-	UFUNCTION(BlueprintCallable)
-		void UpdateTankRotateSpeed(float speed);
+	UFUNCTION(Category = "Gamemode | Game", BlueprintCallable)
+		void SetGameStarted(bool started = true) { bHasGameStarted = started; };
 
-	UFUNCTION(BlueprintCallable)
-		void UpdateTurretRotateSpeed(float speed);
+	UFUNCTION(Category = "Gamemode | Game", BlueprintCallable)
+		void SetCanPlayersControlTanks(bool val) { bCanPlayersControlTanks = val; };
+
+	/////////////
+	// GETTERS //
+	/////////////
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		bool GetCanPlayersControlTanks() { return bCanPlayersControlTanks; };
+
+	UFUNCTION(Category = "Gamemode | Game", BlueprintPure)
+		bool GetGameStarted() { return bHasGameStarted; };
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		TArray<ATT_TankBase*> GetTankArray() { return tankArray; };
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		TArray<ATT_TankTurret*> GetTurretArray() { return turretArray; };
+
+	UFUNCTION(Category = "Gamemode | Game", BlueprintPure)
+		ATT_MainCamera* GetMainCamera() { return mainCam;  };
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		int32 GetTeamOneScore() { return teamOneScore; };
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		int32 GetTeamTwoScore() { return teamTwoScore; };
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		int32 GetPlayersLeft() { return playersLeft; };
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		ATT_TankBaseController* GetPlayerConAtPosition(int32 i);
+
+	UFUNCTION(Category = "Gamemode | Players", BlueprintPure)
+		int32 GetPlayerPositionFromCon(ATT_TankBaseController* con);
 
 protected:
 	virtual void BeginPlay() override;

@@ -24,9 +24,6 @@ ATT_TankBase::ATT_TankBase()
 	tankBaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Body"));
 	RootComponent = tankBaseMesh;
 
-	//shildCollison = CreateDefaultSubobject<USphereComponent>(TEXT("Shild Collison"));
-	//shildCollison->SetupAttachment(RootComponent);
-
 	tankOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Tank Base Overlap"));
 	tankOverlap->SetupAttachment(RootComponent);
 
@@ -62,8 +59,6 @@ void ATT_TankBase::BeginPlay()
 
 	tankOverlap->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankBase::OnOverlapBegin);
 
-	//shildCollison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 	if(turret)
 		turretSlot->SetChildActorClass(turret);
 	if (powerupHolderClass)
@@ -94,14 +89,11 @@ void ATT_TankBase::BeginPlay()
 	gameMode = Cast<ATT_TinyTanksGameMode>(GetWorld()->GetAuthGameMode());
 	if (gameMode)
 	{
-		tankMoveSpeed = gameMode->tankSpeed;
-		tankRotationSpeed = gameMode->tankRotateSpeed;
-
-		myTurret = Cast<ATT_TankTurret>(turretSlot->GetChildActor());
-		if (myTurret)
-		{
-			myTurret->rotateSpeed = gameMode->turretRotateSpeed;
-		}
+		UE_LOG(LogTemp, Log, TEXT("TankBase(BeginPlay): Found the gamemode."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("TankBase(BeginPlay): Failed to find the gamemode."));
 	}
 
 }
@@ -134,7 +126,7 @@ void ATT_TankBase::KillTank(bool addWin)
 			myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(1.0f, 0.5f, true, true, true, true, EDynamicForceFeedbackAction::Start);
 		}
 		else
-			UE_LOG(LogTemp, Error, TEXT("TankBase(KillTank): Cant find myTurret."));
+			UE_LOG(LogTemp, Error, TEXT("TankBase(KillTank): Can't find myTurret."));
 
 		currentHealthPoints = 0;
 
@@ -245,7 +237,7 @@ void ATT_TankBase::DamageTank()
 			if (myTurret)
 				myTurret->GetNetOwningPlayer()->GetPlayerController(GetWorld())->PlayDynamicForceFeedback(0.5f, 0.3f, false, true, false, true, EDynamicForceFeedbackAction::Start);
 			else
-				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Cant find myTurret."));
+				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Can't find myTurret."));
 
 			currentHealthPoints--;
 		}
@@ -262,7 +254,7 @@ void ATT_TankBase::DamageTank()
 				myTurret->GetTankGunBase()->SetVisibility(false, true);
 			}
 			else
-				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Cant find myTurret."));
+				UE_LOG(LogTemp, Error, TEXT("TankBase(DamageTank): Can't find myTurret."));
 
 			if(tankBaseMesh)
 				tankBaseMesh->SetVisibility(false);

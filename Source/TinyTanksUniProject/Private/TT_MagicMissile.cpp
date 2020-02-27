@@ -166,7 +166,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 			else
 			{
 				//FVector newLoc = FMath::Lerp(currentPosition, targetPosition, missileSpeed);
-				FVector newLoc = currentPosition + (velocity * missileSpeed);
+				FVector newLoc = currentPosition + (velocity * (missileSpeed * DeltaTime));
 
 				FHitResult out;
 				SetActorLocation(newLoc, true, &out);

@@ -144,6 +144,14 @@ void ATT_GridCell::HideCell(bool val)
 		floorSelectionComp->SetVisibility(!val);
 }
 
+void ATT_GridCell::SetCellFilled(bool val)
+{
+	if (val)
+		itemToSpawn = E_ItemToSpawn::ITS_filled;
+	else if (!val)
+		itemToSpawn = E_ItemToSpawn::ITS_none;
+}
+
 
 #if WITH_EDITOR
 void ATT_GridCell::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)

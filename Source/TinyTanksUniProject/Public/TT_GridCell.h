@@ -28,6 +28,7 @@ enum class E_ItemToSpawn
 	ITS_spawnPoint			UMETA(DiaplayName = "Spawn Point"),
 	ITS_mine				UMETA(DiaplayName = "Mine"),
 	ITS_destroyed			UMETA(DiaplayName = "Destroyed"),
+	ITS_filled				UMETA(DiaplayName = "Filled"),
 };
 
 UENUM()
@@ -111,6 +112,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void HideCell(bool val);
+
+	UFUNCTION(BlueprintCallable)
+		void SetCellFilled(bool val = true);
 
 protected:
 	// Called when the game starts or when spawned
