@@ -236,7 +236,7 @@ void ATT_TankBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 
 void ATT_TankBase::DamageTank()
 {
-	if (!bIsDead)
+	if (!bIsDead && gameMode && gameMode->GetGameStarted())
 	{
 		if (currentHealthPoints > 0)
 		{

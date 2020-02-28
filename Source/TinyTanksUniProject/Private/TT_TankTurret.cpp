@@ -16,14 +16,13 @@ ATT_TankTurret::ATT_TankTurret()
 	tankGunBase->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 	RootComponent = tankGunBase;
 
-	overlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Overlap Sphere"));
-	overlapSphere->SetupAttachment(RootComponent);
-
 	fireLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Fire Location"));
 	fireLocation->SetupAttachment(RootComponent);
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
 	AIControllerClass = nullptr;
+
+	isOverlapped = false;
 
 	rotateSpeed = 3.0f;
 	fireRate = 1.25f;
@@ -46,20 +45,6 @@ void ATT_TankTurret::BeginPlay()
 	turretForwardVector = tankGunBase->GetForwardVector();
 
 	turretCurrentRotation = GetActorRotation();
-
-	overlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ATT_TankTurret::OnOverlapBegin);
-}
-
-void ATT_TankTurret::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
-	{
-		isOverlapped = true;
-	}
-	else
-	{
-		isOverlapped = false;
-	}
 }
 
 void ATT_TankTurret::Tick(float DeltaTime)
