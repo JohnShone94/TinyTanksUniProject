@@ -271,7 +271,7 @@ void ATT_MagicMissile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 
 void ATT_MagicMissile::RunBulletHitEffect_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Can be destroyed")));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Can be destroyed")));
 	bIsDestroyed = true;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle_DeathTimerExpired, this, &ATT_MagicMissile::DeathTimerExpired, 0.5f);
 }
