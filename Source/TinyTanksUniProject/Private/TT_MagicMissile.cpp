@@ -132,7 +132,7 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 		{
 			currentPosition = traceStartPoint;
 			targetPosition = hit.Location;
-			//DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true, 5.0f);
+			DrawDebugLine(world, traceStartPoint, traceEndPoint, FColor::Blue, true, 1.0f);
 
 			if (GetActorLocation().Equals(targetPosition, 1.0f) && isMoving)
 			{
@@ -182,12 +182,12 @@ void ATT_MagicMissile::MoveMissile(float DeltaTime)
 					ATT_StandardWall* wall = Cast<ATT_StandardWall>(out.GetActor());
 					if (wall) 
 					{
-						//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit Wall with Vector: %s"), *hitNormal.ToString()), true, FVector2D(2.0f, 2.0f));
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit Wall with Vector: %s"), *hitNormal.ToString()), true, FVector2D(2.0f, 2.0f));
 						missileRootComp->IgnoreActorWhenMoving(wall, true);
 					}
 					else if (out.GetActor()->ActorHasTag("Arena_ArenaWall"))
 					{
-						//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit arena wall with Vector: %s"), *hitNormal.ToString()), true, FVector2D(2.0f, 2.0f));
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit arena wall with Vector: %s"), *hitNormal.ToString()), true, FVector2D(2.0f, 2.0f));
 						missileRootComp->IgnoreActorWhenMoving(out.GetActor(), true);
 					}
 					else if (out.GetActor() == owningPlayer && hitAmount < 1)
