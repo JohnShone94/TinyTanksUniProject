@@ -59,7 +59,7 @@ void ATT_Mine::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor * OtherA
 		if (leavingTank)
 			tank = nullptr;
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("overlap"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("overlap"));
 	}
 }
 
