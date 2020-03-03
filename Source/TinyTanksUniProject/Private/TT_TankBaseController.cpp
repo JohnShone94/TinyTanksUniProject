@@ -216,7 +216,7 @@ void ATT_TankBaseController::UseSpecial(float val)
 				tankPawn->GetAttchedPowerupHolder()->UpdatePowerupHolder();
 		}
 
-		if (val != 0.0f && turretPawn && bCanFire == true && (gameMode->GetPlayerPositionFromCon(this) == 2 || gameMode->GetPlayerPositionFromCon(this) == 4) && (turretTankParent->GetCurrentOffensivePowerup() != EPowerupType::PT_none))
+		if (turretPawn && val != 0.0f && bCanFire == true)
 		{
 			UWorld* const world = GetWorld();
 			const FVector fireDirection = turretPawn->GetForwardVector();
@@ -224,7 +224,7 @@ void ATT_TankBaseController::UseSpecial(float val)
 			if (!turretTankParent)
 				GrabSecondaryActors();
 
-			if (turretTankParent && !turretTankParent->GetIsDead() && !turretTankParent->GetIsStunned() && world != NULL && (fireDirection.SizeSquared() > 0.0f))
+			if (world != NULL && turretTankParent && (turretTankParent->GetCurrentOffensivePowerup() != EPowerupType::PT_none) &&  !turretTankParent->GetIsDead() && !turretTankParent->GetIsStunned() && (fireDirection.SizeSquared() > 0.0f))
 			{
 				const FRotator fireRotation = FRotator(fireDirection.Rotation().Pitch, fireDirection.Rotation().Yaw, 0.0f);
 
@@ -239,10 +239,10 @@ void ATT_TankBaseController::UseSpecial(float val)
 
 				ATT_MagicMissile* bullet = world->SpawnActor<ATT_MagicMissile>(turretTankParent->magicMissile, spawnTransform, SpawnParams);
 				if (bullet)
-				{
+				{	
+					activeOffensivePowerup = turretTankParent->GetCurrentOffensivePowerup();
 					bullet->SetupBullet(fireDirection, turretTankParent, activeOffensivePowerup);
 
-					activeOffensivePowerup = turretTankParent->GetCurrentOffensivePowerup();
 					turretTankParent->ResetOffensivePowerup();
 					activeOffensivePowerup = EPowerupType::PT_none;
 
