@@ -40,9 +40,9 @@ void ATT_Powerup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator rot = FRotator(pitchValue, yawValue, rollValue);
+	// FRotator rot = FRotator(pitchValue, yawValue, rollValue);
 
-	FQuat quat = FQuat(rot);
+	// FQuat quat = FQuat(rot);
 
-	AddActorLocalRotation(quat, false, 0, ETeleportType::None);
+	// AddActorLocalRotation(quat, false, 0, ETeleportType::None);
 }
